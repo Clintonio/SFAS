@@ -1,0 +1,120 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="SearchForAStar">
+      <UniqueIdentifier>{2870f954-c985-4350-969c-de3a258300d2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core">
+      <UniqueIdentifier>{33c5e97d-a8b7-4ec7-a33c-13300dc3e3b8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics">
+      <UniqueIdentifier>{8e172329-7b0a-4638-be98-a49bd63b2ae0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SearchForAStar\Game">
+      <UniqueIdentifier>{45e88cbf-271c-4e2d-b92a-157b41be28c1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SearchForAStar\States">
+      <UniqueIdentifier>{2318bab6-2422-412d-b0c5-9ef199bf5214}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Core\Application.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\Camera.cpp">
+      <Filter>Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\RenderItem.cpp">
+      <Filter>Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\TextRenderer.cpp">
+      <Filter>Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="SearchForAStar\SearchForAStar.cpp">
+      <Filter>SearchForAStar</Filter>
+    </ClCompile>
+    <ClCompile Include="SearchForAStar\Game\Bullet.cpp">
+      <Filter>SearchForAStar\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="SearchForAStar\Game\Enemy.cpp">
+      <Filter>SearchForAStar\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="SearchForAStar\Game\Entity.cpp">
+      <Filter>SearchForAStar\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="SearchForAStar\Game\Player.cpp">
+      <Filter>SearchForAStar\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="SearchForAStar\Game\Wall.cpp">
+      <Filter>SearchForAStar\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="SearchForAStar\Game\World.cpp">
+      <Filter>SearchForAStar\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="SearchForAStar\States\GameStateBase.cpp">
+      <Filter>SearchForAStar\States</Filter>
+    </ClCompile>
+    <ClCompile Include="SearchForAStar\States\MainGameState.cpp">
+      <Filter>SearchForAStar\States</Filter>
+    </ClCompile>
+    <ClCompile Include="SearchForAStar\States\StartState.cpp">
+      <Filter>SearchForAStar\States</Filter>
+    </ClCompile>
+    <ClCompile Include="SearchForAStar\States\SummaryState.cpp">
+      <Filter>SearchForAStar\States</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Input.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Core\Application.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\Camera.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\RenderItem.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\TextRenderer.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="SearchForAStar\SearchForAStar.h">
+      <Filter>SearchForAStar</Filter>
+    </ClInclude>
+    <ClInclude Include="SearchForAStar\Game\Bullet.h">
+      <Filter>SearchForAStar\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="SearchForAStar\Game\Enemy.h">
+      <Filter>SearchForAStar\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="SearchForAStar\Game\Entity.h">
+      <Filter>SearchForAStar\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="SearchForAStar\Game\Player.h">
+      <Filter>SearchForAStar\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="SearchForAStar\Game\Wall.h">
+      <Filter>SearchForAStar\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="SearchForAStar\Game\World.h">
+      <Filter>SearchForAStar\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="SearchForAStar\States\GameStateBase.h">
+      <Filter>SearchForAStar\States</Filter>
+    </ClInclude>
+    <ClInclude Include="SearchForAStar\States\MainGameState.h">
+      <Filter>SearchForAStar\States</Filter>
+    </ClInclude>
+    <ClInclude Include="SearchForAStar\States\StartState.h">
+      <Filter>SearchForAStar\States</Filter>
+    </ClInclude>
+    <ClInclude Include="SearchForAStar\States\SummaryState.h">
+      <Filter>SearchForAStar\States</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Input.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

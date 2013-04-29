@@ -1,0 +1,13 @@
+*.opensdf
+*.sdf
+*.suo
+*.pdb
+*.obj
+*.ilk
+*.lastbuildstate
+*.log
+*.idb
+*.tlog
+*.exe
+*.vcxproj.user
+*.unsuccessfulbuild
