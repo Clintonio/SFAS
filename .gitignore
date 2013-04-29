@@ -11,3 +11,4 @@
 *.exe
 *.vcxproj.user
 *.unsuccessfulbuild
+!WorkingVersion/SFAS2013.exe
