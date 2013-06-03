@@ -66,6 +66,9 @@
     <ClCompile Include="Core\Input.cpp">
       <Filter>Core</Filter>
     </ClCompile>
+    <ClCompile Include="OptionsState.cpp">
+      <Filter>SearchForAStar\States</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Core\Application.h">
@@ -115,6 +118,9 @@
     </ClInclude>
     <ClInclude Include="Core\Input.h">
       <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="OptionsState.h">
+      <Filter>SearchForAStar\States</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

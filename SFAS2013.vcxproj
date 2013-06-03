@@ -16,6 +16,7 @@
     <ClCompile Include="Graphics\Camera.cpp" />
     <ClCompile Include="Graphics\RenderItem.cpp" />
     <ClCompile Include="Graphics\TextRenderer.cpp" />
+    <ClCompile Include="OptionsState.cpp" />
     <ClCompile Include="SearchForAStar\Game\Bullet.cpp" />
     <ClCompile Include="SearchForAStar\Game\Enemy.cpp" />
     <ClCompile Include="SearchForAStar\Game\Entity.cpp" />
@@ -34,6 +35,7 @@
     <ClInclude Include="Graphics\Camera.h" />
     <ClInclude Include="Graphics\RenderItem.h" />
     <ClInclude Include="Graphics\TextRenderer.h" />
+    <ClInclude Include="OptionsState.h" />
     <ClInclude Include="SearchForAStar\Game\Bullet.h" />
     <ClInclude Include="SearchForAStar\Game\Enemy.h" />
     <ClInclude Include="SearchForAStar\Game\Entity.h" />

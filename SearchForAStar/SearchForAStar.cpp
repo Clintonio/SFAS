@@ -13,6 +13,7 @@
 #include "SearchForAStar/States/StartState.h"
 #include "SearchForAStar/States/MainGameState.h"
 #include "SearchForAStar/States/SummaryState.h"
+#include "SearchForAStar/States/OptionsState.h"
 
 #include "Graphics/RenderItem.h"
 #include "Graphics/TextRenderer.h"

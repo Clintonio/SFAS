@@ -5,7 +5,7 @@
 // Text rendering helper class.  
 // 
 // Add a summary of your changes here:
-// 
+// 1. Fixed spelling errors on names the two ID3DXFont private variables
 // 
 // 
 #pragma once
