@@ -28,8 +28,8 @@ public:
 
 private:
 
-	ID3DCFont*      m_pFont;        // Font for drawing text
-	ID3DFont*		m_pDebugFont ;  // Font for drawing debug text
+	ID3DXFont*      m_pFont;        // Font for drawing text
+	ID3DXFont*		m_pDebugFont;   // Font for drawing debug text
 	ID3DXSprite*    m_pSprite;      // Sprite for draw calls
 };
 }
