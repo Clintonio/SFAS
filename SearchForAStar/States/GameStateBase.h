@@ -54,7 +54,7 @@ private:
 	// Maximum size of a string within a text object
 	// currently stored in the associated buffer.
 
-	enum { keMaxStringLength = 32 };
+	enum { keMaxStringLength = 64 };
 
 	// Everything we need to know to display a bit of text to the screen
 	struct Text
