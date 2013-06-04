@@ -5,6 +5,7 @@
 // Search For A Star application implementaton file. 
 // 
 // Add a summary of your changes here:
+// - Fixed the fuction definition for the window procedure.
 // 
 // 
 // 

@@ -6,7 +6,7 @@
 // 
 // Add a summary of your changes here:
 // - Added keOptions to fix bug where it didn't exist
-// 
+// - Fixed the fuction definition for the window procedure.
 // 
 #pragma once
 
@@ -71,7 +71,7 @@ private:
 // This is our Window Procedure that will handle messages that we care about 
 // passing them back to the instance of SearchForAStar below.
 
-LRESULT CALLBACK GameAppWindowProcedure(HWND han_Wind,UINT uint_Message,UINT parameter1,WPARAM parameter2);
+LRESULT CALLBACK GameAppWindowProcedure(HWND han_Wind,UINT uint_Message,WPARAM parameter1,LPARAM parameter2);
 static SearchForAStar app = SearchForAStar(GameAppWindowProcedure);
 
 }
