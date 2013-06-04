@@ -6,7 +6,7 @@
 // 
 // Add a summary of your changes here:
 // - Fixed int to floating point conversion errors
-// 
+// - Fixed the update function to use pointers as per the definition in World.h on the bullet lists
 // 
 
 #include "World.h"
@@ -136,9 +136,9 @@ void World::Update( const Engine::Input * input, float dt )
 		}
 
 		// Update active bullets and make a list of inactive bullets
-		std::list<Bullet> inactive;
-		std::list<Bullet>::const_iterator it = m_ActiveBullets.begin();
-		std::list<Bullet>::const_iterator end = m_ActiveBullets.end();
+		std::list<Bullet*> inactive;
+		std::list<Bullet*>::const_iterator it = m_ActiveBullets.begin();
+		std::list<Bullet*>::const_iterator end = m_ActiveBullets.end();
 		while( it != end )
 		{
 			if( !(*it)->IsActive() )
