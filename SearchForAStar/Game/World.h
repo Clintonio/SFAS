@@ -5,7 +5,7 @@
 // The World holds a player and objects and collides them against each other. 
 // 
 // Add a summary of your changes here:
-// 
+// - Added a bullet start constant for insertion of bullets into entity list
 // 
 // 
 #pragma once
@@ -64,6 +64,7 @@ private:
 		keWallStart = keEnemyStart + keNumEnemies,
 		keNumWalls = 4,
 		keNumBullets = 10,
+		keBulletStart = keWallStart + keNumWalls,
 
 		keNumEntities = keNumPlayers + keNumEnemies + keNumWalls + keNumBullets
 	};

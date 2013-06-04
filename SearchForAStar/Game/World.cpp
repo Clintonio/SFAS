@@ -7,7 +7,10 @@
 // Add a summary of your changes here:
 // - Fixed int to floating point conversion errors
 // - Fixed the update function to use pointers as per the definition in World.h on the bullet lists
-// 
+// - Fixing null pointer exceptions caused by uninitialised entities in the entity list
+// - Made bullets render properly by adding them to the entity list
+// - Fixed attempting to delete invalid location in destructor due to <= comparison in loop
+//
 
 #include "World.h"
 #include "Bullet.h"
@@ -46,7 +49,7 @@ World::World(LPDIRECT3DDEVICE9 p_dx_Device, HWND han_Window, int w, int h) : m_A
 	m_Entities[kePlayer] = player;	
 
 	// Create Enemies
-	for( int count = 0; count == keNumEnemies; count++ )
+	for( int count = 0; count < keNumEnemies; count++ )
 	{
 		Enemy * enemy = new Enemy( keEnemyStart + count, 
 			(float)( wallWidth + ( rand() % (int)( w - ( wallWidth * 2 ) ) ) ), 
@@ -73,11 +76,16 @@ World::World(LPDIRECT3DDEVICE9 p_dx_Device, HWND han_Window, int w, int h) : m_A
 
 	wall4->SetActive( true );
 	m_Entities[keWallStart + 3] = wall4;
+	
+	// Set bullet pointers to null for now
+	for (int count = 0; count < keNumBullets; count++) {
+		m_Entities[count + keBulletStart] = 0;
+	}
 }
 
 World::~World(void)
 {
-	for( int count = 0; count <= keNumEntities; count++ )
+	for( int count = 0; count < keNumEntities; count++ )
 	{
 		delete m_Entities[count];
 	}
@@ -165,6 +173,18 @@ void World::Update( const Engine::Input * input, float dt )
 		while( it != end )
 		{
 			m_ActiveBullets.remove( *it );
+		}
+
+		// Copy active bullets to entity list
+		it = m_ActiveBullets.begin();
+		end = m_ActiveBullets.end();
+		for(int count = 0; count < keNumBullets; count++) {
+			if(it != end) {
+				m_Entities[keBulletStart + count] = *it;
+				it++;
+			} else {
+				m_Entities[keBulletStart + count] = 0;
+			}
 		}
 
 		// Collide player against walls
