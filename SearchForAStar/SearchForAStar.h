@@ -5,7 +5,7 @@
 // Search For A Star application implementaton file. 
 // 
 // Add a summary of your changes here:
-// 
+// - Added keOptions to fix bug where it didn't exist
 // 
 // 
 #pragma once
@@ -48,6 +48,7 @@ private:
 		keStart,					// Start Screen
 		keGame,						// Gameplay
 		keGameOver,					// Summary
+		keOptions,					// Options Screen
 									// New states here... 
 
 		keNumStates					// The number of states that exist, 

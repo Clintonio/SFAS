@@ -5,7 +5,7 @@
 // The World holds a player and objects and collides them against each other. 
 // 
 // Add a summary of your changes here:
-// 
+// - Fixed int to floating point conversion errors
 // 
 // 
 
@@ -28,6 +28,8 @@ World::World(LPDIRECT3DDEVICE9 p_dx_Device, HWND han_Window, int w, int h) : m_A
 	float halfWallWidth = wallWidth * 0.5f;
 	float halfAreaWidth = m_Width * 0.5f;
 	float halfAreaHeight = m_Height * 0.5f;
+	float windowHeight = (float) h;
+	float windowWidth = (float) w;
 
 	// Renderable Objects
 	m_BlueSquare = new Engine::RenderItem( p_dx_Device, han_Window, 1.0f, D3DXCOLOR( 0, 0, 1, 1 ) );
@@ -55,10 +57,10 @@ World::World(LPDIRECT3DDEVICE9 p_dx_Device, HWND han_Window, int w, int h) : m_A
 	}
 
 	// Create walls
-	Wall * wall1 = new Wall( keWallStart, halfWallWidth, halfAreaHeight, wallWidth, h );
-	Wall * wall2 = new Wall( keWallStart + 1, halfAreaWidth, halfWallWidth, w, wallWidth );
-	Wall * wall3 = new Wall( keWallStart + 2, w - halfWallWidth, halfAreaHeight, wallWidth, h );
-	Wall * wall4 = new Wall( keWallStart + 3, halfAreaWidth, h - halfWallWidth, w, wallWidth );
+	Wall * wall1 = new Wall( keWallStart, halfWallWidth, halfAreaHeight, wallWidth, windowHeight );
+	Wall * wall2 = new Wall( keWallStart + 1, halfAreaWidth, halfWallWidth, windowWidth, wallWidth );
+	Wall * wall3 = new Wall( keWallStart + 2, w - halfWallWidth, halfAreaHeight, wallWidth, windowHeight );
+	Wall * wall4 = new Wall( keWallStart + 3, halfAreaWidth, h - halfWallWidth, windowWidth, wallWidth );
 
 	wall1->SetActive( true );
 	m_Entities[keWallStart] = wall1;

@@ -9,7 +9,7 @@
 
 using SFAS::States::OptionsState;
 
-OptionsState::OptionsState( LPDIRECT3DDEVICE9 p_dx_Device, HWND han_Window, int w, int h ) : m_GameState( keNewLevel ), m_World(p_dx_Device, han_Window, w, h ), m_TimeSinceStateChange( 0 )
+OptionsState::OptionsState( )
 {
 	
 }
