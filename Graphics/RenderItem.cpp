@@ -6,7 +6,7 @@
 // 
 // Add a summary of your changes here:
 // 
-// 
+// - Fixed vertex rendering by correcting render order and a missing negative on vertex 1
 // 
 
 #include <d3d9.h> 
@@ -85,7 +85,7 @@ void RenderItem::FillVertices()
      cv_Vertices[0].z = 0.0f;
      cv_Vertices[0].color = m_Colour;
  
-     cv_Vertices[1].x = half_size;
+     cv_Vertices[1].x = -half_size;
      cv_Vertices[1].y = half_size;
      cv_Vertices[1].z = 0.0f;
      cv_Vertices[1].color = m_Colour;
@@ -104,8 +104,8 @@ void RenderItem::FillVertices()
 void RenderItem::FillIndices()
 {
      s_Indices[0]=1;
-     s_Indices[1]=2;
-     s_Indices[2]=0;
+     s_Indices[1]=0;
+     s_Indices[2]=3;
      s_Indices[3]=2;
      s_Indices[4]=1;
      s_Indices[5]=3; 

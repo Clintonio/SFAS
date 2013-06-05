@@ -5,7 +5,7 @@
 // The camera class pretty basic position and target affair.
 // 
 // Add a summary of your changes here:
-// 
+// - Disabled 3D lighting due to lack of lighting source
 // 
 // 
 
@@ -32,7 +32,7 @@ void Camera::Update( LPDIRECT3DDEVICE9 p_dx_Device )
 	D3DXMatrixOrthoLH(&m_Projection, m_Width, m_Height, 1, 200);
 	p_dx_Device->SetTransform(D3DTS_PROJECTION, &m_Projection);
 
-	p_dx_Device->SetRenderState(D3DRS_LIGHTING, true);
+	p_dx_Device->SetRenderState(D3DRS_LIGHTING, false);
 }
 
 

@@ -10,7 +10,8 @@
 // - Fixing null pointer exceptions caused by uninitialised entities in the entity list
 // - Made bullets render properly by adding them to the entity list
 // - Fixed attempting to delete invalid location in destructor due to <= comparison in loop
-//
+// - Fixed debug rendering attempting to access null pointer entities
+// - Changed all D3DXCOLOR call parameters to floats for testing/ clarity purposes
 
 #include "World.h"
 #include "Bullet.h"
@@ -35,9 +36,9 @@ World::World(LPDIRECT3DDEVICE9 p_dx_Device, HWND han_Window, int w, int h) : m_A
 	float windowWidth = (float) w;
 
 	// Renderable Objects
-	m_BlueSquare = new Engine::RenderItem( p_dx_Device, han_Window, 1.0f, D3DXCOLOR( 0, 0, 1, 1 ) );
-	m_RedSquare = new Engine::RenderItem( p_dx_Device, han_Window, 1.0f, D3DXCOLOR( 1, 0, 0, 1 ) );
-	m_GreenSquare = new Engine::RenderItem( p_dx_Device, han_Window, 1.0f, D3DXCOLOR( 0, 1, 0, 1 ) );
+	m_BlueSquare = new Engine::RenderItem( p_dx_Device, han_Window, 1.0f, D3DXCOLOR( 0.0f, 0.0f, 1.0f, 1.0f ) );
+	m_RedSquare = new Engine::RenderItem( p_dx_Device, han_Window, 1.0f, D3DXCOLOR( 1.0f, 0.0f, 0.0f, 1.0f ) );
+	m_GreenSquare = new Engine::RenderItem( p_dx_Device, han_Window, 1.0f, D3DXCOLOR( 0.0f, 1.0, 0.0f, 1.0f ) );
 	m_BlueSquare->Init();
 	m_RedSquare->Init();
 	m_GreenSquare->Init();
@@ -126,7 +127,9 @@ void World::RenderDebug( Engine::TextRenderer * txt )
 	// Render debug info
 	for( int count = 0; count < keNumEntities; count++ )
 	{
-		m_Entities[count]->RenderDebug( txt );
+		if(m_Entities[count] != 0) {
+			m_Entities[count]->RenderDebug( txt );
+		}
 	}
 }
 
