@@ -30,7 +30,7 @@ void OptionsState::Render(float dt)
 
 bool OptionsState::Update( const Engine::Input * input, float dt)
 {
-	return false;
+	return true;
 }
 
 void OptionsState::OnEnteringState()
