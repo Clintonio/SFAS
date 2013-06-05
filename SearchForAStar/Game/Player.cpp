@@ -5,7 +5,7 @@
 // Player gets input through Message function and updates player state based on it.
 // 
 // Add a summary of your changes here:
-// 
+// - Made bullets reset to inactive on player reset
 // 
 // 
 
@@ -116,6 +116,10 @@ void Player::OnCollision( Entity& other )
 
 void Player::OnReset()
 {
+	for (int count = 0; count < kNumBullets; count++) 
+	{
+		m_Bullets[count]->SetActive(false);
+	}
 }
 
 Bullet * Player::Fire( float vx, float vy )

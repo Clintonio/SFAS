@@ -5,7 +5,7 @@
 // An imovable object which can support the player. 
 // 
 // Add a summary of your changes here:
-// 
+// - Made bullets deactivate upon collision
 // 
 // 
 
@@ -52,4 +52,5 @@ void Bullet::SetActive( bool active )
 
 void Bullet::OnCollision( Entity& other )
 {
+	SetActive( false );
 }

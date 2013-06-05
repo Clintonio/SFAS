@@ -5,7 +5,7 @@
 // The World holds a player and objects and collides them against each other. 
 // 
 // Add a summary of your changes here:
-// - Added a bullet start constant for insertion of bullets into entity list
+// - Removed bullets from entity list entirely due to better implementation for bullets else where
 // 
 // 
 #pragma once
@@ -63,10 +63,8 @@ private:
 
 		keWallStart = keEnemyStart + keNumEnemies,
 		keNumWalls = 4,
-		keNumBullets = 10,
-		keBulletStart = keWallStart + keNumWalls,
 
-		keNumEntities = keNumPlayers + keNumEnemies + keNumWalls + keNumBullets
+		keNumEntities = keNumPlayers + keNumEnemies + keNumWalls
 	};
 
 	enum { kePlayerLives = 3, keNumLevels = keNumEntities, keHitScore = 100 };
