@@ -77,6 +77,12 @@ World::World(LPDIRECT3DDEVICE9 p_dx_Device, HWND han_Window, int w, int h) : m_A
 
 	wall4->SetActive( true );
 	m_Entities[keWallStart + 3] = wall4;
+
+	// Debugging
+	/*wall1->SetActive(false);
+	wall2->SetActive(false);
+	wall3->SetActive(false);
+	wall4->SetActive(false);*/
 	
 	// Set bullet pointers to null for now
 	for (int count = 0; count < keNumBullets; count++) {
@@ -305,9 +311,9 @@ bool World::DoCollision( Entity * lh, Entity * rh, float dt )
 {
 	bool collision = false;
 
-	if( lh != 0 && rh != 0 && lh->CheckForPossibleCollision( *rh ) )
+	if( lh != 0 && rh != 0 && lh->CheckForPossibleCollision( *rh, dt ) && lh->IsActive() && rh->IsActive() )
 	{
-		if( lh->CheckForCollision( *rh ) )
+		if( lh->CheckForCollision( *rh, dt ) )
 		{
 			collision = true;
 

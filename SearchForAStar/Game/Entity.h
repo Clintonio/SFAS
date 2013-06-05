@@ -54,8 +54,8 @@ public:
 	// Collision
 	void SetRadius( float radius ) { m_Radius = radius; } 
 
-	bool CheckForPossibleCollision( const Entity& other );
-	bool CheckForCollision( const Entity& other );
+	bool CheckForPossibleCollision( const Entity& other, float dt );
+	bool CheckForCollision( const Entity& other, float dt );
 	
 	float GetMass() const;
 

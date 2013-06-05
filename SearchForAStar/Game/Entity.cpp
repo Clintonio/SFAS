@@ -6,7 +6,7 @@
 // 
 // Add a summary of your changes here:
 // - Improved code in CheckForCollision by making it fit coding standards more
-// 
+// - Improved collision functionality by making the checks use the full bounding box
 // 
 
 #include "Entity.h"
@@ -83,9 +83,12 @@ void Entity::Update( float dt )
 	}
 }
 
-bool Entity::CheckForPossibleCollision( const Entity& other )
+bool Entity::CheckForPossibleCollision( const Entity& other, float dt )
 {
-	float minimumDistance = m_Radius + other.m_Radius;
+	// Possible collision if the two particles are within each other's movement
+	// radius during the timestep.
+	float movementDistance = (D3DXVec3Length(&m_Velocity) + D3DXVec3Length(&other.GetVelocity())) * dt;
+	float minimumDistance = m_Radius + other.m_Radius + movementDistance;
 	D3DXVECTOR3 difference = m_Position - other.m_Position;
 	float length = D3DXVec3Length( &difference );
 
@@ -99,21 +102,21 @@ bool Entity::CheckForPossibleCollision( const Entity& other )
 	return false;
 }
 
-bool Entity::CheckForCollision( const Entity& other )
+bool Entity::CheckForCollision( const Entity& other, float dt )
 {
-	if( ( m_Position.x ) > ( other.m_Position.x + ( other.m_Scale.x * 0.5f ) ) ) { 
+	if( ( m_Position.x - (m_Scale.x * 0.5f) ) > ( other.m_Position.x + ( other.m_Scale.x * 0.5f ) ) ) { 
 		return false; // This is on the right of other
 	}
 
-	if( ( m_Position.y ) > ( other.m_Position.y + ( other.m_Scale.y * 0.5f ) ) ) {
+	if( ( m_Position.y - (m_Scale.y * 0.5f) ) > ( other.m_Position.y + ( other.m_Scale.y * 0.5f ) ) ) {
 		return false; // This is under other
 	}
 
-	if( ( other.m_Position.x ) > ( m_Position.x + ( m_Scale.x * 0.5f ) ) ) {
+	if( ( other.m_Position.x - (other.m_Scale.x * 0.5f) ) > ( m_Position.x + ( m_Scale.x * 0.5f ) ) ) {
 		return false; // Other is on the right of this
 	}
 
-	if( ( other.m_Position.y ) > ( m_Position.y + ( m_Scale.y * 0.5f ) ) ) {
+	if( ( other.m_Position.y - (other.m_Scale.y * 0.5f) ) > ( m_Position.y + ( m_Scale.y * 0.5f ) ) ) {
 		return false; // Other is under this
 	}
 	
