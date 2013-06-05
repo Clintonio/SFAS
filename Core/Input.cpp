@@ -5,7 +5,7 @@
 // The base application, creates the window and device.
 // 
 // Add a summary of your changes here:
-// 
+// - Added ability to track whether the mouse has been clicked by the user in the last frame
 // 
 // 
 
@@ -24,6 +24,9 @@ Input::Input()
 		mKeyStates[count].KeyDown = false;
 		mKeyStates[count].LastFrameKeyDown = false;
 	}
+
+	m_MouseButton1.lastFrameClicked = false;
+	m_MouseButton1.pressed = false;
 }
 
 Input::~Input(void)
@@ -56,6 +59,39 @@ void Input::OnKeyUp( WPARAM parameter1, LPARAM parameter2 )
 	}
 }
 
+void Input::OnMouseDown ( const short btn, WPARAM status, LPARAM pos )
+{
+	if ( Input::Button::MouseButton1 == btn ) 
+	{
+		m_MouseButton1.pressed = true;
+		m_MouseButton1.startX = GET_X_LPARAM(pos);
+		m_MouseButton1.startY = GET_Y_LPARAM(pos);
+	}
+}
+
+void Input::OnMouseUp( const short btn, WPARAM status, LPARAM pos )
+{
+	if ( Input::Button::MouseButton1 == btn ) 
+	{
+		int newX = GET_X_LPARAM(pos);
+		int newY = GET_Y_LPARAM(pos);
+
+		m_MouseButton1.lastFrameClicked = inClickRadius( m_MouseButton1, newX, newY );
+		m_MouseButton1.lastClickX = m_MouseButton1.startX;
+		m_MouseButton1.lastClickY = m_MouseButton1.startY;
+
+		m_MouseButton1.pressed = false;
+		m_MouseButton1.startX = 0;
+		m_MouseButton1.startY = 0;
+	}
+}
+
+const bool Input::inClickRadius( MouseButton btn, int xPos, int yPos ) 
+{
+	return ((xPos < btn.startX + Input::kClickTolerance) && (xPos > btn.startX - Input::kClickTolerance)
+		&& (yPos < btn.startY + Input::kClickTolerance) && (yPos > btn.startY - Input::kClickTolerance));
+}
+
 void Input::Update( float dt )
 {
 	for( int count = 0; count < kNumInputOptions; count++ )
@@ -72,6 +108,12 @@ void Input::Update( float dt )
 		{
 			mKeyStates[count].Repeat = false;
 		}
+
+		// Reset the mouse clicks
+		m_MouseButton1.lastFrameClicked = false;
+		m_MouseButton1.lastClickX = 0;
+		m_MouseButton1.lastClickY = 0;
+
 	}
 }
 
@@ -93,4 +135,14 @@ bool Input::Held( Key key ) const
 bool Input::PressedWithRepeat( Key key ) const
 {
 	return ( mKeyStates[key].KeyDown && mKeyStates[key].Repeat );
+}
+
+bool Input::HasUserClicked( Button btn ) const
+{
+	if ( btn == Button::MouseButton1 && m_MouseButton1.lastFrameClicked)
+	{
+		return true;
+	}
+
+	return false;
 }

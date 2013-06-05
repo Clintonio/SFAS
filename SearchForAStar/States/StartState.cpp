@@ -5,7 +5,7 @@
 // Starting state that the player always sees before gameplay starts.  
 // 
 // Add a summary of your changes here:
-// 
+// - Made it possible to click to go to the next screen
 // 
 // 
 
@@ -18,7 +18,7 @@ StartState::StartState(void)
 {
 	SetTitleText( L"SEARCH FOR A STAR!" );
 	SetPageText( L"" );
-	SetInstructionText( L"Press Any Key To Continue..." );
+	SetInstructionText( L"Click or Press Any Key To Continue..." );
 }
 
 StartState::~StartState(void)
@@ -32,5 +32,5 @@ void StartState::Render(float dt)
 
 bool StartState::Update( const Engine::Input * input, float dt)
 {
-	return input->JustPressed( Engine::Input::kContinue );
+	return input->JustPressed( Engine::Input::kContinue ) || input->HasUserClicked( Engine::Input::Button::MouseButton1);
 }

@@ -6,7 +6,7 @@
 // 
 // Add a summary of your changes here:
 // - Fixed the fuction definition for the window procedure.
-// 
+// - Added mouse capture functionality
 // 
 // 
 
@@ -121,6 +121,14 @@ LRESULT CALLBACK SFAS::GameAppWindowProcedure(HWND han_Wind,UINT uint_Message,WP
 		case WM_KEYUP:
 			// Send these to the application
 			SFAS::app.OnKeyUp( parameter1, parameter2 );
+			break;
+
+		case WM_LBUTTONDOWN:
+			SFAS::app.OnMouseDown(Engine::Input::Button::MouseButton1, parameter1, parameter2);
+			break;
+
+		case WM_LBUTTONUP:
+			SFAS::app.OnMouseUp(Engine::Input::Button::MouseButton1, parameter1, parameter2);
 			break;
 	}
 

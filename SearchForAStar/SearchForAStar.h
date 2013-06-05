@@ -7,11 +7,12 @@
 // Add a summary of your changes here:
 // - Added keOptions to fix bug where it didn't exist
 // - Fixed the fuction definition for the window procedure.
-// 
+//
 #pragma once
 
 #include "Core/Application.h"
 #include "Graphics/Camera.h"
+#include "Core/Input.h"
 
 namespace SFAS
 {

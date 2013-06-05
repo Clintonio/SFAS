@@ -5,7 +5,7 @@
 // The base application, creates the window and device.
 // 
 // Add a summary of your changes here:
-// 
+// - Added mouse capture functions
 // 
 // 
 
@@ -89,6 +89,22 @@ void Application::OnKeyUp( WPARAM parameter1, LPARAM parameter2 )
 	if( m_Input != 0 )
 	{
 		m_Input->OnKeyUp( parameter1, parameter2 );
+	}
+}
+
+void Application::OnMouseDown( const short btn, WPARAM parameter1, LPARAM parameter2 )
+{
+	if( m_Input != 0) 
+	{
+		m_Input->OnMouseDown(btn, parameter1, parameter2);
+	}
+}
+
+void Application::OnMouseUp( const short btn, WPARAM parameter1, LPARAM parameter2 )
+{
+	if( m_Input != 0) 
+	{
+		m_Input->OnMouseUp(btn, parameter1, parameter2);
 	}
 }
 

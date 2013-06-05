@@ -5,7 +5,7 @@
 // The base application, creates the window and device.
 // 
 // Add a summary of your changes here:
-// 
+// - Added mouse capture function signatures
 // 
 // 
 
@@ -32,6 +32,10 @@ public:
 	// Pass on key down and on key up events onto the input manager
 	void OnKeyDown( WPARAM parameter1, LPARAM parameter2 );
 	void OnKeyUp( WPARAM parameter1, LPARAM parameter2 );
+
+	// Pass mouse events to input manager
+	void Application::OnMouseDown( const short btn, WPARAM parameter1, LPARAM parameter2 );
+	void Application::OnMouseUp( const short btn, WPARAM parameter1, LPARAM parameter2 );
 
 protected:
 
