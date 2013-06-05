@@ -12,6 +12,8 @@
 // - Fixed attempting to delete invalid location in destructor due to <= comparison in loop
 // - Fixed debug rendering attempting to access null pointer entities
 // - Changed all D3DXCOLOR call parameters to floats for testing/ clarity purposes
+// - Fixed onCollision being run twice on one target, and not on the other
+// - Fixed game not reseting on player death
 
 #include "World.h"
 #include "Bullet.h"
@@ -247,7 +249,7 @@ void World::Update( const Engine::Input * input, float dt )
 	}
 	else
 	{
-		if( m_NumActiveEnemies == -1 )
+		if( m_NumActiveEnemies > 0 )
 		{
 			ResetLevel();
 			m_Entities[kePlayer]->OnReset();
@@ -322,7 +324,7 @@ bool World::DoCollision( Entity * lh, Entity * rh, float dt )
 				lh->Resolve( *rh, dt );
 			}
 
-			rh->OnCollision( *rh );
+			lh->OnCollision( *rh );
 			rh->OnCollision( *lh );
 		}
 	}
