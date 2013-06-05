@@ -104,19 +104,23 @@ bool Entity::CheckForPossibleCollision( const Entity& other, float dt )
 
 bool Entity::CheckForCollision( const Entity& other, float dt )
 {
-	if( ( m_Position.x - (m_Scale.x * 0.5f) ) > ( other.m_Position.x + ( other.m_Scale.x * 0.5f ) ) ) { 
+	if( ( m_Position.x - (m_Scale.x * 0.5f) ) > ( other.m_Position.x + ( other.m_Scale.x * 0.5f ) ) ) 
+	{ 
 		return false; // This is on the right of other
 	}
 
-	if( ( m_Position.y - (m_Scale.y * 0.5f) ) > ( other.m_Position.y + ( other.m_Scale.y * 0.5f ) ) ) {
+	if( ( m_Position.y - (m_Scale.y * 0.5f) ) > ( other.m_Position.y + ( other.m_Scale.y * 0.5f ) ) ) 
+	{
 		return false; // This is under other
 	}
 
-	if( ( other.m_Position.x - (other.m_Scale.x * 0.5f) ) > ( m_Position.x + ( m_Scale.x * 0.5f ) ) ) {
+	if( ( other.m_Position.x - (other.m_Scale.x * 0.5f) ) > ( m_Position.x + ( m_Scale.x * 0.5f ) ) ) 
+	{
 		return false; // Other is on the right of this
 	}
 
-	if( ( other.m_Position.y - (other.m_Scale.y * 0.5f) ) > ( m_Position.y + ( m_Scale.y * 0.5f ) ) ) {
+	if( ( other.m_Position.y - (other.m_Scale.y * 0.5f) ) > ( m_Position.y + ( m_Scale.y * 0.5f ) ) ) 
+	{
 		return false; // Other is under this
 	}
 	
