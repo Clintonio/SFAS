@@ -5,7 +5,7 @@
 // Entity is the base class for all objects with a position and a velocity.
 // 
 // Add a summary of your changes here:
-// 
+// - Improved code in CheckForCollision by making it fit coding standards more
 // 
 // 
 
@@ -101,10 +101,21 @@ bool Entity::CheckForPossibleCollision( const Entity& other )
 
 bool Entity::CheckForCollision( const Entity& other )
 {
-	if( ( m_Position.x ) > ( other.m_Position.x + ( other.m_Scale.x * 0.5f ) ) ) return false; // This is on the right of other
-	if( ( m_Position.y ) > ( other.m_Position.y + ( other.m_Scale.y * 0.5f ) ) ) return false; // This is under other
-	if( ( other.m_Position.x ) > ( m_Position.x + ( m_Scale.x * 0.5f ) ) ) return false; // Other is on the right of this
-	if( ( other.m_Position.y ) > ( m_Position.y + ( m_Scale.y * 0.5f ) ) ) return false; // Other is under this
+	if( ( m_Position.x ) > ( other.m_Position.x + ( other.m_Scale.x * 0.5f ) ) ) { 
+		return false; // This is on the right of other
+	}
+
+	if( ( m_Position.y ) > ( other.m_Position.y + ( other.m_Scale.y * 0.5f ) ) ) {
+		return false; // This is under other
+	}
+
+	if( ( other.m_Position.x ) > ( m_Position.x + ( m_Scale.x * 0.5f ) ) ) {
+		return false; // Other is on the right of this
+	}
+
+	if( ( other.m_Position.y ) > ( m_Position.y + ( m_Scale.y * 0.5f ) ) ) {
+		return false; // Other is under this
+	}
 	
 	return true;
 }
