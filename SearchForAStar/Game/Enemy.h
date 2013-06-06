@@ -30,9 +30,7 @@ public:
 	static const float sSpeed;
 	static const float sMass;
 	static const float sDamping;
-
 private:
-
 	WCHAR * ToString()  const { return L"Enemy"; }
 
 	void OnCollision( Entity& other );

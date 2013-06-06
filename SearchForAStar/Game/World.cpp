@@ -37,6 +37,8 @@ World::World(LPDIRECT3DDEVICE9 p_dx_Device, HWND han_Window, int w, int h) : m_A
 	float windowHeight = (float) h;
 	float windowWidth = (float) w;
 
+	m_EntityList = new EntityList;
+
 	// Renderable Objects
 	m_BlueSquare = new Engine::RenderItem( p_dx_Device, han_Window, 1.0f, D3DXCOLOR( 0.0f, 0.0f, 1.0f, 1.0f ) );
 	m_RedSquare = new Engine::RenderItem( p_dx_Device, han_Window, 1.0f, D3DXCOLOR( 1.0f, 0.0f, 0.0f, 1.0f ) );
@@ -50,6 +52,7 @@ World::World(LPDIRECT3DDEVICE9 p_dx_Device, HWND han_Window, int w, int h) : m_A
 	player->SetPosition( D3DXVECTOR3( halfAreaWidth, halfAreaHeight, 0.0f ) );
 	player->SetCollidable();
 	m_Entities[kePlayer] = player;	
+	m_EntityList->insert(player);
 
 	// Create Enemies
 	for( int count = 0; count < keNumEnemies; count++ )

@@ -18,6 +18,9 @@
 
 using SFAS::Game::Entity;
 
+const Entity::EntityType Entity::kEntityType(0);
+
+
 Entity::Entity( int id, const D3DXVECTOR3& pos, const D3DXVECTOR3& scale, float damping ) : m_Position(pos), 
 																		m_Velocity( 0.0f, 0.0f, 0.0f ), 
 																		m_Acceleration( 0.0f, 0.0f, 0.0f ), 
@@ -100,6 +103,19 @@ bool Entity::CheckForPossibleCollision( const Entity& other, float dt )
 	}
 
 	return false;
+}
+
+const D3DXVECTOR3 Entity::DirectionToEntity( const Entity& other ) const
+{
+	D3DXVECTOR3 direction = other.GetPosition() - GetPosition();
+	D3DXVECTOR3 unitDir;
+	D3DXVec3Normalize( &unitDir, &direction );
+
+	return unitDir;
+}
+
+const Entity* Entity::FindNearestEntityOfType( const EntityType &typeID ) const {
+	return NULL;
 }
 
 bool Entity::CheckForCollision( const Entity& other, float dt )

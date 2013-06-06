@@ -27,6 +27,16 @@ public:
 	Entity( int id, const D3DXVECTOR3& pos, const D3DXVECTOR3& scale, float damping );
 	virtual ~Entity(void);
 
+	struct EntityType {
+		EntityType(int type): typeID(type) {}
+
+		const int typeID;
+
+		inline bool operator< (const EntityType rhs)const {
+			return (typeID < rhs.typeID);
+		}
+	};
+
 	// Render and Update the Entity object 
 	virtual void Render( Engine::RenderItem * drw );
 	virtual void RenderDebug( Engine::TextRenderer * txt );
@@ -54,6 +64,9 @@ public:
 	// Collision
 	void SetRadius( float radius ) { m_Radius = radius; } 
 
+	// Get this entity's type
+	const Entity::EntityType GetEntityType() const { return kEntityType; }
+
 	bool CheckForPossibleCollision( const Entity& other, float dt );
 	bool CheckForCollision( const Entity& other, float dt );
 	
@@ -74,11 +87,18 @@ public:
 
 	virtual bool IsPlayerControlled() const { return false; }
 
+	static const Entity::EntityType kEntityType;
 protected:
+
 	void SetInverseMass( float iv ) { m_InverseMass = iv; }
 	void SetMass( float mass );
 
 	static bool Intersection( const D3DXVECTOR3 & p1, const D3DXVECTOR3 & p2, const D3DXVECTOR3 & s1, const D3DXVECTOR3 & s2, D3DXVECTOR3 & contact, float & penetration ); 
+	
+	// Return unit direction to the other entity
+	const D3DXVECTOR3 DirectionToEntity( const Entity & other ) const;
+	// Find the nearest active entity by a given type
+	const Entity* FindNearestEntityOfType( const EntityType &typeID ) const;
 
 private:
 

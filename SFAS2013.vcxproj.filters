@@ -69,6 +69,9 @@
     <ClCompile Include="SearchForAStar\States\OptionsState.cpp">
       <Filter>SearchForAStar\States</Filter>
     </ClCompile>
+    <ClCompile Include="SearchForAStar\Game\EntityList.cpp">
+      <Filter>SearchForAStar\Game</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Core\Application.h">
@@ -121,6 +124,9 @@
     </ClInclude>
     <ClInclude Include="SearchForAStar\States\OptionsState.h">
       <Filter>SearchForAStar\States</Filter>
+    </ClInclude>
+    <ClInclude Include="SearchForAStar\Game\EntityList.h">
+      <Filter>SearchForAStar\Game</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

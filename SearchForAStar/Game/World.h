@@ -11,7 +11,9 @@
 #pragma once
 
 #include <d3d9.h>
+#include <map>
 #include "Player.h"
+#include "EntityList.h"
 
 // Forward declare
 namespace Engine { class RenderItem; class Input; class TextRenderer; }
@@ -74,6 +76,7 @@ private:
 	Engine::RenderItem *	m_RedSquare;
 	Engine::RenderItem *	m_GreenSquare;
 	Entity *				m_Entities[keNumEntities];
+	EntityList *			m_EntityList;
 
 	float					m_Width;
 	float					m_Height;

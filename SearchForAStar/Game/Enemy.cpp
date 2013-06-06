@@ -10,8 +10,10 @@
 // 
 
 #include "Enemy.h"
+#include "Player.h"
 
 using SFAS::Game::Enemy;
+using SFAS::Game::Entity;
 
 const float Enemy::sSize = 10.0f;
 const float Enemy::sSpeed = 10000.0f;
@@ -31,7 +33,7 @@ void Enemy::Update( float dt )
 {
 	if( IsActive() )
 	{
-		switch( rand() % 4 )
+		switch( rand() % 5 )
 		{
 		case 0:
 			AddForce( D3DXVECTOR3( sSpeed, 0.0f, 0.0f ) );
@@ -44,6 +46,10 @@ void Enemy::Update( float dt )
 			break;
 		case 3:
 			AddForce( D3DXVECTOR3( 0.0f, -sSpeed, 0.0f ) );
+			break;
+		case 4:
+			//Player player = FindNearestEntityOfType(Player::kEntityType);
+			//AddForce( DirectionToEntity ( player ));
 			break;
 		}
 	}

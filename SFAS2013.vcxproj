@@ -19,6 +19,7 @@
     <ClCompile Include="SearchForAStar\Game\Bullet.cpp" />
     <ClCompile Include="SearchForAStar\Game\Enemy.cpp" />
     <ClCompile Include="SearchForAStar\Game\Entity.cpp" />
+    <ClCompile Include="SearchForAStar\Game\EntityList.cpp" />
     <ClCompile Include="SearchForAStar\Game\Player.cpp" />
     <ClCompile Include="SearchForAStar\Game\Wall.cpp" />
     <ClCompile Include="SearchForAStar\Game\World.cpp" />
@@ -38,6 +39,7 @@
     <ClInclude Include="SearchForAStar\Game\Bullet.h" />
     <ClInclude Include="SearchForAStar\Game\Enemy.h" />
     <ClInclude Include="SearchForAStar\Game\Entity.h" />
+    <ClInclude Include="SearchForAStar\Game\EntityList.h" />
     <ClInclude Include="SearchForAStar\Game\Player.h" />
     <ClInclude Include="SearchForAStar\Game\Wall.h" />
     <ClInclude Include="SearchForAStar\Game\World.h" />
