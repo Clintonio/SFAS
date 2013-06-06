@@ -15,13 +15,13 @@
 #include "float.h"
 #include "Graphics/RenderItem.h"
 #include "Graphics/TextRenderer.h"
+#include "World.h"
 
-using SFAS::Game::Entity;
+using namespace SFAS::Game;
 
-const Entity::EntityType Entity::kEntityType(0);
+int Entity::sHighestID = 0;
 
-
-Entity::Entity( int id, const D3DXVECTOR3& pos, const D3DXVECTOR3& scale, float damping ) : m_Position(pos), 
+Entity::Entity( const D3DXVECTOR3& pos, const D3DXVECTOR3& scale, float damping ) : m_Position(pos), 
 																		m_Velocity( 0.0f, 0.0f, 0.0f ), 
 																		m_Acceleration( 0.0f, 0.0f, 0.0f ), 
 																		m_LastFrameAcceleration( 0.0f, 0.0f, 0.0f ), 
@@ -39,10 +39,10 @@ Entity::Entity( int id, const D3DXVECTOR3& pos, const D3DXVECTOR3& scale, float 
 																		m_Penetration(0.0f),
 																		m_Friction(0.0f),
 																		m_Tolerance(0.0f),
-																		m_ID( id ),
 																		m_Active(false),
 																		m_Collide(false)
 {
+	m_ID = sHighestID++;
 }
 
 
@@ -50,7 +50,7 @@ Entity::~Entity(void)
 {
 }
 
-void Entity::Render( Engine::RenderItem * drw )
+void Entity::Render( )
 {
 	if( m_Active )
 	{
@@ -62,7 +62,7 @@ void Entity::Render( Engine::RenderItem * drw )
 		D3DXMatrixScaling( &scale, m_Scale.x, m_Scale.y, m_Scale.z );
 		
 		world = scale * move;
-		drw->Draw( &world );
+		GetRenderItem()->Draw( &world );
 	}
 }
 
@@ -73,7 +73,7 @@ void Entity::RenderDebug( Engine::TextRenderer * txt )
 	txt->DrawDebug( strBuffer, 800, 100 + ( m_ID * 10 ), D3DXCOLOR( 1.0f, 1.0f, 1.0f, 1.0f ) );
 }
 
-void Entity::Update( float dt )
+void Entity::Update( World * world, float dt )
 {
 	if( m_Active )
 	{

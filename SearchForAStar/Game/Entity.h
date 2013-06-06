@@ -5,9 +5,10 @@
 // Entity is the base class for all objects with a position and a velocity.
 // 
 // Add a summary of your changes here:
-// 
-// 
-// 
+// - Made entity IDs generate internally for better encapsulation
+// - Gave entities ability to perceive the world (ie; the world object) during update routine
+//   for more intelligent behaviours
+// - Removed RenderItem from the Render call
 #pragma once
 
 #include <d3dx9.h>
@@ -20,11 +21,12 @@ namespace SFAS
 namespace Game                  
 {          
 	const float kGravity = 0.0f;
+	class World;
 
 class Entity
 {
 public:
-	Entity( int id, const D3DXVECTOR3& pos, const D3DXVECTOR3& scale, float damping );
+	Entity( const D3DXVECTOR3& pos, const D3DXVECTOR3& scale, float damping );
 	virtual ~Entity(void);
 
 	struct EntityType {
@@ -38,9 +40,9 @@ public:
 	};
 
 	// Render and Update the Entity object 
-	virtual void Render( Engine::RenderItem * drw );
+	virtual void Render( );
 	virtual void RenderDebug( Engine::TextRenderer * txt );
-	virtual void Update( float dt );
+	virtual void Update( World * world, float dt );
 
 	// Get the moveable position, velocity and orientation
 	const D3DXVECTOR3& GetPosition() const { return m_Position; }
@@ -64,9 +66,6 @@ public:
 	// Collision
 	void SetRadius( float radius ) { m_Radius = radius; } 
 
-	// Get this entity's type
-	const Entity::EntityType GetEntityType() const { return kEntityType; }
-
 	bool CheckForPossibleCollision( const Entity& other, float dt );
 	bool CheckForCollision( const Entity& other, float dt );
 	
@@ -74,7 +73,10 @@ public:
 
 	virtual void OnCollision( Entity& other );
 
-	virtual void OnReset() {}
+	virtual void OnReset() {
+		m_ForceAccumulator = D3DXVECTOR3( 0.0f, 0.0f, 0.0f );
+		m_Velocity = D3DXVECTOR3( 0,0,0);
+	}
 
 	bool IsMoveable() const { return m_InverseMass > 0.0f; }
 
@@ -87,7 +89,8 @@ public:
 
 	virtual bool IsPlayerControlled() const { return false; }
 
-	static const Entity::EntityType kEntityType;
+	// Get the entity type for this entity
+	virtual const Entity::EntityType GetEntityType() = 0;
 protected:
 
 	void SetInverseMass( float iv ) { m_InverseMass = iv; }
@@ -99,6 +102,8 @@ protected:
 	const D3DXVECTOR3 DirectionToEntity( const Entity & other ) const;
 	// Find the nearest active entity by a given type
 	const Entity* FindNearestEntityOfType( const EntityType &typeID ) const;
+	// Get the render item for this entity
+	virtual Engine::RenderItem * GetRenderItem() = 0;
 
 private:
 
@@ -134,6 +139,8 @@ private:
 	int				m_ID;
 	bool			m_Active;
 	bool			m_Collide;
+
+	static int		sHighestID;
 };
 }
 }     

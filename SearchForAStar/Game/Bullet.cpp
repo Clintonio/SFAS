@@ -6,30 +6,29 @@
 // 
 // Add a summary of your changes here:
 // - Made bullets deactivate upon collision
-// 
+// - Modified bullet logic to be more encapsulated
 // 
 
 #include "Bullet.h"
+#include "World.h"
 
-using SFAS::Game::Bullet;
+using namespace SFAS::Game;
 
 const float Bullet::sSize = 1.0f;
 const float Bullet::sMass = 0.5f;
 const float Bullet::sDamping = 0.9999f;
 
-Bullet::Bullet( int id ) : Entity( id, D3DXVECTOR3(), D3DXVECTOR3( sSize, sSize, 0.0f ), sDamping )
+Engine::RenderItem * Bullet::sRenderItem = 0;
+const Entity::EntityType Bullet::kEntityType(20);
+
+Bullet::Bullet( ) : Entity( D3DXVECTOR3(), D3DXVECTOR3( sSize, sSize, 0.0f ), sDamping )
 {
-	SetActive( false );
 	SetMass( sMass );
 }
 
-Bullet::~Bullet( void )
+void Bullet::Update( World * world, float dt )
 {
-}
-
-void Bullet::Update( float dt )
-{
-	Entity::Update( dt );
+	Entity::Update( world, dt );
 
 	if( GetTimeSpentActive() >= kLifetime )
 	{
@@ -39,15 +38,9 @@ void Bullet::Update( float dt )
 
 void Bullet::Fire( float vx, float vy )
 {	
+	OnReset();
 	AddForce( D3DXVECTOR3( vx * kForce, vy * kForce, 0.0f ) );
 	SetActive( true );
-}
-
-void Bullet::SetActive( bool active )
-{
-	// Test comment to test check-ins
-	Entity::SetActive( active );
-	SetVelocity( D3DXVECTOR3( 0.0f, 0.0f, 0.0f ) );
 }
 
 void Bullet::OnCollision( Entity& other )

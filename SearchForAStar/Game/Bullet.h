@@ -24,15 +24,21 @@ namespace Game
 class Bullet : public Entity
 {
 public:
-	Bullet( int id );
-	virtual ~Bullet(void);
+	Bullet( );
 
-	void Update( float dt );
+	void Update( World * world, float dt );
 	void Fire( float vx, float vy );
 
-	void SetActive( bool active );
-	
 	bool IsPlayerControlled() const { return true; }
+	
+	static Engine::RenderItem * sRenderItem;
+	static const Entity::EntityType kEntityType;
+	
+	// Get the entity type for this entity
+	const Entity::EntityType GetEntityType() { return kEntityType; }
+protected: 
+	// Get the render item for this entity
+	virtual Engine::RenderItem * GetRenderItem() { return sRenderItem; }
 
 private: 
 
@@ -45,6 +51,7 @@ private:
 	static const float sDamping;
 
 	void OnCollision( Entity& other );
+	
 };
 }
 }

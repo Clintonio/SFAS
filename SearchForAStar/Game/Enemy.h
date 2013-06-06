@@ -11,6 +11,7 @@
 #pragma once
 
 #include "Entity.h"
+#include "World.h"
 
 namespace SFAS
 {
@@ -21,19 +22,29 @@ namespace Game
 class Enemy : public Entity
 {
 public:
-	Enemy( int id, float x, float y );
+	Enemy( float x, float y );
 	virtual ~Enemy(void);
 
-	virtual void Update( float dt );
+	virtual void Update( World * world, float dt );
 
 	static const float sSize;
 	static const float sSpeed;
 	static const float sMass;
 	static const float sDamping;
+
+	static Engine::RenderItem * sRenderItem;
+	static const Entity::EntityType kEntityType;
+	
+	
+	// Get the entity type for this entity
+	const Entity::EntityType GetEntityType() { return kEntityType; }
+protected: 
+	virtual Engine::RenderItem * GetRenderItem() { return sRenderItem; }
 private:
 	WCHAR * ToString()  const { return L"Enemy"; }
 
 	void OnCollision( Entity& other );
+	
 };
 }
 }

@@ -7,29 +7,36 @@
 // Add a summary of your changes here:
 // - Made bullets reset to inactive on player reset
 // - Added mouse support for firing bullets
-// 
+// - Modified bullet logic so that bullet timings are handled internally
+// - Made bullets appear in front of player so that they do not collide with player
 
 #include "Player.h"
 #include "Bullet.h"
 #include "float.h"
+#include "World.h"
 #include "Core/Input.h"
+#include "Entity.h"
 
 using Engine::Input;
-using SFAS::Game::Player;
-using SFAS::Game::Bullet;
+using namespace SFAS::Game;
 
-const float Player::sMoveForce = 8000.0f;
-const float Player::sSize = 10.0f;
-const float Player::sMass = 100.0f;
-const float Player::sDamping = 0.39f;
+const float Player::sMoveForce	= 8000.0f;
+const float Player::sSize		= 10.0f;
+const float Player::sMass		= 100.0f;
+const float Player::sDamping	= 0.39f;
+const float Player::sFireDelay	= 0.1f;
 
-Player::Player( int id, int lives ) : Entity( id, D3DXVECTOR3(), D3DXVECTOR3( sSize, sSize, 0.0f ), sDamping ), m_Lives( lives ), m_Score( 0 ), m_Multiplier( 1 ), m_Best( 0 )
+Engine::RenderItem * Player::sRenderItem = 0;
+const Entity::EntityType Player::kEntityType(1);
+
+Player::Player( int lives ) : Entity( D3DXVECTOR3(), D3DXVECTOR3( sSize, sSize, 0.0f ), sDamping ), 
+	m_Lives( lives ), m_Score( 0 ), m_Multiplier( 1 ), m_Best( 0 ), m_TimeSinceLastFire( 0 )
 {
 	SetMass( sMass );
 
 	for( int count = 0; count < kNumBullets; count++ )
 	{
-		m_Bullets[count] = new Bullet( count );
+		m_Bullets[count] = new Bullet( );
 	}
 }
 
@@ -42,12 +49,7 @@ Player::~Player(void)
 	}
 }
 
-void Player::Render( Engine::RenderItem* drw )
-{
-	Entity::Render(drw);
-}
-
-Bullet * Player::Update( const Engine::Input * input, float dt )
+void Player::DoInput(World * world, const Engine::Input * input )
 {
 	// Check for personal best
 	if( m_Score > m_Best )
@@ -86,26 +88,47 @@ Bullet * Player::Update( const Engine::Input * input, float dt )
 
 		bullet = Fire( direction.x, direction.y );
 	}
-	else if( input->PressedWithRepeat( Input::kFireUp ) )
+	else if( input->Held( Input::kFireUp ) )
 	{
 		bullet = Fire( 0.0f, 1.0f );
 	}
-	else if( input->PressedWithRepeat( Input::kFireLeft ) )
+	else if( input->Held( Input::kFireLeft ) )
 	{
 		bullet = Fire( -1.0f, 0.0f );
 	}
-	else if( input->PressedWithRepeat( Input::kFireRight ) )
+	else if( input->Held( Input::kFireRight ) )
 	{
 		bullet = Fire( 1.0f, 0.0f );
 	}
-	else if( input->PressedWithRepeat( Input::kFireDown ) )
+	else if( input->Held( Input::kFireDown ) )
 	{
 		bullet = Fire( 0.0f, -1.0f );
 	}
 
-	Entity::Update(dt);
+	if( bullet != NULL )
+	{
+		if( CanFire() )
+		{
+			world->AddEntity(bullet);
+			m_TimeSinceLastFire = 0;
+		} 
+		else 
+		{
+			bullet->SetActive(false);
+		}
+	}
+}
 
-	return bullet;
+void Player::Update( World * world, float dt ) 
+{
+	m_TimeSinceLastFire += dt;
+
+	Entity::Update( world, dt );
+}
+
+inline bool Player::CanFire() const
+{
+	return ( sFireDelay < m_TimeSinceLastFire );
 }
 
 void Player::OnCollision( Entity& other )
@@ -146,7 +169,7 @@ Bullet * Player::Fire( float vx, float vy )
 
 	if( bullet != 0 )
 	{
-		bullet->SetPosition( GetPosition() );
+		bullet->SetPosition( GetPosition() + D3DXVECTOR3(vx, vy, 0.0) * sSize );
 		bullet->Fire( vx, vy );
 	}
 

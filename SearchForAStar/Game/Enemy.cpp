@@ -11,16 +11,19 @@
 
 #include "Enemy.h"
 #include "Player.h"
+#include "World.h"
 
-using SFAS::Game::Enemy;
-using SFAS::Game::Entity;
+using namespace SFAS::Game;
 
 const float Enemy::sSize = 10.0f;
 const float Enemy::sSpeed = 10000.0f;
 const float Enemy::sMass = 100.0f;
 const float Enemy::sDamping = 0.6f;
 
-Enemy::Enemy( int id, float x, float y ) : Entity( id, D3DXVECTOR3( x, y, 0.0f ), D3DXVECTOR3( sSize, sSize, 0.0f ), sDamping )
+Engine::RenderItem * Enemy::sRenderItem = 0;
+const Entity::EntityType Enemy::kEntityType(2);
+
+Enemy::Enemy( float x, float y ) : Entity( D3DXVECTOR3( x, y, 0.0f ), D3DXVECTOR3( sSize, sSize, 0.0f ), sDamping )
 {
 	SetMass( sMass );
 }
@@ -29,7 +32,7 @@ Enemy::~Enemy(void)
 {
 }
 
-void Enemy::Update( float dt )
+void Enemy::Update( World * world, float dt )
 {
 	if( IsActive() )
 	{
@@ -54,7 +57,7 @@ void Enemy::Update( float dt )
 		}
 	}
 
-	Entity::Update(dt);
+	Entity::Update( world, dt);
 }
 
 void Enemy::OnCollision( Entity& other )

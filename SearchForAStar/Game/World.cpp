@@ -14,6 +14,7 @@
 // - Fixed onCollision being run twice on one target, and not on the other
 // - Fixed game not reseting on player death
 // - Fixed infinite loop caused by lack of update of iterator pointer when removing inactive bullets
+// - Replaced Entity array system with more flexible entity list
 
 #include "World.h"
 #include "Bullet.h"
@@ -22,13 +23,14 @@
 #include "Player.h"
 #include "Core/Input.h"
 #include "Graphics/RenderItem.h"
+#include "EntityList.h"
 
 using SFAS::Game::World;
 using SFAS::Game::Entity;
 using SFAS::Game::Wall;
 using SFAS::Game::Player;
 
-World::World(LPDIRECT3DDEVICE9 p_dx_Device, HWND han_Window, int w, int h) : m_ActiveBullets(), m_Width( (float)w ), m_Height( (float)h ), m_Level( 0 ), m_NumActiveEnemies( INT_MAX )
+World::World(LPDIRECT3DDEVICE9 p_dx_Device, HWND han_Window, int w, int h) : m_Width( (float)w ), m_Height( (float)h ), m_Level( 0 ), m_NumActiveEnemies( INT_MAX )
 {
 	float wallWidth = 10.0f;
 	float halfWallWidth = wallWidth * 0.5f;
@@ -46,90 +48,65 @@ World::World(LPDIRECT3DDEVICE9 p_dx_Device, HWND han_Window, int w, int h) : m_A
 	m_BlueSquare->Init();
 	m_RedSquare->Init();
 	m_GreenSquare->Init();
+	
+	Player::sRenderItem = m_BlueSquare;
+	Wall::sRenderItem = m_RedSquare;
+	Enemy::sRenderItem = m_RedSquare;
+	Bullet::sRenderItem = m_GreenSquare;
 
 	// Player Object
-	Player * player = new Player( kePlayer, kePlayerLives );
+	Player * player = new Player(  kePlayerLives );
 	player->SetPosition( D3DXVECTOR3( halfAreaWidth, halfAreaHeight, 0.0f ) );
 	player->SetCollidable();
-	m_Entities[kePlayer] = player;	
 	m_EntityList->insert(player);
 
-	// Create Enemies
-	for( int count = 0; count < keNumEnemies; count++ )
-	{
-		Enemy * enemy = new Enemy( keEnemyStart + count, 
-			(float)( wallWidth + ( rand() % (int)( w - ( wallWidth * 2 ) ) ) ), 
-			(float)( wallWidth + ( rand() % (int)( h - ( wallWidth * 2 ) ) ) ) );
-		enemy->SetActive( true );
-		enemy->SetCollidable();
-		m_Entities[keEnemyStart + count] = enemy;
-	}
-
 	// Create walls
-	Wall * wall1 = new Wall( keWallStart, halfWallWidth, halfAreaHeight, wallWidth, windowHeight );
-	Wall * wall2 = new Wall( keWallStart + 1, halfAreaWidth, halfWallWidth, windowWidth, wallWidth );
-	Wall * wall3 = new Wall( keWallStart + 2, w - halfWallWidth, halfAreaHeight, wallWidth, windowHeight );
-	Wall * wall4 = new Wall( keWallStart + 3, halfAreaWidth, h - halfWallWidth, windowWidth, wallWidth );
-
+	Wall * wall1 = new Wall( halfWallWidth, halfAreaHeight, wallWidth, windowHeight );
+	Wall * wall2 = new Wall( halfAreaWidth, halfWallWidth, windowWidth, wallWidth );
+	Wall * wall3 = new Wall( w - halfWallWidth, halfAreaHeight, wallWidth, windowHeight );
+	Wall * wall4 = new Wall( halfAreaWidth, h - halfWallWidth, windowWidth, wallWidth );
+	
 	wall1->SetActive( true );
-	m_Entities[keWallStart] = wall1;
-
 	wall2->SetActive( true );
-	m_Entities[keWallStart + 1] = wall2;
-
 	wall3->SetActive( true );
-	m_Entities[keWallStart + 2] = wall3;
-
 	wall4->SetActive( true );
-	m_Entities[keWallStart + 3] = wall4;
+	m_EntityList->insert(wall1);
+	m_EntityList->insert(wall2);
+	m_EntityList->insert(wall3);
+	m_EntityList->insert(wall4);
 }
 
 World::~World(void)
 {
-	for( int count = 0; count < keNumEntities; count++ )
-	{
-		delete m_Entities[count];
-	}
+	delete m_EntityList;
 
+	delete m_RedSquare;
 	delete m_BlueSquare;
+	delete m_GreenSquare;
+}
+
+void World::AddEntity(Entity* entity) 
+{
+	m_EntityList->insert(entity);
 }
 
 void World::Render( float dt )
 {
-	// Render the player
-	m_Entities[kePlayer]->Render( m_BlueSquare );
-
-	// Render the enemies
-	for( int count = keEnemyStart; count < keNumEntities; count++ )
+	EntityList::iterator it;
+	// Render all items
+	for(it = m_EntityList->begin(); m_EntityList->end() != it; it++)
 	{
-		if( m_Entities[count] != 0 )
-		{
-			m_Entities[count]->Render( m_RedSquare );
-		}
-	}
-
-	// Render active bullets
-	std::list<Bullet*>::const_iterator it = m_ActiveBullets.begin();
-	std::list<Bullet*>::const_iterator end = m_ActiveBullets.end();
-	while( it != end )
-	{
-		if( (*it)->IsActive() )
-		{
-			(*it)->Render( m_GreenSquare );
-		}
-
-		it++;
+		((*it).second)->Render();
 	}
 }
 
 void World::RenderDebug( Engine::TextRenderer * txt )
 {
-	// Render debug info
-	for( int count = 0; count < keNumEntities; count++ )
+	EntityList::iterator it;
+	// Render all items
+	for(it = m_EntityList->begin(); m_EntityList->end() != it; it++)
 	{
-		if(m_Entities[count] != 0) {
-			m_Entities[count]->RenderDebug( txt );
-		}
+		((*it).second)->RenderDebug(txt);
 	}
 }
 
@@ -139,93 +116,42 @@ void World::Update( const Engine::Input * input, float dt )
 	
 	if( player->IsActive() )
 	{
-		// Update the player - add bullets if neccessary
-		Bullet * bullet = player->Update( input, dt );
-		if( bullet != 0 )
-		{
-			m_ActiveBullets.push_back(bullet);
-		}
+		player->DoInput(this, input);
 
-		// Update active bullets and make a list of inactive bullets
-		std::list<Bullet*> inactive;
-		std::list<Bullet*>::const_iterator it = m_ActiveBullets.begin();
-		std::list<Bullet*>::const_iterator end = m_ActiveBullets.end();
-		while( it != end )
+		EntityList::iterator it;
+		std::vector<EntityList::iterator> eraseLocations;
+		// Update all items and remove inactive ones
+		for(it = m_EntityList->begin(); m_EntityList->end() != it; it++)
 		{
-			if( !(*it)->IsActive() )
+			Entity * entity = (*it).second;
+			if( entity->IsActive() )
 			{
-				inactive.push_back( *it );
-			}
+				entity->Update(this, dt);
+			} 
 			else
 			{
-				(*it)->Update( dt );
+				eraseLocations.push_back(it);
+			}
+		}
 
-				// Collide against walls
-				for( int wall = 0; wall < keNumWalls; wall++ )
+		// Erase all inactive entities
+		for(std::vector<EntityList::iterator>::iterator eraseIt = eraseLocations.begin();
+			eraseIt != eraseLocations.end(); eraseIt++)
+		{
+			m_EntityList->erase(*eraseIt);
+		}
+
+		// Do all collisions
+		for(it = m_EntityList->begin(); m_EntityList->end() != it; it++)
+		{
+			EntityList::iterator innerIt;
+			for(innerIt = m_EntityList->begin(); m_EntityList->end() != innerIt; innerIt++)
+			{
+				if(innerIt != it)
 				{
-					DoCollision( *it, m_Entities[keWallStart + wall], dt );
+					DoCollision((*it).second, (*innerIt).second, dt);
 				}
 			}
-
-			it++;
-		}
-
-		// Remove inactive bullets
-		it = inactive.begin();
-		end = inactive.end();
-		while( it != end )
-		{
-			m_ActiveBullets.remove( *it );
-			it++;
-		}
-
-		// Collide player against walls
-		for( int wall = 0; wall < keNumWalls; wall++ )
-		{
-			DoCollision( player, m_Entities[keWallStart + wall], dt );
-		}
-
-		m_NumActiveEnemies = 0;
-
-		// Update enemies
-		for( int count = kePlayer + 1; count < keWallStart; count++ )
-		{
-			// Check this enemy exists and is active 
-			if( m_Entities[count] != 0 && !m_Entities[count]->IsActive() )
-			{
-				continue;
-			}
-
-			m_NumActiveEnemies++;
-
-			// First update this enemy
-			m_Entities[count]->Update( dt );
-
-			// Collide against the player
-			DoCollision( player, m_Entities[count], dt );
-
-			// Collide against walls
-			for( int wall = 0; wall < keNumWalls; wall++ )
-			{
-				DoCollision( m_Entities[count], m_Entities[keWallStart + wall], dt );
-			}
-
-			// Collide against the player bullets
-			it = m_ActiveBullets.begin();
-			end = m_ActiveBullets.end();
-			while( it != end )
-			{
-				if( (*it)->IsActive() )
-				{
-					if( DoCollision( m_Entities[count], *it, dt ) )
-					{
-						GetPlayerHelper()->AddScore( keHitScore );
-					}
-				}
-
-				it++;
-			}
-
 		}
 	}
 	else
@@ -233,7 +159,7 @@ void World::Update( const Engine::Input * input, float dt )
 		if( m_NumActiveEnemies > 0 )
 		{
 			ResetLevel();
-			m_Entities[kePlayer]->OnReset();
+			player->OnReset();
 		}
 	}
 }
@@ -244,7 +170,6 @@ void World::NewGame()
 	Player * player = GetPlayerHelper();
 	player->ResetScore();
 	player->ResetLives( kePlayerLives );
-	m_ActiveBullets.clear();
 }
 
 bool World::IsGameOver() const
@@ -259,30 +184,31 @@ bool World::IsGameOver() const
 
 void World::NextLevel()
 {
+	Player * player = GetPlayerHelper();
 	// Up the level
 	m_Level++;
 	ResetLevel();
-	m_Entities[kePlayer]->OnReset();
+	player->OnReset();
 	m_NumActiveEnemies = INT_MAX;
-	m_ActiveBullets.clear();
 }
 
 void World::ResetLevel()
 {
 	float halfAreaWidth = m_Width * 0.5f;
 	float halfAreaHeight = m_Height * 0.5f;
-
-	// Reset the player position, velocity and rotation - then set to active
-	m_Entities[kePlayer]->SetPosition( D3DXVECTOR3( halfAreaWidth, halfAreaHeight, 0.0f ) );
-	m_Entities[kePlayer]->SetVelocity( D3DXVECTOR3( 0.0f, 0.0f, 0.0f ) );
-	m_Entities[kePlayer]->SetActive( true );
-	m_ActiveBullets.clear();
-
-	// Reset enemies
-	for( int count = kePlayer + 1; count < keWallStart; count++ )
+	
+	EntityList::iterator it;
+	// Reset all items
+	for(it = m_EntityList->begin(); m_EntityList->end() != it; it++)
 	{
-		m_Entities[count]->SetActive( count <= m_Level );
+		((*it).second)->OnReset();
 	}
+
+	Player * player = GetPlayerHelper();
+	// Reset the player position, velocity and rotation - then set to active
+	player->SetPosition( D3DXVECTOR3( halfAreaWidth, halfAreaHeight, 0.0f ) );
+	player->SetVelocity( D3DXVECTOR3( 0.0f, 0.0f, 0.0f ) );
+	player->SetActive( true );
 }
 
 bool World::IsLevelFinished() const
@@ -311,4 +237,12 @@ bool World::DoCollision( Entity * lh, Entity * rh, float dt )
 	}
 
 	return collision;
+}
+
+const Player * World::GetPlayer() const { 
+		return ((Player*) (*m_EntityList->GetAllEntitiesOfType(Player::kEntityType).begin()));
+}
+
+Player * World::GetPlayerHelper() { 
+		return ((Player*) (*m_EntityList->GetAllEntitiesOfType(Player::kEntityType).begin()));
 }

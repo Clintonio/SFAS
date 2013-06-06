@@ -5,15 +5,12 @@
 // The World holds a player and objects and collides them against each other. 
 // 
 // Add a summary of your changes here:
-// - Removed bullets from entity list entirely due to better implementation for bullets else where
-// 
+// - Replaced entity system with more flexible entity list
 // 
 #pragma once
 
 #include <d3d9.h>
 #include <map>
-#include "Player.h"
-#include "EntityList.h"
 
 // Forward declare
 namespace Engine { class RenderItem; class Input; class TextRenderer; }
@@ -27,6 +24,8 @@ namespace Game
 class Entity;
 class Wall;
 class Bullet;
+class Player;
+class EntityList;
 
 class World
 {
@@ -39,7 +38,7 @@ public:
 	virtual void Update( const Engine::Input * input, float dt );
 
 	// Return a constant pointer to the player so that its state can be examined safely
-	const Player * GetPlayer() const { return reinterpret_cast<Player*>(m_Entities[kePlayer]); }
+	const Player * GetPlayer() const;
 
 	// Game Setup Code  
 	void NewGame();
@@ -49,33 +48,21 @@ public:
 	bool IsLevelFinished() const;
 	int GetCurrentLevel() const { return m_Level; } 
 
+	// Add an entity to the world
+	void AddEntity(Entity* entity);
+
 private:
 
 	// None constant private helper accessor for the player
-	Player * GetPlayerHelper() { return reinterpret_cast<Player*>(m_Entities[kePlayer]); }
+	Player * GetPlayerHelper();
+
 	bool DoCollision( Entity * lh, Entity * rh, float dt );
 
-	enum WorldEntities 
-	{ 
-		kePlayer, 
-		keNumPlayers,
+	enum { kePlayerLives = 3, keNumLevels = 10, keHitScore = 100 };
 
-		keEnemyStart = keNumPlayers,
-		keNumEnemies = 10,
-
-		keWallStart = keEnemyStart + keNumEnemies,
-		keNumWalls = 4,
-
-		keNumEntities = keNumPlayers + keNumEnemies + keNumWalls
-	};
-
-	enum { kePlayerLives = 3, keNumLevels = keNumEntities, keHitScore = 100 };
-
-	std::list<Bullet*>		m_ActiveBullets;
 	Engine::RenderItem *	m_BlueSquare;
 	Engine::RenderItem *	m_RedSquare;
 	Engine::RenderItem *	m_GreenSquare;
-	Entity *				m_Entities[keNumEntities];
 	EntityList *			m_EntityList;
 
 	float					m_Width;
