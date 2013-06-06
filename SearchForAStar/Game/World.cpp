@@ -46,19 +46,15 @@ World::World(LPDIRECT3DDEVICE9 p_dx_Device, HWND han_Window, int w, int h) : m_W
 	float windowWidth = (float) w;
 
 	m_EntityList = new EntityList;
-
-	// Renderable Objects
-	m_BlueSquare = new Engine::RenderItem( p_dx_Device, han_Window, 1.0f, D3DXCOLOR( 0.0f, 0.0f, 1.0f, 1.0f ) );
-	m_RedSquare = new Engine::RenderItem( p_dx_Device, han_Window, 1.0f, D3DXCOLOR( 1.0f, 0.0f, 0.0f, 1.0f ) );
-	m_GreenSquare = new Engine::RenderItem( p_dx_Device, han_Window, 1.0f, D3DXCOLOR( 0.0f, 1.0, 0.0f, 1.0f ) );
-	m_BlueSquare->Init();
-	m_RedSquare->Init();
-	m_GreenSquare->Init();
 	
-	Player::sRenderItem = m_BlueSquare;
-	Wall::sRenderItem = m_RedSquare;
-	Enemy::sRenderItem = m_RedSquare;
-	Bullet::sRenderItem = m_GreenSquare;
+	// Renderable Objects
+	m_Textured = new Engine::RenderItem( p_dx_Device, han_Window, 1.0f );
+	m_Textured->Init();
+	
+	Player::sRenderItem = m_Textured;
+	Wall::sRenderItem = m_Textured;
+	Enemy::sRenderItem = m_Textured;
+	Bullet::sRenderItem = m_Textured;
 
 	// Player Object
 	Player * player = new Player(  kePlayerLives );
@@ -86,9 +82,7 @@ World::~World(void)
 {
 	delete m_EntityList;
 
-	delete m_RedSquare;
-	delete m_BlueSquare;
-	delete m_GreenSquare;
+	delete m_Textured;
 }
 
 void World::AddEntity(Entity* entity) 

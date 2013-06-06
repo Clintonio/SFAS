@@ -7,7 +7,7 @@
 // Add a summary of your changes here:
 // 
 // - Fixed vertex rendering by correcting render order and a missing negative on vertex 1
-// 
+// - Added texture rendering
 
 #include <d3d9.h> 
 #include <d3dx9.h> 
@@ -16,13 +16,15 @@
 
 using Engine::RenderItem;
 
-RenderItem::RenderItem(LPDIRECT3DDEVICE9 p_dx_device, HWND han_Window, float size, DWORD colour) : m_Size(size), m_Window(han_Window), m_pDxDevice(p_dx_device), p_dx_VertexBuffer(0), p_dx_IndexBuffer(0), flt_Angle(0), m_Colour( colour )
+RenderItem::RenderItem(LPDIRECT3DDEVICE9 p_dx_device, HWND han_Window, float size) : 
+	m_Size(size), m_Window(han_Window), m_pDxDevice(p_dx_device), p_dx_VertexBuffer(0), p_dx_IndexBuffer(0), flt_Angle(0)
 {
 	D3DXMatrixIdentity( &m_World );
 }
 
 RenderItem::~RenderItem(void)
 {
+	m_Texture->Release();
 }
 
 void RenderItem::Init()
@@ -30,19 +32,19 @@ void RenderItem::Init()
 	FillVertices();
 	FillIndices();
 
-	if (FAILED(m_pDxDevice->CreateVertexBuffer(4*sizeof(VertexPosCol), 0, D3DFVF_XYZ|D3DFVF_DIFFUSE, D3DPOOL_DEFAULT, &p_dx_VertexBuffer, NULL)))
+	if (FAILED(m_pDxDevice->CreateVertexBuffer(4*sizeof(VertexPosTex), 0, kFVFState, D3DPOOL_DEFAULT, &p_dx_VertexBuffer, NULL)))
 	{
 		MessageBox(m_Window,L"Error while creating RenderItem VertexBuffer",L"FillVertices()",MB_OK);
 	}
 
 	VOID* p_Vertices;
-	if (FAILED(p_dx_VertexBuffer->Lock(0, 4*sizeof(VertexPosCol), (void**)&p_Vertices, 0)))
+	if (FAILED(p_dx_VertexBuffer->Lock(0, 4*sizeof(VertexPosTex), (void**)&p_Vertices, 0)))
 	{
 		MessageBox(m_Window,L"Error trying to lock RenderItem VertexBuffer",L"FillVertices()",MB_OK);
 	}
 	else
 	{
-		memcpy(p_Vertices, cv_Vertices, 4*sizeof(VertexPosCol));
+		memcpy(p_Vertices, cv_Vertices, 4*sizeof(VertexPosTex));
 		p_dx_VertexBuffer->Unlock();
 	}
 
@@ -60,6 +62,17 @@ void RenderItem::Init()
 	{
 		memcpy(p_Indices, s_Indices, 6*sizeof(short));
 		p_dx_IndexBuffer->Unlock();
+		
+		if (FAILED(D3DXCreateTextureFromFile(m_pDxDevice, L"textures/pokeball.png", &m_Texture)))
+		{
+			MessageBox(m_Window,L"Error trying to open texture file",L"FillIndices()",MB_OK);
+		} 
+		else
+		{
+			m_pDxDevice->SetTextureStageState(0,D3DTSS_COLOROP,D3DTOP_SELECTARG1);
+			m_pDxDevice->SetTextureStageState(0,D3DTSS_COLORARG1,D3DTA_TEXTURE);
+			m_pDxDevice->SetTextureStageState(0,D3DTSS_COLORARG2,D3DTA_DIFFUSE);
+		}
 	}
 }
 
@@ -71,34 +84,47 @@ void RenderItem::Draw()
 void RenderItem::Draw( const D3DMATRIX * pWorld )
 {
 	m_pDxDevice->SetTransform(D3DTS_WORLD, pWorld);
-    m_pDxDevice->SetStreamSource(0, p_dx_VertexBuffer, 0, sizeof(VertexPosCol));
-    m_pDxDevice->SetFVF(D3DFVF_XYZ|D3DFVF_DIFFUSE);
+    m_pDxDevice->SetStreamSource(0, p_dx_VertexBuffer, 0, sizeof(VertexPosTex));
+    m_pDxDevice->SetFVF(kFVFState);
 	m_pDxDevice->SetIndices(p_dx_IndexBuffer);
+	m_pDxDevice->SetTexture(0, m_Texture);
 	m_pDxDevice->DrawIndexedPrimitive(D3DPT_TRIANGLELIST,0,0,4,0,2);
 }
 
 void RenderItem::FillVertices()
 {
 	const float half_size = m_Size * 0.5f;
-     cv_Vertices[0].x = half_size;
-     cv_Vertices[0].y = half_size;
-     cv_Vertices[0].z = 0.0f;
-     cv_Vertices[0].color = m_Colour;
- 
-     cv_Vertices[1].x = -half_size;
-     cv_Vertices[1].y = half_size;
-     cv_Vertices[1].z = 0.0f;
-     cv_Vertices[1].color = m_Colour;
- 
-     cv_Vertices[2].x = -half_size;
-     cv_Vertices[2].y = -half_size;
-     cv_Vertices[2].z = 0.0f;
-     cv_Vertices[2].color = m_Colour;
+	// Top right
+	cv_Vertices[0].x = half_size;
+	cv_Vertices[0].y = half_size;
+	cv_Vertices[0].z = 0.0f;
+	cv_Vertices[0].colour = D3DXCOLOR( 0.0f, 1.0, 0.0f, 1.0f );
+	cv_Vertices[0].tu = 1.0f;
+	cv_Vertices[0].tv = 0.0f;
 
-     cv_Vertices[3].x = half_size;
-     cv_Vertices[3].y = -half_size;
-     cv_Vertices[3].z = 0.0f;
-     cv_Vertices[3].color = m_Colour;
+	// Top left
+	cv_Vertices[1].x = -half_size;
+	cv_Vertices[1].y = half_size;
+	cv_Vertices[1].z = 0.0f;
+	cv_Vertices[1].colour = D3DXCOLOR( 0.0f, 1.0, 0.0f, 1.0f );
+	cv_Vertices[1].tu = 0.0f;
+	cv_Vertices[1].tv = 0.0f;
+
+	// Bottom left
+	cv_Vertices[2].x = -half_size;
+	cv_Vertices[2].y = -half_size;
+	cv_Vertices[2].z = 0.0f;
+	cv_Vertices[2].colour = D3DXCOLOR( 0.0f, 1.0, 0.0f, 1.0f );
+	cv_Vertices[2].tu = 0.0f;
+	cv_Vertices[2].tv = 1.0f;
+
+	// Bottom right
+	cv_Vertices[3].x = half_size;
+	cv_Vertices[3].y = -half_size;
+	cv_Vertices[3].z = 0.0f;
+	cv_Vertices[3].colour = D3DXCOLOR( 0.0f, 1.0, 0.0f, 1.0f );
+	cv_Vertices[3].tu = 1.0f;
+	cv_Vertices[3].tv = 1.0f;
 }
 
 void RenderItem::FillIndices()

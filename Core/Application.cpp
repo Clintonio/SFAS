@@ -43,7 +43,7 @@ void Application::Run()
 		float fDT = static_cast<float>( dt );
 
 		// Start Draw 
-		m_Device->Clear(0, NULL, D3DCLEAR_TARGET, D3DCOLOR_XRGB(0,0,0), 1.0f, 0);
+		m_Device->Clear(0, NULL, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, D3DCOLOR_XRGB(0,0,0), 1.0f, 0);
 		m_Device->BeginScene();
 
 		// Render the application
@@ -151,8 +151,15 @@ void Application::InitializeApplicationDevice()
 	ZeroMemory( &dx_PresParams, sizeof(dx_PresParams) );
 	dx_PresParams.Windowed = TRUE;
 	dx_PresParams.SwapEffect = D3DSWAPEFFECT_DISCARD;
-	dx_PresParams.BackBufferFormat = D3DFMT_UNKNOWN;
-
+	dx_PresParams.BackBufferFormat = D3DFMT_X8R8G8B8;
+	dx_PresParams.BackBufferCount = 1;
+	dx_PresParams.MultiSampleType = D3DMULTISAMPLE_NONE;
+	dx_PresParams.MultiSampleQuality = 0;
+	dx_PresParams.Flags = NULL;
+	dx_PresParams.PresentationInterval = D3DPRESENT_INTERVAL_DEFAULT;
+	dx_PresParams.EnableAutoDepthStencil = TRUE;
+	dx_PresParams.AutoDepthStencilFormat = D3DFMT_D16;
+	
 	if (FAILED(m_dx_Object->CreateDevice(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, m_Window, D3DCREATE_HARDWARE_VERTEXPROCESSING, &dx_PresParams, &m_Device)))
 	{
 		if (FAILED(m_dx_Object->CreateDevice(D3DADAPTER_DEFAULT, D3DDEVTYPE_REF, m_Window, D3DCREATE_SOFTWARE_VERTEXPROCESSING, &dx_PresParams, &m_Device)))
@@ -162,7 +169,7 @@ void Application::InitializeApplicationDevice()
 	}
  
 	// Set these to help debug the application
-	m_Device->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
+	m_Device->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
     m_Device->SetRenderState(D3DRS_LIGHTING,false);
 	//m_Device->SetRenderState(D3DRS_FILLMODE,D3DFILL_WIREFRAME);
 }

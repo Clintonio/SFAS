@@ -5,7 +5,7 @@
 // RenderItem 2D square in 3D space for rendering game objects 
 // 
 // Add a summary of your changes here:
-// 
+// - Added texture rendering
 // 
 // 
 #pragma once
@@ -17,14 +17,16 @@ namespace Engine
 
 class RenderItem
 {
-	struct VertexPosCol
-	{
+	const static DWORD kFVFState = D3DFVF_XYZ | D3DFVF_DIFFUSE | D3DFVF_TEX1;
+
+	struct VertexPosTex {
 		float x, y, z;
-		DWORD color;
-	}; 
+		DWORD colour;
+		float tu,tv;
+	};
 
 public:
-	RenderItem(LPDIRECT3DDEVICE9 p_dx_Device, HWND han_Window, float size, DWORD colour);
+	RenderItem(LPDIRECT3DDEVICE9 p_dx_Device, HWND han_Window, float size);
 	virtual ~RenderItem(void);
 
 	void Init();
@@ -38,7 +40,7 @@ private:
 	void FillVertices();
 	void FillIndices();
 
-	VertexPosCol cv_Vertices[4];
+	VertexPosTex cv_Vertices[4];
 	float m_Size;
 	short s_Indices[6];
 	HWND m_Window;
@@ -46,6 +48,6 @@ private:
 	LPDIRECT3DVERTEXBUFFER9 p_dx_VertexBuffer;
 	LPDIRECT3DINDEXBUFFER9 p_dx_IndexBuffer;
 	float flt_Angle;
-	DWORD m_Colour;
+	IDirect3DTexture9 * m_Texture;
 };
 }

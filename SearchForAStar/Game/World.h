@@ -66,9 +66,7 @@ private:
 
 	enum { kePlayerLives = 3, keNumLevels = 10, keHitScore = 100 };
 
-	Engine::RenderItem *	m_BlueSquare;
-	Engine::RenderItem *	m_RedSquare;
-	Engine::RenderItem *	m_GreenSquare;
+	Engine::RenderItem *	m_Textured;
 	EntityList *			m_EntityList;
 
 	float					m_Width;

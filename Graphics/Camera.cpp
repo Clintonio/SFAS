@@ -33,6 +33,7 @@ void Camera::Update( LPDIRECT3DDEVICE9 p_dx_Device )
 	p_dx_Device->SetTransform(D3DTS_PROJECTION, &m_Projection);
 
 	p_dx_Device->SetRenderState(D3DRS_LIGHTING, false);
+	p_dx_Device->SetRenderState( D3DRS_ZENABLE, true );
 }
 
 
