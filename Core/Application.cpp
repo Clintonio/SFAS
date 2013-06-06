@@ -10,7 +10,6 @@
 // 
 
 #include "Application.h"
-#include "Input.h"
 
 using Engine::Application;
 
@@ -21,6 +20,7 @@ Application::Application(LPCTSTR str_Title, LPCTSTR str_Class, int int_Width, in
 	CreateApplicationWindow(10, 10, proc);
 	InitializeApplicationDevice();
 	m_Input = new Input();
+	m_Input->SetWindowDimensions(m_Width, m_Height);
 }
 
 Application::~Application(void)
@@ -92,7 +92,7 @@ void Application::OnKeyUp( WPARAM parameter1, LPARAM parameter2 )
 	}
 }
 
-void Application::OnMouseDown( const short btn, WPARAM parameter1, LPARAM parameter2 )
+void Application::OnMouseDown( Engine::Input::Button btn, WPARAM parameter1, LPARAM parameter2 )
 {
 	if( m_Input != 0) 
 	{
@@ -100,11 +100,19 @@ void Application::OnMouseDown( const short btn, WPARAM parameter1, LPARAM parame
 	}
 }
 
-void Application::OnMouseUp( const short btn, WPARAM parameter1, LPARAM parameter2 )
+void Application::OnMouseUp( Engine::Input::Button btn, WPARAM parameter1, LPARAM parameter2 )
 {
 	if( m_Input != 0) 
 	{
 		m_Input->OnMouseUp(btn, parameter1, parameter2);
+	}
+}
+
+void Application::OnMouseMove( Engine::Input::Button btn, WPARAM parameter1, LPARAM parameter2 )
+{
+	if( m_Input != 0) 
+	{
+		m_Input->OnMouseMove(btn, parameter1, parameter2);
 	}
 }
 

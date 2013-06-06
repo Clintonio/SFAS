@@ -6,7 +6,7 @@
 // 
 // Add a summary of your changes here:
 // - Made bullets reset to inactive on player reset
-// 
+// - Added mouse support for firing bullets
 // 
 
 #include "Player.h"
@@ -77,7 +77,16 @@ Bullet * Player::Update( const Engine::Input * input, float dt )
 	AddForce(deltaForce);
 
 	Bullet * bullet = 0;
-	if( input->PressedWithRepeat( Input::kFireUp ) )
+	if( input->IsButtonHeld( Input::Button::MouseButton1 ) ){
+		const D3DXVECTOR2 mouseCoords = input->GetMousePosition(Input::Button::MouseButton1);
+		const D3DXVECTOR2 playerCoords = GetPosition();
+
+		D3DXVECTOR2 direction = (mouseCoords - playerCoords);
+		D3DXVec2Normalize( &direction, &direction);
+
+		bullet = Fire( direction.x, direction.y );
+	}
+	else if( input->PressedWithRepeat( Input::kFireUp ) )
 	{
 		bullet = Fire( 0.0f, 1.0f );
 	}

@@ -130,6 +130,10 @@ LRESULT CALLBACK SFAS::GameAppWindowProcedure(HWND han_Wind,UINT uint_Message,WP
 		case WM_LBUTTONUP:
 			SFAS::app.OnMouseUp(Engine::Input::Button::MouseButton1, parameter1, parameter2);
 			break;
+
+		case WM_MOUSEMOVE:
+			SFAS::app.OnMouseMove(Engine::Input::Button::MouseButton1, parameter1, parameter2);
+			break;
 	}
 
 	return DefWindowProc(han_Wind,uint_Message,parameter1,parameter2);

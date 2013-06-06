@@ -33,6 +33,12 @@ Input::~Input(void)
 {
 }
 
+void Input::SetWindowDimensions( int width, int height ) 
+{
+	m_WindowHeight = height;
+	m_WindowWidth = width;
+}
+
 void Input::OnKeyDown( WPARAM parameter1, LPARAM parameter2 )
 {
 	for( int count = 0; count < kNumInputOptions; count++ )
@@ -59,7 +65,7 @@ void Input::OnKeyUp( WPARAM parameter1, LPARAM parameter2 )
 	}
 }
 
-void Input::OnMouseDown ( const short btn, WPARAM status, LPARAM pos )
+void Input::OnMouseDown ( Button btn, WPARAM status, LPARAM pos )
 {
 	if ( Input::Button::MouseButton1 == btn ) 
 	{
@@ -69,7 +75,7 @@ void Input::OnMouseDown ( const short btn, WPARAM status, LPARAM pos )
 	}
 }
 
-void Input::OnMouseUp( const short btn, WPARAM status, LPARAM pos )
+void Input::OnMouseUp( Button btn, WPARAM status, LPARAM pos )
 {
 	if ( Input::Button::MouseButton1 == btn ) 
 	{
@@ -83,6 +89,18 @@ void Input::OnMouseUp( const short btn, WPARAM status, LPARAM pos )
 		m_MouseButton1.pressed = false;
 		m_MouseButton1.startX = 0;
 		m_MouseButton1.startY = 0;
+	}
+}
+
+void Input::OnMouseMove( Button btn, WPARAM status, LPARAM pos ) 
+{
+	if ( Input::Button::MouseButton1 == btn ) 
+	{
+		int newX = GET_X_LPARAM(pos);
+		int newY = GET_Y_LPARAM(pos);
+		// Mouse coordinates are based in top left, graphics coordinates bottom left
+		// so translate the coordinates to match
+		m_MouseButton1.position = D3DXVECTOR2(newX, m_WindowHeight - (float) newY);
 	}
 }
 
@@ -145,4 +163,22 @@ bool Input::HasUserClicked( Button btn ) const
 	}
 
 	return false;
+}
+
+bool Input::IsButtonHeld ( Button btn ) const 
+{
+	if ( btn == Button::MouseButton1 && m_MouseButton1.pressed ) 
+	{
+		return true;
+	}
+
+	return false;
+}
+
+const D3DXVECTOR2 &Input::GetMousePosition ( Button btn ) const {
+	if ( btn == Button::MouseButton1 ) {
+		return m_MouseButton1.position;
+	}
+
+	return D3DXVECTOR2(0,0);
 }

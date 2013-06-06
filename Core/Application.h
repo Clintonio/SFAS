@@ -14,10 +14,10 @@
 #include <Windows.h>
 #include <d3d9.h> 
 #include <d3dx9.h> 
+#include "Input.h"
 
 namespace Engine
 {
-class Input;
 
 class Application
 {
@@ -34,8 +34,9 @@ public:
 	void OnKeyUp( WPARAM parameter1, LPARAM parameter2 );
 
 	// Pass mouse events to input manager
-	void Application::OnMouseDown( const short btn, WPARAM parameter1, LPARAM parameter2 );
-	void Application::OnMouseUp( const short btn, WPARAM parameter1, LPARAM parameter2 );
+	void Application::OnMouseDown( Input::Button btn, WPARAM parameter1, LPARAM parameter2 );
+	void Application::OnMouseUp( Input::Button btn, WPARAM parameter1, LPARAM parameter2 );
+	void Application::OnMouseMove( Input::Button btn, WPARAM parameter1, LPARAM parameter2 );
 
 protected:
 
