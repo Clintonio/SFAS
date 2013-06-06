@@ -19,7 +19,7 @@ namespace SFAS
 
 namespace Game                  
 {          
-
+class Player;
 
 class Bullet : public Entity
 {
@@ -27,7 +27,7 @@ public:
 	Bullet( );
 
 	void Update( World * world, float dt );
-	void Fire( float vx, float vy );
+	void Fire( float vx, float vy, Player * owner );
 
 	bool IsPlayerControlled() const { return true; }
 	
@@ -49,6 +49,9 @@ private:
 	static const float sSize;
 	static const float sMass;
 	static const float sDamping;
+
+	// The player that fired this bullet
+	Player * m_Owner;
 
 	void OnCollision( Entity& other );
 	

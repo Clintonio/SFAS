@@ -170,7 +170,7 @@ Bullet * Player::Fire( float vx, float vy )
 	if( bullet != 0 )
 	{
 		bullet->SetPosition( GetPosition() + D3DXVECTOR3(vx, vy, 0.0) * sSize );
-		bullet->Fire( vx, vy );
+		bullet->Fire( vx, vy, this );
 	}
 
 	return bullet;

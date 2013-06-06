@@ -17,7 +17,7 @@ using SFAS::States::SummaryState;
 SummaryState::SummaryState(void)
 {
 	SetTitleText( L"GAME OVER" );
-	SetInstructionText( L"Press Any Key To Continue..." );
+	SetInstructionText( L"Click Or Press Any Key To Continue..." );
 }
 
 SummaryState::~SummaryState(void)
@@ -34,5 +34,5 @@ void SummaryState::Setup( int score, int best )
 
 bool SummaryState::Update( const Engine::Input * input, float dt)
 {
-	return input->JustPressed( Engine::Input::kContinue );
+	return input->JustPressed( Engine::Input::kContinue ) || input->HasUserClicked( Engine::Input::Button::MouseButton1);
 }

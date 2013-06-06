@@ -151,9 +151,9 @@ void World::Update( const Engine::Input * input, float dt )
 		for(it = m_EntityList->begin(); m_EntityList->end() != it; it++)
 		{
 			EntityList::iterator innerIt;
-			for(innerIt = m_EntityList->begin(); m_EntityList->end() != innerIt; innerIt++)
+			for(innerIt = it; m_EntityList->end() != innerIt; innerIt++)
 			{
-				if(innerIt != it)
+				if(it != innerIt)
 				{
 					DoCollision((*it).second, (*innerIt).second, dt);
 				}
@@ -180,7 +180,7 @@ void World::NewGame()
 
 bool World::IsGameOver() const
 {
-	if( GetPlayer()->GetLivesRemaining() == 0 )
+	if( GetPlayer()->GetLivesRemaining() <= 0 )
 	{
 		return true;
 	}
@@ -232,7 +232,7 @@ void World::ResetLevel()
 
 bool World::IsLevelFinished() const
 {
-	return ( m_NumActiveEnemies == 0 );
+	return ( m_NumActiveEnemies <= 0 );
 }
 
 bool World::DoCollision( Entity * lh, Entity * rh, float dt )

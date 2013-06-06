@@ -29,13 +29,20 @@ public:
 	Entity( const D3DXVECTOR3& pos, const D3DXVECTOR3& scale, float damping );
 	virtual ~Entity(void);
 
-	struct EntityType {
+	struct EntityType 
+	{
 		EntityType(int type): typeID(type) {}
 
 		const int typeID;
 
-		inline bool operator< (const EntityType rhs)const {
+		inline bool operator< (const EntityType rhs) const 
+		{
 			return (typeID < rhs.typeID);
+		}
+
+		inline bool operator==(const EntityType rhs) const 
+		{
+			return (typeID == rhs.typeID);
 		}
 	};
 

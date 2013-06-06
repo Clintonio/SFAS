@@ -18,7 +18,7 @@ StartState::StartState(void)
 {
 	SetTitleText( L"SEARCH FOR A STAR!" );
 	SetPageText( L"" );
-	SetInstructionText( L"Click or Press Any Key To Continue..." );
+	SetInstructionText( L"Click Or Press Any Key To Continue..." );
 }
 
 StartState::~StartState(void)
