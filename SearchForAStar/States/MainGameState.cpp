@@ -77,6 +77,7 @@ bool MainGameState::Update( const Engine::Input * input, float dt)
 			}
 			else if( m_World.IsGameOver() )
 			{
+				m_World.ClearLevel();
 				gameOver = true;
 			}
 			break;

@@ -159,6 +159,9 @@ void World::Update( const Engine::Input * input, float dt )
 				}
 			}
 		}
+
+		// Determine number of remaining enemies
+		m_NumActiveEnemies = m_EntityList->count(Enemy::kEntityType);
 	}
 	else
 	{
@@ -209,6 +212,12 @@ void World::OpenLevel( int level )
 		Enemy* enemy = new Enemy(pos.x, pos.y);
 		AddEntity(enemy);
 	}
+}
+
+void World::ClearLevel()
+{
+	m_EntityList->erase(Enemy::kEntityType);
+	m_EntityList->erase(Bullet::kEntityType);
 }
 
 void World::ResetLevel()

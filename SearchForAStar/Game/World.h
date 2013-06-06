@@ -46,6 +46,8 @@ public:
 	bool IsGameOver() const;
 	void NextLevel();
 	void ResetLevel();
+	// Erase all existing items in the level
+	void ClearLevel();
 	bool IsLevelFinished() const;
 	int GetCurrentLevel() const { return m_Level; } 
 
