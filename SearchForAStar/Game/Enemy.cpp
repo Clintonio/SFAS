@@ -26,6 +26,7 @@ const Entity::EntityType Enemy::kEntityType(2);
 Enemy::Enemy( float x, float y ) : Entity( D3DXVECTOR3( x, y, 0.0f ), D3DXVECTOR3( sSize, sSize, 0.0f ), sDamping )
 {
 	SetMass( sMass );
+	SetActive(true);
 }
 
 Enemy::~Enemy(void)
@@ -51,8 +52,11 @@ void Enemy::Update( World * world, float dt )
 			AddForce( D3DXVECTOR3( 0.0f, -sSpeed, 0.0f ) );
 			break;
 		case 4:
-			//Player player = FindNearestEntityOfType(Player::kEntityType);
-			//AddForce( DirectionToEntity ( player ));
+			Player * player = (Player*) world->FindNearestEntityOfType( this, Player::kEntityType );
+			if(player != NULL)
+			{
+				AddForce( sSpeed * DirectionToEntity ( player ));
+			}
 			break;
 		}
 	}

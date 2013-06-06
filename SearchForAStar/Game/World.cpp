@@ -15,6 +15,8 @@
 // - Fixed game not reseting on player death
 // - Fixed infinite loop caused by lack of update of iterator pointer when removing inactive bullets
 // - Replaced Entity array system with more flexible entity list
+// - Added helper utilities for entities to find other entities
+// - Added level loading from level descriptor format
 
 #include "World.h"
 #include "Bullet.h"
@@ -24,6 +26,10 @@
 #include "Core/Input.h"
 #include "Graphics/RenderItem.h"
 #include "EntityList.h"
+#include "Level.h"
+
+// Binary level includes
+#include "Levels/Level1.h"
 
 using SFAS::Game::World;
 using SFAS::Game::Entity;
@@ -190,6 +196,19 @@ void World::NextLevel()
 	ResetLevel();
 	player->OnReset();
 	m_NumActiveEnemies = INT_MAX;
+	OpenLevel(m_Level);
+}
+
+void World::OpenLevel( int level )
+{
+	Level l = getLevel1();
+
+	for(unsigned int i = 0; i < l.enemyCount; i++)
+	{
+		D3DXVECTOR3 pos = l.enemies[i].pos;
+		Enemy* enemy = new Enemy(pos.x, pos.y);
+		AddEntity(enemy);
+	}
 }
 
 void World::ResetLevel()
@@ -220,7 +239,7 @@ bool World::DoCollision( Entity * lh, Entity * rh, float dt )
 {
 	bool collision = false;
 
-	if( lh != 0 && rh != 0 && lh->CheckForPossibleCollision( *rh, dt ) && lh->IsActive() && rh->IsActive() )
+	if( lh != 0 && rh != 0 && lh->CheckForPossibleCollision( *rh, dt ) )
 	{
 		if( lh->CheckForCollision( *rh, dt ) )
 		{
@@ -239,10 +258,30 @@ bool World::DoCollision( Entity * lh, Entity * rh, float dt )
 	return collision;
 }
 
-const Player * World::GetPlayer() const { 
+const Player * World::GetPlayer() const 
+{ 
 		return ((Player*) (*m_EntityList->GetAllEntitiesOfType(Player::kEntityType).begin()));
 }
 
-Player * World::GetPlayerHelper() { 
+Player * World::GetPlayerHelper() 
+{ 
 		return ((Player*) (*m_EntityList->GetAllEntitiesOfType(Player::kEntityType).begin()));
+}
+
+const Entity* World::FindNearestEntityOfType( const Entity * origin, const Entity::EntityType &typeID ) const 
+{
+	std::vector<Entity*> entities = m_EntityList->GetAllEntitiesOfType(typeID);
+	Entity* closest = NULL;
+	float minDist = FLT_MAX;
+	for(std::vector<Entity*>::iterator it = entities.begin(); it < entities.end(); it++)
+	{
+		float curDist = origin->DistanceTo(*it);
+		if((NULL == closest) || (curDist < minDist))
+		{
+			minDist = curDist;
+			closest = *it;
+		}
+	}
+
+	return closest;
 }

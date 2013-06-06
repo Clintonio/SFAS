@@ -16,6 +16,9 @@
     <Filter Include="SearchForAStar\States">
       <UniqueIdentifier>{2318bab6-2422-412d-b0c5-9ef199bf5214}</UniqueIdentifier>
     </Filter>
+    <Filter Include="SearchForAStar\Game\Level">
+      <UniqueIdentifier>{5790cc95-9af7-4016-9e6f-1e290ede7ba8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Core\Application.cpp">
@@ -127,6 +130,12 @@
     </ClInclude>
     <ClInclude Include="SearchForAStar\Game\EntityList.h">
       <Filter>SearchForAStar\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="SearchForAStar\Game\Level.h">
+      <Filter>SearchForAStar\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Levels\Level1.h">
+      <Filter>SearchForAStar\Game\Level</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

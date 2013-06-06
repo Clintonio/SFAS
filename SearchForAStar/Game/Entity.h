@@ -68,6 +68,8 @@ public:
 
 	bool CheckForPossibleCollision( const Entity& other, float dt );
 	bool CheckForCollision( const Entity& other, float dt );
+	// Get absolute distance to other entity center
+	const float DistanceTo( const Entity * other) const;
 	
 	float GetMass() const;
 
@@ -99,9 +101,7 @@ protected:
 	static bool Intersection( const D3DXVECTOR3 & p1, const D3DXVECTOR3 & p2, const D3DXVECTOR3 & s1, const D3DXVECTOR3 & s2, D3DXVECTOR3 & contact, float & penetration ); 
 	
 	// Return unit direction to the other entity
-	const D3DXVECTOR3 DirectionToEntity( const Entity & other ) const;
-	// Find the nearest active entity by a given type
-	const Entity* FindNearestEntityOfType( const EntityType &typeID ) const;
+	const D3DXVECTOR3 DirectionToEntity( const Entity * other ) const;
 	// Get the render item for this entity
 	virtual Engine::RenderItem * GetRenderItem() = 0;
 

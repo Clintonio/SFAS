@@ -11,6 +11,8 @@
 
 #include <d3d9.h>
 #include <map>
+#include "Entity.h"
+
 
 // Forward declare
 namespace Engine { class RenderItem; class Input; class TextRenderer; }
@@ -20,8 +22,7 @@ namespace SFAS
 
 namespace Game                  
 {          
-
-class Entity;
+using SFAS::Game::Entity;
 class Wall;
 class Bullet;
 class Player;
@@ -50,11 +51,14 @@ public:
 
 	// Add an entity to the world
 	void AddEntity(Entity* entity);
-
+	// Find the nearest active entity by a given type
+	const Entity* FindNearestEntityOfType( const Entity * origin, const Entity::EntityType &typeID ) const;
 private:
 
 	// None constant private helper accessor for the player
 	Player * GetPlayerHelper();
+	// Open the given level
+	void OpenLevel( int level );
 
 	bool DoCollision( Entity * lh, Entity * rh, float dt );
 

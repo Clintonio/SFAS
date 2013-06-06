@@ -36,10 +36,12 @@
     <ClInclude Include="Graphics\Camera.h" />
     <ClInclude Include="Graphics\RenderItem.h" />
     <ClInclude Include="Graphics\TextRenderer.h" />
+    <ClInclude Include="Levels\Level1.h" />
     <ClInclude Include="SearchForAStar\Game\Bullet.h" />
     <ClInclude Include="SearchForAStar\Game\Enemy.h" />
     <ClInclude Include="SearchForAStar\Game\Entity.h" />
     <ClInclude Include="SearchForAStar\Game\EntityList.h" />
+    <ClInclude Include="SearchForAStar\Game\Level.h" />
     <ClInclude Include="SearchForAStar\Game\Player.h" />
     <ClInclude Include="SearchForAStar\Game\Wall.h" />
     <ClInclude Include="SearchForAStar\Game\World.h" />
