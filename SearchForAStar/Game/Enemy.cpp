@@ -37,7 +37,7 @@ void Enemy::Update( World * world, float dt )
 {
 	if( IsActive() )
 	{
-		switch( rand() % 5 )
+		switch( rand() % 4 )
 		{
 		case 0:
 			AddForce( D3DXVECTOR3( sSpeed, 0.0f, 0.0f ) );
@@ -51,15 +51,14 @@ void Enemy::Update( World * world, float dt )
 		case 3:
 			AddForce( D3DXVECTOR3( 0.0f, -sSpeed, 0.0f ) );
 			break;
-		case 4:
-			Player * player = (Player*) world->FindNearestEntityOfType( this, Player::kEntityType );
-			if(player != NULL)
-			{
-				AddForce( sSpeed * DirectionToEntity ( player ));
-			}
-			break;
+		}
+		Player * player = (Player*) world->FindNearestEntityOfType( this, Player::kEntityType );
+		if(player != NULL)
+		{
+			AddForce( sSpeed * DirectionToEntity ( player ));
 		}
 	}
+
 
 	Entity::Update( world, dt);
 }
