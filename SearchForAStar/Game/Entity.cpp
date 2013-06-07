@@ -16,6 +16,7 @@
 #include "Graphics/RenderItem.h"
 #include "Graphics/TextRenderer.h"
 #include "World.h"
+#include <cmath>
 
 using namespace SFAS::Game;
 
@@ -41,7 +42,8 @@ Entity::Entity( const D3DXVECTOR3& pos, const D3DXVECTOR3& scale, float damping 
 																		m_Friction(0.0f),
 																		m_Tolerance(0.0f),
 																		m_Active(false),
-																		m_Collide(false)
+																		m_Collide(true),
+																		m_RotationAngle(0.0f)
 {
 	m_ID = sHighestID++;
 }
@@ -55,14 +57,16 @@ void Entity::Render( )
 {
 	if( m_Active )
 	{
+		D3DXMATRIX zRot;
 		D3DXMATRIX world;
 		D3DXMATRIX move;
 		D3DXMATRIX scale;
 
+		D3DXMatrixRotationZ(&zRot, m_RotationAngle);
 		D3DXMatrixTranslation( &move, m_Position.x, m_Position.y, m_Position.z );
 		D3DXMatrixScaling( &scale, m_Scale.x, m_Scale.y, m_Scale.z );
 		
-		world = scale * move;
+		world = zRot * scale * move;
 		m_RenderItem->Draw( &world );
 	}
 }
@@ -70,7 +74,7 @@ void Entity::Render( )
 void Entity::RenderDebug( Engine::TextRenderer * txt )
 {
 	WCHAR strBuffer[512];
-	swprintf_s( strBuffer, 512, L"ID %d %s {%f, %f}", m_ID, ToString(), m_Position.x, m_Position.y );
+	swprintf_s( strBuffer, 512, L"ID %d %s {%f, %f}, %f", m_ID, ToString(), m_Position.x, m_Position.y, m_RotationAngle );
 	txt->DrawDebug( strBuffer, 800, 100 + ( m_ID * 10 ), D3DXCOLOR( 1.0f, 1.0f, 1.0f, 1.0f ) );
 }
 
@@ -115,6 +119,16 @@ const D3DXVECTOR3 Entity::DirectionToEntity( const Entity * other ) const
 	return unitDir;
 }
 
+void Entity::FaceDirection( const D3DXVECTOR2 direction )
+{
+	m_RotationAngle = atan2(direction.y, direction.x);
+}
+
+void Entity::FaceDirection( const D3DXVECTOR3 direction )
+{
+	FaceDirection( D3DXVECTOR2( direction.x, direction.y ));
+}
+
 const float Entity::DistanceTo( const Entity * other) const
 {
 	const D3DXVECTOR3 direction = other->GetPosition() - GetPosition();
@@ -147,7 +161,7 @@ bool Entity::CheckForCollision( const Entity& other, float dt )
 	return true;
 }
 
-void Entity::OnCollision( Entity& other )
+void Entity::OnCollision( Entity& other, World * world )
 {
 	// Default behavour
 	SetActive( false );

@@ -78,10 +78,14 @@ public:
 	bool CheckForCollision( const Entity& other, float dt );
 	// Get absolute distance to other entity center
 	const float DistanceTo( const Entity * other) const;
-	
+	// Make this entity face a given direction
+	void FaceDirection( const D3DXVECTOR2 direction );
+	// Make this entity face a given direction, deletes the z component
+	void FaceDirection( const D3DXVECTOR3 direction );
+
 	float GetMass() const;
 
-	virtual void OnCollision( Entity& other );
+	virtual void OnCollision( Entity& other, World * world );
 
 	virtual void OnReset() {
 		m_ForceAccumulator = D3DXVECTOR3( 0.0f, 0.0f, 0.0f );
@@ -89,8 +93,9 @@ public:
 	}
 
 	bool IsMoveable() const { return m_InverseMass > 0.0f; }
-
-	void SetCollidable() { m_Collide = true; }
+	
+	void SetCollidable( const bool collidable ) { m_Collide = collidable; }
+	void SetCollidable( ) { m_Collide = true; }
 	bool IsCollidable() const { return m_Collide; }
 
 	void Resolve(Entity& other, float duration);
@@ -110,6 +115,8 @@ protected:
 
 	static bool Intersection( const D3DXVECTOR3 & p1, const D3DXVECTOR3 & p2, const D3DXVECTOR3 & s1, const D3DXVECTOR3 & s2, D3DXVECTOR3 & contact, float & penetration ); 
 	
+	void SetScale( D3DXVECTOR3 scale ) { m_Scale = scale; }
+
 	// Return unit direction to the other entity
 	const D3DXVECTOR3 DirectionToEntity( const Entity * other ) const;
 	// The render item for this entity
@@ -147,6 +154,7 @@ private:
 	float			m_Penetration;
 	float			m_Friction;
 	float			m_Tolerance;
+	float			m_RotationAngle;
 	int				m_ID;
 	bool			m_Active;
 	bool			m_Collide;

@@ -19,7 +19,7 @@ namespace SFAS
 
 namespace Game                  
 {          
-
+class World;
 
 class Wall : public Entity
 {
@@ -29,17 +29,13 @@ public:
 
 	virtual void Update( float dt );
 	
-	static Engine::RenderItem * sRenderItem;
 	// Get the entity type for this entity
 	const Entity::EntityType GetEntityType() { return kEntityType; }
-protected: 
-	virtual Engine::RenderItem * GetRenderItem() { return sRenderItem; }
-
 private: 
 
 	WCHAR * ToString()  const { return L"Wall"; }
 
-	void OnCollision( Entity& other );
+	void OnCollision( Entity& other, World* world );
 	
 	static const Entity::EntityType kEntityType;
 };

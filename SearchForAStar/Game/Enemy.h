@@ -32,19 +32,14 @@ public:
 	static const float sMass;
 	static const float sDamping;
 
-	static Engine::RenderItem * sRenderItem;
 	static const Entity::EntityType kEntityType;
-	
 	
 	// Get the entity type for this entity
 	const Entity::EntityType GetEntityType() { return kEntityType; }
-protected: 
-	virtual Engine::RenderItem * GetRenderItem() { return sRenderItem; }
 private:
 	WCHAR * ToString()  const { return L"Enemy"; }
 
-	void OnCollision( Entity& other );
-	
+	void OnCollision( Entity& other, World * world );
 };
 }
 }

@@ -31,15 +31,10 @@ public:
 
 	bool IsPlayerControlled() const { return true; }
 	
-	static Engine::RenderItem * sRenderItem;
 	static const Entity::EntityType kEntityType;
 	
 	// Get the entity type for this entity
 	const Entity::EntityType GetEntityType() { return kEntityType; }
-protected: 
-	// Get the render item for this entity
-	virtual Engine::RenderItem * GetRenderItem() { return sRenderItem; }
-
 private: 
 
 	WCHAR * ToString()  const { return L"Bullet"; }
@@ -53,7 +48,7 @@ private:
 	// The player that fired this bullet
 	Player * m_Owner;
 
-	void OnCollision( Entity& other );
+	void OnCollision( Entity& other, World * world );
 	
 };
 }

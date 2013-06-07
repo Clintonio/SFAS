@@ -5,22 +5,22 @@
 // Enemy class that patrols, hurts the player.
 // 
 // Add a summary of your changes here:
-// 
-// 
+// - Made enemy face player
+// - Made enemy explode on death
 // 
 
 #include "Enemy.h"
 #include "Player.h"
 #include "World.h"
+#include "Explosion.h"
 
 using namespace SFAS::Game;
 
-const float Enemy::sSize = 10.0f;
+const float Enemy::sSize = 20.0f;
 const float Enemy::sSpeed = 10000.0f;
 const float Enemy::sMass = 100.0f;
 const float Enemy::sDamping = 0.6f;
 
-Engine::RenderItem * Enemy::sRenderItem = 0;
 const Entity::EntityType Enemy::kEntityType(2);
 
 Enemy::Enemy( float x, float y ) : Entity( D3DXVECTOR3( x, y, 0.0f ), D3DXVECTOR3( sSize, sSize, 0.0f ), sDamping )
@@ -36,39 +36,43 @@ Enemy::~Enemy(void)
 
 void Enemy::Update( World * world, float dt )
 {
-	if( IsActive() )
+	D3DXVECTOR2 direction;
+	Player * player = (Player*) world->FindNearestEntityOfType( this, Player::kEntityType );
+
+	switch( rand() % 4 )
 	{
-		switch( rand() % 4 )
-		{
-		case 0:
-			AddForce( D3DXVECTOR3( sSpeed, 0.0f, 0.0f ) );
-			break;
-		case 1:
-			AddForce( D3DXVECTOR3( 0.0f, sSpeed, 0.0f ) );
-			break;
-		case 2:
-			AddForce( D3DXVECTOR3( -sSpeed, 0.0f, 0.0f ) );
-			break;
-		case 3:
-			AddForce( D3DXVECTOR3( 0.0f, -sSpeed, 0.0f ) );
-			break;
-		}
-		Player * player = (Player*) world->FindNearestEntityOfType( this, Player::kEntityType );
-		if(player != NULL)
-		{
-			AddForce( sSpeed * DirectionToEntity ( player ));
-		}
+	case 0:
+		AddForce( D3DXVECTOR3( sSpeed, 0.0f, 0.0f ) );
+		break;
+	case 1:
+		AddForce( D3DXVECTOR3( 0.0f, sSpeed, 0.0f ) );
+		break;
+	case 2:
+		AddForce( D3DXVECTOR3( -sSpeed, 0.0f, 0.0f ) );
+		break;
+	case 3:
+		AddForce( D3DXVECTOR3( 0.0f, -sSpeed, 0.0f ) );
+		break;
 	}
 
+	if(player != NULL)
+	{
+		AddForce( sSpeed * DirectionToEntity ( player ));
+	}
+
+	FaceDirection(DirectionToEntity ( player ));
 
 	Entity::Update( world, dt);
 }
 
-void Enemy::OnCollision( Entity& other )
+void Enemy::OnCollision( Entity& other, World * world )
 {
 	if( other.IsPlayerControlled() )
 	{
 		// Might be the player might be a player bullet - either way, die.
 		SetActive( false );
+
+		Explosion* explosion = new Explosion(GetPosition(), GetScale() );
+		world->AddEntity( explosion );
 	}
 }

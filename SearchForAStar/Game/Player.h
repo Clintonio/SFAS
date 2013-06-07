@@ -50,25 +50,19 @@ public:
 	int GetLivesRemaining() const { return m_Lives; }
 	void ResetLives( int lives ) { m_Lives = lives; }
 
-	// Override called when a collision is dectected
-	void OnCollision( Entity& other );
 
 	void OnReset();
 	virtual void Update( World * world, float dt );
 
 	bool IsPlayerControlled() const { return true; }
 
-	static Engine::RenderItem * sRenderItem;
 	static const Entity::EntityType kEntityType;
 
 	// Get the entity type for this entity
 	const Entity::EntityType GetEntityType() { return kEntityType; }
-protected: 
-	// Get the render item for this entity
-	virtual Engine::RenderItem * GetRenderItem() { return sRenderItem; }
-
 private:
-
+	// Override called when a collision is dectected
+	void OnCollision( Entity& other, World * world );
 
 	WCHAR * ToString()  const { return L"Player"; }
 

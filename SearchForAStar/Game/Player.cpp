@@ -9,6 +9,9 @@
 // - Added mouse support for firing bullets
 // - Modified bullet logic so that bullet timings are handled internally
 // - Made bullets appear in front of player so that they do not collide with player
+// - Made player face direction of mouse
+// - Made player explode on death
+// - Removed player keyboard controls
 
 #include "Player.h"
 #include "Bullet.h"
@@ -16,6 +19,7 @@
 #include "World.h"
 #include "Core/Input.h"
 #include "Entity.h"
+#include "Explosion.h"
 
 using Engine::Input;
 using namespace SFAS::Game;
@@ -26,7 +30,6 @@ const float Player::sMass		= 100.0f;
 const float Player::sDamping	= 0.39f;
 const float Player::sFireDelay	= 0.1f;
 
-Engine::RenderItem * Player::sRenderItem = 0;
 const Entity::EntityType Player::kEntityType(1);
 
 Player::Player( int lives ) : Entity( D3DXVECTOR3(), D3DXVECTOR3( sSize, sSize, 0.0f ), sDamping ), 
@@ -53,6 +56,11 @@ Player::~Player(void)
 
 void Player::DoInput(World * world, const Engine::Input * input )
 {
+	Bullet * bullet = 0;
+	const D3DXVECTOR2 mouseCoords = input->GetMousePosition(Input::Button::MouseButton1);
+	const D3DXVECTOR2 playerCoords = GetPosition();
+	D3DXVECTOR2 direction;
+
 	// Check for personal best
 	if( m_Score > m_Best )
 	{
@@ -80,45 +88,28 @@ void Player::DoInput(World * world, const Engine::Input * input )
 
 	AddForce(deltaForce);
 
-	Bullet * bullet = 0;
+	direction = (mouseCoords - playerCoords);
+	D3DXVec2Normalize( &direction, &direction);
+	FaceDirection(direction);
+	
 	if( input->IsButtonHeld( Input::Button::MouseButton1 ) ){
-		const D3DXVECTOR2 mouseCoords = input->GetMousePosition(Input::Button::MouseButton1);
-		const D3DXVECTOR2 playerCoords = GetPosition();
-
-		D3DXVECTOR2 direction = (mouseCoords - playerCoords);
-		D3DXVec2Normalize( &direction, &direction);
-
 		bullet = Fire( direction.x, direction.y );
-	}
-	else if( input->Held( Input::kFireUp ) )
-	{
-		bullet = Fire( 0.0f, 1.0f );
-	}
-	else if( input->Held( Input::kFireLeft ) )
-	{
-		bullet = Fire( -1.0f, 0.0f );
-	}
-	else if( input->Held( Input::kFireRight ) )
-	{
-		bullet = Fire( 1.0f, 0.0f );
-	}
-	else if( input->Held( Input::kFireDown ) )
-	{
-		bullet = Fire( 0.0f, -1.0f );
-	}
-
-	if( bullet != NULL )
-	{
-		if( CanFire() )
+		if( bullet != NULL )
 		{
-			world->AddEntity(bullet);
-			m_TimeSinceLastFire = 0;
-		} 
-		else 
-		{
-			bullet->SetActive(false);
+			// CanFire is an expensive operation, so it's faster to load a bullet
+			// first before checking this
+			if( CanFire() )
+			{
+				world->AddEntity(bullet);
+				m_TimeSinceLastFire = 0;
+			} 
+			else 
+			{
+				bullet->SetActive(false);
+			}
 		}
 	}
+
 }
 
 void Player::Update( World * world, float dt ) 
@@ -133,7 +124,7 @@ inline bool Player::CanFire() const
 	return ( sFireDelay < m_TimeSinceLastFire );
 }
 
-void Player::OnCollision( Entity& other )
+void Player::OnCollision( Entity& other, World * world )
 {
 	if( other.IsMoveable() && !other.IsPlayerControlled() )
 	{
@@ -145,6 +136,9 @@ void Player::OnCollision( Entity& other )
 
 		// Default behavour is to die
 		SetActive( false );
+
+		Explosion* e = new Explosion( GetPosition(), GetScale() );
+		world->AddEntity( e );
 	}
 }
 

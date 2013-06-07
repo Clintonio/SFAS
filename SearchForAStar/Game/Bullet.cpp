@@ -16,11 +16,10 @@
 
 using namespace SFAS::Game;
 
-const float Bullet::sSize = 1.0f;
+const float Bullet::sSize = 2.0f;
 const float Bullet::sMass = 0.5f;
 const float Bullet::sDamping = 0.9999f;
 
-Engine::RenderItem * Bullet::sRenderItem = 0;
 const Entity::EntityType Bullet::kEntityType(20);
 
 Bullet::Bullet( ) : Entity( D3DXVECTOR3(), D3DXVECTOR3( sSize, sSize, 0.0f ), sDamping )
@@ -47,7 +46,7 @@ void Bullet::Fire( float vx, float vy, Player * owner )
 	m_Owner = owner;
 }
 
-void Bullet::OnCollision( Entity& other )
+void Bullet::OnCollision( Entity& other, World * world )
 {
 	if( Enemy::kEntityType == other.GetEntityType() )
 	{

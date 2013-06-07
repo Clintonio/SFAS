@@ -239,13 +239,13 @@ bool World::DoCollision( Entity * lh, Entity * rh, float dt )
 		{
 			collision = true;
 
-			if( lh->IsCollidable() )
+			if( lh->IsCollidable() && rh->IsCollidable() )
 			{
 				lh->Resolve( *rh, dt );
+				rh->Resolve( *lh, dt );
+				lh->OnCollision( *rh, this );
+				rh->OnCollision( *lh, this );
 			}
-
-			lh->OnCollision( *rh );
-			rh->OnCollision( *lh );
 		}
 	}
 
