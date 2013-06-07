@@ -75,6 +75,9 @@
     <ClCompile Include="SearchForAStar\Game\EntityList.cpp">
       <Filter>SearchForAStar\Game</Filter>
     </ClCompile>
+    <ClCompile Include="Graphics\TextureLoader.cpp">
+      <Filter>Graphics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Core\Application.h">
@@ -136,6 +139,9 @@
     </ClInclude>
     <ClInclude Include="Levels\Level1.h">
       <Filter>SearchForAStar\Game\Level</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\TextureLoader.h">
+      <Filter>Graphics</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

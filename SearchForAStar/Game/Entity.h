@@ -12,6 +12,7 @@
 #pragma once
 
 #include <d3dx9.h>
+#include "Graphics/TextureLoader.h"
 
 namespace Engine { class RenderItem; class TextRenderer; }
 
@@ -100,6 +101,8 @@ public:
 
 	// Get the entity type for this entity
 	virtual const Entity::EntityType GetEntityType() = 0;
+
+	static void Init(LPDIRECT3DDEVICE9 p_dx_Device, HWND han_Window);
 protected:
 
 	void SetInverseMass( float iv ) { m_InverseMass = iv; }
@@ -109,9 +112,10 @@ protected:
 	
 	// Return unit direction to the other entity
 	const D3DXVECTOR3 DirectionToEntity( const Entity * other ) const;
-	// Get the render item for this entity
-	virtual Engine::RenderItem * GetRenderItem() = 0;
-
+	// The render item for this entity
+	const Engine::RenderItem * m_RenderItem;
+	// The texture loading for render items
+	static Engine::TextureLoader* sTextureLoader;
 private:
 
 	virtual WCHAR * ToString()  const = 0;

@@ -46,15 +46,8 @@ World::World(LPDIRECT3DDEVICE9 p_dx_Device, HWND han_Window, int w, int h) : m_W
 	float windowWidth = (float) w;
 
 	m_EntityList = new EntityList;
-	
-	// Renderable Objects
-	m_Textured = new Engine::RenderItem( p_dx_Device, han_Window, 1.0f );
-	m_Textured->Init();
-	
-	Player::sRenderItem = m_Textured;
-	Wall::sRenderItem = m_Textured;
-	Enemy::sRenderItem = m_Textured;
-	Bullet::sRenderItem = m_Textured;
+
+	Entity::Init(p_dx_Device, han_Window);
 
 	// Player Object
 	Player * player = new Player(  kePlayerLives );
@@ -81,8 +74,6 @@ World::World(LPDIRECT3DDEVICE9 p_dx_Device, HWND han_Window, int w, int h) : m_W
 World::~World(void)
 {
 	delete m_EntityList;
-
-	delete m_Textured;
 }
 
 void World::AddEntity(Entity* entity) 

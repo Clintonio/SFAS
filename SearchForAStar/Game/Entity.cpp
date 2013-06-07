@@ -20,6 +20,7 @@
 using namespace SFAS::Game;
 
 int Entity::sHighestID = 0;
+Engine::TextureLoader* Entity::sTextureLoader = 0;
 
 Entity::Entity( const D3DXVECTOR3& pos, const D3DXVECTOR3& scale, float damping ) : m_Position(pos), 
 																		m_Velocity( 0.0f, 0.0f, 0.0f ), 
@@ -62,7 +63,7 @@ void Entity::Render( )
 		D3DXMatrixScaling( &scale, m_Scale.x, m_Scale.y, m_Scale.z );
 		
 		world = scale * move;
-		GetRenderItem()->Draw( &world );
+		m_RenderItem->Draw( &world );
 	}
 }
 
@@ -200,3 +201,7 @@ void Entity::Resolve(Entity& other, float duration)
 	m_Velocity = m_Velocity * -1.0f;
 }
 
+void Entity::Init(LPDIRECT3DDEVICE9 p_dx_Device, HWND han_Window)
+{
+	sTextureLoader = new Engine::TextureLoader(p_dx_Device, han_Window);
+}

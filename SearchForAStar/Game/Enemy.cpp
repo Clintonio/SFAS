@@ -27,6 +27,7 @@ Enemy::Enemy( float x, float y ) : Entity( D3DXVECTOR3( x, y, 0.0f ), D3DXVECTOR
 {
 	SetMass( sMass );
 	SetActive(true);
+	m_RenderItem = sTextureLoader->LoadTexturedRenderItem(L"textures/enemy.png", 1.0f);
 }
 
 Enemy::~Enemy(void)

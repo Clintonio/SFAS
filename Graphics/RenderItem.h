@@ -10,18 +10,19 @@
 // 
 #pragma once
 
-#include <d3d9.h>
+#include <d3d9.h> 
+#include <d3dx9.h> 
+#include <string>
 
 namespace Engine
 {
 
 class RenderItem
 {
-	const static DWORD kFVFState = D3DFVF_XYZ | D3DFVF_DIFFUSE | D3DFVF_TEX1;
+	const static DWORD kFVFState = D3DFVF_XYZ | D3DFVF_TEX1;
 
 	struct VertexPosTex {
 		float x, y, z;
-		DWORD colour;
 		float tu,tv;
 	};
 
@@ -29,9 +30,9 @@ public:
 	RenderItem(LPDIRECT3DDEVICE9 p_dx_Device, HWND han_Window, float size);
 	virtual ~RenderItem(void);
 
-	void Init();
-	void Draw();
-	void Draw( const D3DMATRIX * pWorld );
+	void Init(const std::wstring textureFile);
+	void Draw() const;
+	void Draw( const D3DMATRIX * pWorld ) const;
 
 protected:
 	D3DXMATRIX m_World;

@@ -26,6 +26,7 @@ const Entity::EntityType Bullet::kEntityType(20);
 Bullet::Bullet( ) : Entity( D3DXVECTOR3(), D3DXVECTOR3( sSize, sSize, 0.0f ), sDamping )
 {
 	SetMass( sMass );
+	m_RenderItem = sTextureLoader->LoadTexturedRenderItem(L"textures/bullet.png", 1.0f);
 }
 
 void Bullet::Update( World * world, float dt )

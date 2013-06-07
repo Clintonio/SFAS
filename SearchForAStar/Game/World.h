@@ -6,7 +6,8 @@
 // 
 // Add a summary of your changes here:
 // - Replaced entity system with more flexible entity list
-// 
+// - Moved loading of render items to the individual entities
+
 #pragma once
 
 #include <d3d9.h>
@@ -66,7 +67,6 @@ private:
 
 	enum { kePlayerLives = 3, keNumLevels = 10, keHitScore = 100 };
 
-	Engine::RenderItem *	m_Textured;
 	EntityList *			m_EntityList;
 
 	float					m_Width;

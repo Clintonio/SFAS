@@ -38,6 +38,8 @@ Player::Player( int lives ) : Entity( D3DXVECTOR3(), D3DXVECTOR3( sSize, sSize, 
 	{
 		m_Bullets[count] = new Bullet( );
 	}
+
+	m_RenderItem = sTextureLoader->LoadTexturedRenderItem(L"textures/player.png", 1.0f);
 }
 
 Player::~Player(void)
