@@ -107,7 +107,7 @@ public:
 	// Get the entity type for this entity
 	virtual const Entity::EntityType GetEntityType() = 0;
 
-	static void Init(LPDIRECT3DDEVICE9 p_dx_Device, HWND han_Window);
+	static void Init(LPDIRECT3DDEVICE9 p_dx_Device);
 protected:
 
 	void SetInverseMass( float iv ) { m_InverseMass = iv; }

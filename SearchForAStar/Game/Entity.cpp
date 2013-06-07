@@ -7,7 +7,7 @@
 // Add a summary of your changes here:
 // - Improved code in CheckForCollision by making it fit coding standards more
 // - Improved collision functionality by making the checks use the full bounding box
-// 
+// - Improved collision support by making collision inelastic.
 
 #include "Entity.h"
 
@@ -211,11 +211,32 @@ float Entity::GetMass() const
 
 void Entity::Resolve(Entity& other, float duration)
 {
-	m_Contact = &other;
-	m_Velocity = m_Velocity * -1.0f;
+	float massA = GetMass();
+	float massB = other.GetMass();
+	D3DXVECTOR3 velA = GetVelocity();
+	D3DXVECTOR3 velB = other.GetVelocity();
+
+	// Calculate momentum changes for BOTH parties.
+	// Info: http://en.wikipedia.org/wiki/Inelastic_collision
+	float coeffOfRestitution = 0.5f;
+	float nominatorXA = coeffOfRestitution * massB * (velB.x - velA.x) + massA*velA.x + massB*velB.x;
+	float nominatorYA = coeffOfRestitution * massB * (velB.y - velA.y) + massA*velA.y + massB*velB.y;
+	float nominatorXB = coeffOfRestitution * massA * (velA.x - velB.x) + massA*velA.x + massB*velB.x;
+	float nominatorYB = coeffOfRestitution * massA * (velA.y - velB.y) + massA*velA.y + massB*velB.y;
+	float denominator = massA + massB;
+
+	m_Velocity.x = nominatorXA / denominator;
+	m_Velocity.y = nominatorYA / denominator;
+	m_Velocity.z = 0;
+
+	other.SetVelocity(D3DXVECTOR3(
+		nominatorXB / denominator, 
+		nominatorYB / denominator, 
+		0
+	));
 }
 
-void Entity::Init(LPDIRECT3DDEVICE9 p_dx_Device, HWND han_Window)
+void Entity::Init(LPDIRECT3DDEVICE9 p_dx_Device)
 {
-	sTextureLoader = new Engine::TextureLoader(p_dx_Device, han_Window);
+	sTextureLoader = new Engine::TextureLoader(p_dx_Device);
 }

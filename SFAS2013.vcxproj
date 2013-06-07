@@ -15,6 +15,7 @@
     <ClCompile Include="Core\Input.cpp" />
     <ClCompile Include="Graphics\Camera.cpp" />
     <ClCompile Include="Graphics\RenderItem.cpp" />
+    <ClCompile Include="Graphics\SkyBox.cpp" />
     <ClCompile Include="Graphics\TextRenderer.cpp" />
     <ClCompile Include="Graphics\TextureLoader.cpp" />
     <ClCompile Include="SearchForAStar\Game\Bullet.cpp" />
@@ -37,6 +38,7 @@
     <ClInclude Include="Core\Input.h" />
     <ClInclude Include="Graphics\Camera.h" />
     <ClInclude Include="Graphics\RenderItem.h" />
+    <ClInclude Include="Graphics\SkyBox.h" />
     <ClInclude Include="Graphics\TextRenderer.h" />
     <ClInclude Include="Graphics\TextureLoader.h" />
     <ClInclude Include="Levels\Level1.h" />

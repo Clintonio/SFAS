@@ -16,7 +16,7 @@
 
 
 // Forward declare
-namespace Engine { class RenderItem; class Input; class TextRenderer; }
+namespace Engine { class RenderItem; class Input; class TextRenderer; class SkyBox; }
 
 namespace SFAS
 {
@@ -68,6 +68,7 @@ private:
 	enum { kePlayerLives = 3, keNumLevels = 10, keHitScore = 100 };
 
 	EntityList *			m_EntityList;
+	Engine::SkyBox *		m_SkyBox;
 
 	float					m_Width;
 	float					m_Height;

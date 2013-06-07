@@ -126,7 +126,7 @@ inline bool Player::CanFire() const
 
 void Player::OnCollision( Entity& other, World * world )
 {
-	if( other.IsMoveable() && !other.IsPlayerControlled() )
+	if( other.IsMoveable() || !other.IsPlayerControlled() )
 	{
 		// Lost a life
 		m_Lives--;

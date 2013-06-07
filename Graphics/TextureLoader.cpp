@@ -3,8 +3,8 @@
 
 using namespace Engine;
 
-TextureLoader::TextureLoader(LPDIRECT3DDEVICE9 p_dx_device, HWND han_Window) 
-	:  m_Window(han_Window), m_pDxDevice(p_dx_device)
+TextureLoader::TextureLoader(LPDIRECT3DDEVICE9 p_dx_device) 
+	: m_pDxDevice(p_dx_device)
 {
 
 }
@@ -32,7 +32,7 @@ RenderItem* TextureLoader::LoadTexturedRenderItem(const std::wstring texture, fl
 	}
 	else
 	{
-		item = new RenderItem(m_pDxDevice, m_Window, size);
+		item = new RenderItem(m_pDxDevice);
 		item->Init(texture);
 		m_RenderItems.insert(std::pair<const std::wstring, RenderItem*>(texture, item));
 	}

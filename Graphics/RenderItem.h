@@ -28,7 +28,7 @@ class RenderItem
 	};
 
 public:
-	RenderItem(LPDIRECT3DDEVICE9 p_dx_Device, HWND han_Window, float size);
+	RenderItem(LPDIRECT3DDEVICE9 p_dx_Device);
 	virtual ~RenderItem(void);
 
 	void Init(const std::wstring textureFile);
@@ -43,9 +43,7 @@ private:
 	void FillIndices();
 
 	VertexPosTex cv_Vertices[4];
-	float m_Size;
 	short s_Indices[6];
-	HWND m_Window;
 	LPDIRECT3DDEVICE9 m_pDxDevice;
 	LPDIRECT3DVERTEXBUFFER9 p_dx_VertexBuffer;
 	LPDIRECT3DINDEXBUFFER9 p_dx_IndexBuffer;

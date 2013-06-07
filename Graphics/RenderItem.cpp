@@ -14,8 +14,8 @@
 
 using Engine::RenderItem;
 
-RenderItem::RenderItem(LPDIRECT3DDEVICE9 p_dx_device, HWND han_Window, float size) : 
-	m_Size(size), m_Window(han_Window), m_pDxDevice(p_dx_device), p_dx_VertexBuffer(0), p_dx_IndexBuffer(0), flt_Angle(0)
+RenderItem::RenderItem(LPDIRECT3DDEVICE9 p_dx_device) : 
+	m_pDxDevice(p_dx_device), p_dx_VertexBuffer(0), p_dx_IndexBuffer(0), flt_Angle(0)
 {
 	D3DXMatrixIdentity( &m_World );
 }
@@ -92,7 +92,7 @@ void RenderItem::Draw( const D3DMATRIX * pWorld ) const
 
 void RenderItem::FillVertices()
 {
-	const float half_size = m_Size * 0.5f;
+	const float half_size = 0.5f;
 	// Top right
 	cv_Vertices[0].x = half_size;
 	cv_Vertices[0].y = half_size;

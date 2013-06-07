@@ -1,4 +1,4 @@
-//
+//	
 // Source files for Search For A Star competition
 // Copyright (c) 2013 L. Attwood
 //
@@ -17,6 +17,7 @@
 // - Replaced Entity array system with more flexible entity list
 // - Added helper utilities for entities to find other entities
 // - Added level loading from level descriptor format
+// - Added a skybox
 
 #include "World.h"
 #include "Bullet.h"
@@ -27,6 +28,8 @@
 #include "Graphics/RenderItem.h"
 #include "EntityList.h"
 #include "Level.h"
+#include "Graphics/SkyBox.h"
+#include "Explosion.h"
 
 // Binary level includes
 #include "Levels/Level1.h"
@@ -47,7 +50,7 @@ World::World(LPDIRECT3DDEVICE9 p_dx_Device, HWND han_Window, int w, int h) : m_W
 
 	m_EntityList = new EntityList;
 
-	Entity::Init(p_dx_Device, han_Window);
+	Entity::Init(p_dx_Device);
 
 	// Player Object
 	Player * player = new Player(  kePlayerLives );
@@ -69,11 +72,15 @@ World::World(LPDIRECT3DDEVICE9 p_dx_Device, HWND han_Window, int w, int h) : m_W
 	m_EntityList->insert(wall2);
 	m_EntityList->insert(wall3);
 	m_EntityList->insert(wall4);
+
+	m_SkyBox = new Engine::SkyBox(p_dx_Device, w, h);
+	m_SkyBox->Init(L"textures/skybox.png");
 }
 
 World::~World(void)
 {
 	delete m_EntityList;
+	delete m_SkyBox;
 }
 
 void World::AddEntity(Entity* entity) 
@@ -83,6 +90,7 @@ void World::AddEntity(Entity* entity)
 
 void World::Render( float dt )
 {
+	m_SkyBox->Render();
 	EntityList::iterator it;
 	// Render all items
 	for(it = m_EntityList->begin(); m_EntityList->end() != it; it++)
@@ -203,6 +211,7 @@ void World::ClearLevel()
 {
 	m_EntityList->erase(Enemy::kEntityType);
 	m_EntityList->erase(Bullet::kEntityType);
+	m_EntityList->erase(Explosion::kEntityType);
 }
 
 void World::ResetLevel()
@@ -233,7 +242,7 @@ bool World::DoCollision( Entity * lh, Entity * rh, float dt )
 {
 	bool collision = false;
 
-	if( lh != 0 && rh != 0 && lh->CheckForPossibleCollision( *rh, dt ) )
+	if( lh->CheckForPossibleCollision( *rh, dt ) )
 	{
 		if( lh->CheckForCollision( *rh, dt ) )
 		{
@@ -242,7 +251,6 @@ bool World::DoCollision( Entity * lh, Entity * rh, float dt )
 			if( lh->IsCollidable() && rh->IsCollidable() )
 			{
 				lh->Resolve( *rh, dt );
-				rh->Resolve( *lh, dt );
 				lh->OnCollision( *rh, this );
 				rh->OnCollision( *lh, this );
 			}
