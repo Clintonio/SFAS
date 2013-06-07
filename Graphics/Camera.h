@@ -5,7 +5,7 @@
 // The camera class pretty basic position and target affair.
 // 
 // Add a summary of your changes here:
-// 
+// - Added initialisation function
 // 
 // 
 #pragma once
@@ -19,7 +19,8 @@ public:
 	Camera( float w, float h );
 	virtual ~Camera(void);
 
-	void Update( LPDIRECT3DDEVICE9 p_dx_Device); 
+	void Camera::Init( LPDIRECT3DDEVICE9 p_dx_Device );
+	void Update( LPDIRECT3DDEVICE9 p_dx_Device ); 
 
 private:
 

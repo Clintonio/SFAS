@@ -21,7 +21,7 @@ using Engine::Input;
 using namespace SFAS::Game;
 
 const float Player::sMoveForce	= 8000.0f;
-const float Player::sSize		= 10.0f;
+const float Player::sSize		= 20.0f;
 const float Player::sMass		= 100.0f;
 const float Player::sDamping	= 0.39f;
 const float Player::sFireDelay	= 0.1f;

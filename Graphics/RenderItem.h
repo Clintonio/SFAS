@@ -19,10 +19,11 @@ namespace Engine
 
 class RenderItem
 {
-	const static DWORD kFVFState = D3DFVF_XYZ | D3DFVF_TEX1;
+	const static DWORD kFVFState = D3DFVF_XYZ | D3DFVF_DIFFUSE | D3DFVF_TEX1;
 
 	struct VertexPosTex {
 		float x, y, z;
+		DWORD colour;
 		float tu,tv;
 	};
 

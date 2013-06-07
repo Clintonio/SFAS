@@ -6,7 +6,7 @@
 // 
 // Add a summary of your changes here:
 // - Disabled 3D lighting due to lack of lighting source
-// 
+// - Added initialisation function to handle several of the render states
 // 
 
 #include <d3d9.h> 
@@ -24,6 +24,21 @@ Camera::~Camera(void)
 {
 }
 
+void Camera::Init( LPDIRECT3DDEVICE9 p_dx_Device )
+{
+	p_dx_Device->SetRenderState(D3DRS_LIGHTING, false);
+	p_dx_Device->SetRenderState(D3DRS_ZENABLE, true );
+
+	// Setting up blending and transparency
+	p_dx_Device->SetRenderState(D3DRS_ALPHABLENDENABLE, true);
+	p_dx_Device->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
+	p_dx_Device->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
+	p_dx_Device->SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_GREATEREQUAL);
+	p_dx_Device->SetRenderState(D3DRS_ALPHAREF, (DWORD)50);
+	p_dx_Device->SetRenderState(D3DRS_ALPHATESTENABLE, 1);
+	p_dx_Device->SetRenderState(D3DRS_BLENDOP, D3DBLENDOP_ADD);
+}
+
 void Camera::Update( LPDIRECT3DDEVICE9 p_dx_Device )
 {
 	D3DXMatrixLookAtLH(&m_View, &m_EyePos, &m_TargetPos, &m_UpVector);
@@ -31,9 +46,6 @@ void Camera::Update( LPDIRECT3DDEVICE9 p_dx_Device )
 
 	D3DXMatrixOrthoLH(&m_Projection, m_Width, m_Height, 1, 200);
 	p_dx_Device->SetTransform(D3DTS_PROJECTION, &m_Projection);
-
-	p_dx_Device->SetRenderState(D3DRS_LIGHTING, false);
-	p_dx_Device->SetRenderState( D3DRS_ZENABLE, true );
 }
 
 

@@ -36,6 +36,8 @@ SearchForAStar::SearchForAStar(WNDPROC proc) : Application(L"SearchForAStar", L"
 	m_StateArray[keGame] = new States::MainGameState( GetDevice(), GetWindow(), keScreenWidth, keScreenHeight );
 	m_StateArray[keGameOver] = new States::SummaryState();
 	m_StateArray[keOptions] = new States::OptionsState();
+	
+	m_Camera.Init( GetDevice() );
 }
 
 SearchForAStar::~SearchForAStar(void)

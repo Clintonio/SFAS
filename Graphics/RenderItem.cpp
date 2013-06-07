@@ -7,7 +7,7 @@
 // Add a summary of your changes here:
 // 
 // - Fixed vertex rendering by correcting render order and a missing negative on vertex 1
-// - Added texture rendering
+// - Added texture rendering with alpha blending
 
 #include "RenderItem.h"
 #include <string>
@@ -66,9 +66,13 @@ void RenderItem::Init(const std::wstring textureFile)
 		throw std::runtime_error("Error trying to open texture file");
 	} 
 
-	m_pDxDevice->SetTextureStageState(0,D3DTSS_COLOROP,D3DTOP_SELECTARG1);
-	m_pDxDevice->SetTextureStageState(0,D3DTSS_COLORARG1,D3DTA_TEXTURE);
-	m_pDxDevice->SetTextureStageState(0,D3DTSS_COLORARG2,D3DTA_DIFFUSE);
+	m_pDxDevice->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_MODULATE);
+	m_pDxDevice->SetTextureStageState(0, D3DTSS_COLORARG1, D3DTA_TEXTURE);
+	m_pDxDevice->SetTextureStageState(0, D3DTSS_COLORARG2, D3DTA_DIFFUSE);
+	//Set the alpha to come completely from the diffuse component
+	m_pDxDevice->SetTextureStageState(0,D3DTSS_ALPHAOP, D3DTOP_MODULATE);
+	m_pDxDevice->SetTextureStageState(0,D3DTSS_ALPHAARG1,D3DTA_DIFFUSE);
+	m_pDxDevice->SetTextureStageState(0,D3DTSS_ALPHAARG2,D3DTA_TEXTURE);   //Ignored
 }
 
 void RenderItem::Draw() const
@@ -93,6 +97,7 @@ void RenderItem::FillVertices()
 	cv_Vertices[0].x = half_size;
 	cv_Vertices[0].y = half_size;
 	cv_Vertices[0].z = 0.0f;
+	cv_Vertices[0].colour = 0xFFFFFFFF;
 	cv_Vertices[0].tu = 1.0f;
 	cv_Vertices[0].tv = 0.0f;
 
@@ -100,6 +105,7 @@ void RenderItem::FillVertices()
 	cv_Vertices[1].x = -half_size;
 	cv_Vertices[1].y = half_size;
 	cv_Vertices[1].z = 0.0f;
+	cv_Vertices[0].colour = 0xFFFFFFFF;
 	cv_Vertices[1].tu = 0.0f;
 	cv_Vertices[1].tv = 0.0f;
 
@@ -107,6 +113,7 @@ void RenderItem::FillVertices()
 	cv_Vertices[2].x = -half_size;
 	cv_Vertices[2].y = -half_size;
 	cv_Vertices[2].z = 0.0f;
+	cv_Vertices[0].colour = 0xFFFFFFFF;
 	cv_Vertices[2].tu = 0.0f;
 	cv_Vertices[2].tv = 1.0f;
 
@@ -114,6 +121,7 @@ void RenderItem::FillVertices()
 	cv_Vertices[3].x = half_size;
 	cv_Vertices[3].y = -half_size;
 	cv_Vertices[3].z = 0.0f;
+	cv_Vertices[0].colour = 0xFFFFFFFF;
 	cv_Vertices[3].tu = 1.0f;
 	cv_Vertices[3].tv = 1.0f;
 }
