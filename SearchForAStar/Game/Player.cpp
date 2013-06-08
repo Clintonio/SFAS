@@ -134,11 +134,17 @@ void Player::DoInput(World * world, const Engine::Input * input )
 void Player::LoadSounds(Engine::SoundProvider* soundProvider)
 {
 	Engine::Sound* bulletSound = soundProvider->CreateSoundBufferFromFile("Sound/laser1.wav");
+	Engine::Sound* explosionSound = soundProvider->CreateSoundBufferFromFile("Sound/player-explosion.wav");
 	if( bulletSound != 0 )
 	{
 		m_BulletSound = bulletSound;
 	}
 
+	if( explosionSound != 0 )
+	{
+		m_ExplosionSound = explosionSound;
+		m_ExplosionSound->SetVolume(0.7f);
+	}
 }
 
 void Player::Update( World * world, float dt ) 
@@ -168,6 +174,11 @@ void Player::OnCollision( Entity& other, World * world )
 
 		Explosion* e = new Explosion( GetPosition(), GetScale() );
 		world->AddEntity( e );
+
+		if( m_ExplosionSound != 0 )
+		{
+			m_ExplosionSound->PlaySoundFromStart();
+		}
 	}
 }
 

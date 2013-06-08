@@ -100,10 +100,11 @@ bool SoundProvider::LoadWaveFile(const char* filename, LPDIRECTSOUNDBUFFER& buff
 	GetWaveFormat(waveFileHeader, waveFormat);
 	
 	bufferDesc.dwSize = sizeof(DSBUFFERDESC);
-	bufferDesc.dwFlags = DSBCAPS_CTRLVOLUME | DSBCAPS_GLOBALFOCUS | DSBCAPS_CTRLPAN;
+	bufferDesc.dwFlags =  DSBCAPS_CTRLFX | DSBCAPS_CTRLVOLUME | DSBCAPS_GLOBALFOCUS | DSBCAPS_CTRLFREQUENCY | DSBCAPS_CTRLPAN;
 	bufferDesc.dwBufferBytes = DSBSIZE_MAX;
 	bufferDesc.dwReserved = 0;
 	bufferDesc.lpwfxFormat = &waveFormat;
+	bufferDesc.guid3DAlgorithm = DS3DALG_DEFAULT;
 
 	waveData = new unsigned char[waveFileHeader.dataSize];
 	fseek(filePtr, sizeof(WaveHeaderType), SEEK_SET);

@@ -11,6 +11,8 @@ class Sound
 public:
 	Sound(LPDIRECTSOUNDBUFFER buffer);
 	~Sound();
+	// Set the volume
+	bool SetVolume( const float volume );
 	
 	bool PlaySoundFromStart();
 private:
