@@ -7,12 +7,14 @@ using SFAS::Game::Level;
 Level getLevel1() {
 	Level::EnemyType* enemyTypes = new Level::EnemyType[2];
 	enemyTypes[0].id = 0;
+	enemyTypes[0].health = 1;
 	enemyTypes[0].aiType = "suicide";
 	enemyTypes[0].weapon = "none";
 	enemyTypes[0].dimensions = D3DXVECTOR3(20.0f, 20.0f, 0.0f);
 	enemyTypes[0].textureFile = L"textures/enemy.png";
 
 	enemyTypes[1].id = 0;
+	enemyTypes[1].health = 3;
 	enemyTypes[1].aiType = "avoid";
 	enemyTypes[1].weapon = "laser";
 	enemyTypes[1].dimensions = D3DXVECTOR3(30.0f, 30.0f, 0.0f);

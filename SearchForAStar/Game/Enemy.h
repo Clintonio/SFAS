@@ -70,6 +70,7 @@ private:
 	Weapon		m_WeaponType;
 	AIRoutine	m_AIRoutine;
 	float		m_LastFireTime;
+	int			m_Health;
 
 	static Engine::Sound* sExplosionSound;
 };

@@ -15,6 +15,7 @@ struct Level
 	struct EnemyType 
 	{
 		unsigned int id;
+		int health;
 		std::string aiType;
 		std::string weapon;
 		D3DXVECTOR3 dimensions;

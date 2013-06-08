@@ -36,6 +36,7 @@ Enemy::Enemy( Level::EnemyType & type, float x, float y ) :
 	SetActive(true);
 	SetWeapon( type.weapon );
 	SetAIRoutine( type.aiType );
+	m_Health = type.health;
 	m_RenderItem = sTextureLoader->LoadTexturedRenderItem(type.textureFile, 1.0f);
 }
 
@@ -122,15 +123,19 @@ bool Enemy::OnCollision( Entity& other, World * world )
 {
 	if( other.IsPlayerControlled() )
 	{
-		// Might be the player might be a player bullet - either way, die.
-		SetActive( false );
-
-		Explosion* explosion = new Explosion(GetPosition(), GetScale() );
-		world->AddEntity( explosion );
-
-		if( sExplosionSound != 0 )
+		m_Health--;
+		if( m_Health <= 0 ) 
 		{
-			sExplosionSound->PlaySoundFromStart();
+			// Might be the player might be a player bullet - either way, die.
+			SetActive( false );
+
+			Explosion* explosion = new Explosion(GetPosition(), GetScale() );
+			world->AddEntity( explosion );
+
+			if( sExplosionSound != 0 )
+			{
+				sExplosionSound->PlaySoundFromStart();
+			}
 		}
 	}
 
