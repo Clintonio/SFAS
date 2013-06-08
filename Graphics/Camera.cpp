@@ -28,15 +28,16 @@ void Camera::Init( LPDIRECT3DDEVICE9 p_dx_Device )
 {
 	p_dx_Device->SetRenderState(D3DRS_LIGHTING, false);
 	p_dx_Device->SetRenderState(D3DRS_ZENABLE, true );
+	p_dx_Device->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
 
 	// Setting up blending and transparency
 	p_dx_Device->SetRenderState(D3DRS_ALPHABLENDENABLE, true);
 	p_dx_Device->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
 	p_dx_Device->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
-	p_dx_Device->SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_GREATEREQUAL);
+	/*p_dx_Device->SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_GREATEREQUAL);
 	p_dx_Device->SetRenderState(D3DRS_ALPHAREF, (DWORD)50);
 	p_dx_Device->SetRenderState(D3DRS_ALPHATESTENABLE, 1);
-	p_dx_Device->SetRenderState(D3DRS_BLENDOP, D3DBLENDOP_ADD);
+	p_dx_Device->SetRenderState(D3DRS_BLENDOP, D3DBLENDOP_ADD);*/
 }
 
 void Camera::Update( LPDIRECT3DDEVICE9 p_dx_Device )

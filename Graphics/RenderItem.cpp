@@ -66,13 +66,13 @@ void RenderItem::Init(const std::wstring textureFile)
 		throw std::runtime_error("Error trying to open texture file");
 	} 
 
-	m_pDxDevice->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_MODULATE);
+	m_pDxDevice->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_SELECTARG1);
 	m_pDxDevice->SetTextureStageState(0, D3DTSS_COLORARG1, D3DTA_TEXTURE);
 	m_pDxDevice->SetTextureStageState(0, D3DTSS_COLORARG2, D3DTA_DIFFUSE);
 	//Set the alpha to come completely from the diffuse component
-	m_pDxDevice->SetTextureStageState(0,D3DTSS_ALPHAOP, D3DTOP_MODULATE);
+	m_pDxDevice->SetTextureStageState(0,D3DTSS_ALPHAOP, D3DTOP_SELECTARG2);
 	m_pDxDevice->SetTextureStageState(0,D3DTSS_ALPHAARG1,D3DTA_DIFFUSE);
-	m_pDxDevice->SetTextureStageState(0,D3DTSS_ALPHAARG2,D3DTA_TEXTURE);   //Ignored
+	m_pDxDevice->SetTextureStageState(0,D3DTSS_ALPHAARG2,D3DTA_TEXTURE);
 }
 
 void RenderItem::Draw() const
