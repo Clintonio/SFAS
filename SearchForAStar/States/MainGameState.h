@@ -14,6 +14,7 @@
 #include "GameStateBase.h"
 #include "SearchForAStar/Game/World.h"
 #include "SearchForAStar/Game/Player.h"
+#include "Graphics/RenderItem.h"
 
 namespace SFAS
 {
@@ -53,9 +54,11 @@ private:
 
 	enum { keMessageDisplayTime = 1 };
 
-	State		m_GameState;
-	Game::World	m_World;
-	float		m_TimeSinceStateChange;
+	State				m_GameState;
+	Game::World			m_World;
+	float				m_TimeSinceStateChange;
+	Engine::RenderItem	m_Cursor;
+	D3DXVECTOR2			m_PlayerMousePosition;
 };
 }
 }

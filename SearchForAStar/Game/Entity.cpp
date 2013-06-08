@@ -8,6 +8,7 @@
 // - Improved code in CheckForCollision by making it fit coding standards more
 // - Improved collision functionality by making the checks use the full bounding box
 // - Improved collision support by making collision inelastic.
+// - Moved rendering code to render item
 
 #include "Entity.h"
 
@@ -57,17 +58,7 @@ void Entity::Render( )
 {
 	if( m_Active )
 	{
-		D3DXMATRIX zRot;
-		D3DXMATRIX world;
-		D3DXMATRIX move;
-		D3DXMATRIX scale;
-
-		D3DXMatrixRotationZ(&zRot, m_RotationAngle);
-		D3DXMatrixTranslation( &move, m_Position.x, m_Position.y, m_Position.z );
-		D3DXMatrixScaling( &scale, m_Scale.x, m_Scale.y, m_Scale.z );
-		
-		world = zRot * scale * move;
-		m_RenderItem->Draw( &world );
+		m_RenderItem->Draw( m_Position, m_Scale, m_RotationAngle );
 	}
 }
 

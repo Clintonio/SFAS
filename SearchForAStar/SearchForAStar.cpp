@@ -8,6 +8,7 @@
 // - Fixed the fuction definition for the window procedure.
 // - Added mouse capture functionality
 // - Mapped windows cancel message to the escape key
+// - Hidden mouse cursor during execution with an internal crosshair icon to represent it in gameplay
 
 #include "SearchForAStar.h"
 #include "SearchForAStar/States/StartState.h"
@@ -38,6 +39,7 @@ SearchForAStar::SearchForAStar(WNDPROC proc) : Application(L"SearchForAStar", L"
 		m_StateArray[keGameOver] = new States::SummaryState();
 		m_StateArray[keOptions] = new States::OptionsState();
 		m_Camera.Init( GetDevice() );
+		ShowCursor( FALSE );
 	} 
 	catch (std::runtime_error e)
 	{

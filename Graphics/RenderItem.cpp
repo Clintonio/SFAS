@@ -8,6 +8,7 @@
 // 
 // - Fixed vertex rendering by correcting render order and a missing negative on vertex 1
 // - Added texture rendering with alpha blending
+// - Moved matrix calculations to this method
 
 #include "RenderItem.h"
 #include <string>
@@ -18,11 +19,15 @@ RenderItem::RenderItem(LPDIRECT3DDEVICE9 p_dx_device) :
 	m_pDxDevice(p_dx_device), p_dx_VertexBuffer(0), p_dx_IndexBuffer(0), flt_Angle(0)
 {
 	D3DXMatrixIdentity( &m_World );
+	m_Texture = 0;
 }
 
 RenderItem::~RenderItem(void)
 {
-	m_Texture->Release();
+	if( m_Texture != 0 )
+	{
+		m_Texture->Release();
+	}
 }
 
 void RenderItem::Init(const std::wstring textureFile)
@@ -78,6 +83,31 @@ void RenderItem::Init(const std::wstring textureFile)
 void RenderItem::Draw() const
 {
 	Draw(&m_World);
+}
+
+void RenderItem::Draw(D3DXVECTOR3 & translation) const
+{
+	Draw( translation, D3DXVECTOR3(1,1,1) );
+}
+
+void RenderItem::Draw(D3DXVECTOR3 & translation, D3DXVECTOR3 & scale) const
+{
+	Draw( translation, scale, 0 );
+}
+
+void RenderItem::Draw( D3DXVECTOR3 & translation, D3DXVECTOR3 & scale, float zRotationAngle ) const
+{
+	D3DXMATRIX zRot;
+	D3DXMATRIX world;
+	D3DXMATRIX move;
+	D3DXMATRIX scaling;
+
+	D3DXMatrixRotationZ(&zRot, zRotationAngle);
+	D3DXMatrixTranslation( &move, translation.x, translation.y, translation.z );
+	D3DXMatrixScaling( &scaling, scale.x, scale.y, scale.z );
+		
+	world = zRot * scaling * move;
+	Draw( &world );
 }
 
 void RenderItem::Draw( const D3DMATRIX * pWorld ) const

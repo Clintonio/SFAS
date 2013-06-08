@@ -33,6 +33,9 @@ public:
 
 	void Init(const std::wstring textureFile);
 	void Draw() const;
+	void Draw( D3DXVECTOR3 & translation ) const;
+	void Draw( D3DXVECTOR3 & translation, D3DXVECTOR3 & scale ) const;
+	void Draw( D3DXVECTOR3 & translation, D3DXVECTOR3 & scale, float zRotation ) const;
 	void Draw( const D3DMATRIX * pWorld ) const;
 
 protected:

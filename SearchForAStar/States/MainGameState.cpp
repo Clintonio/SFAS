@@ -5,19 +5,26 @@
 // The main game state that controls what happens when the player is in game
 // 
 // Add a summary of your changes here:
-// 
+// - Added custom mouse cursor
 // 
 // 
 
 #include "MainGameState.h"
+#include "Core/Input.h"
 
 using SFAS::States::MainGameState;
 
-MainGameState::MainGameState( LPDIRECT3DDEVICE9 p_dx_Device, HWND han_Window, int w, int h ) : m_GameState( keNewLevel ), m_World(p_dx_Device, han_Window, w, h ), m_TimeSinceStateChange( 0 )
+MainGameState::MainGameState( LPDIRECT3DDEVICE9 p_dx_Device, HWND han_Window, int w, int h ) : 
+	m_GameState( keNewLevel ), 
+	m_World(p_dx_Device, han_Window, w, h ), 
+	m_TimeSinceStateChange( 0 ),
+	m_Cursor( p_dx_Device )
 {
 	SetTitleText( L"" );
 	SetPageText( L"" );
 	SetInstructionText( L"Lives: -      Score: -      Multiplier: -      Best: -" );
+	// The crosshair for the player
+	m_Cursor.Init( L"Textures/crosshair.png" );
 }
 
 MainGameState::~MainGameState(void)
@@ -36,6 +43,10 @@ void MainGameState::RenderOverlay( Engine::TextRenderer* txt )
 void MainGameState::Render(float dt)
 {
 	m_World.Render(dt);
+	m_Cursor.Draw(
+		D3DXVECTOR3(m_PlayerMousePosition.x, m_PlayerMousePosition.y, 0),
+		D3DXVECTOR3(50, 50, 0)
+	);
 }
 
 bool MainGameState::Update( const Engine::Input * input, float dt)
@@ -52,6 +63,9 @@ bool MainGameState::Update( const Engine::Input * input, float dt)
 
 	// Update the game world
 	m_World.Update(input, 0.03f);//dt
+
+	// Capture the current mouse position
+	m_PlayerMousePosition = input->GetMousePosition(Engine::Input::Button::MouseButton1);
 
 	// Switch the state
 	switch( m_GameState )
