@@ -152,9 +152,6 @@
     <ClInclude Include="SearchForAStar\Game\Level.h">
       <Filter>SearchForAStar\Game</Filter>
     </ClInclude>
-    <ClInclude Include="Levels\Level1.h">
-      <Filter>SearchForAStar\Game\Level</Filter>
-    </ClInclude>
     <ClInclude Include="Graphics\TextureLoader.h">
       <Filter>Graphics</Filter>
     </ClInclude>
@@ -169,6 +166,9 @@
     </ClInclude>
     <ClInclude Include="Audio\SoundProvider.h">
       <Filter>Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="SearchForAStar\Game\Levels\Level1.h">
+      <Filter>SearchForAStar\Game\Level</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

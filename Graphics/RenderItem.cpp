@@ -19,10 +19,22 @@ RenderItem::RenderItem(LPDIRECT3DDEVICE9 p_dx_device) :
 	m_pDxDevice(p_dx_device), p_dx_VertexBuffer(0), p_dx_IndexBuffer(0), flt_Angle(0)
 {
 	D3DXMatrixIdentity( &m_World );
+	FillVertices();
+	FillIndices();
 	m_Texture = 0;
 }
 
 RenderItem::~RenderItem(void)
+{
+	if( m_Texture != 0 )
+	{
+		CleanUp();
+	}
+	p_dx_VertexBuffer->Release();
+	p_dx_IndexBuffer->Release();
+}
+
+void RenderItem::CleanUp() 
 {
 	if( m_Texture != 0 )
 	{
@@ -36,9 +48,6 @@ void RenderItem::Init(const std::wstring textureFile)
 	VOID* p_Vertices;
 	const size_t vertexSize = 4 * sizeof(VertexPosTex);
 	const size_t indexSize = 6 * sizeof(short);
-
-	FillVertices();
-	FillIndices();
 
 	if (FAILED(m_pDxDevice->CreateVertexBuffer(vertexSize, 0, kFVFState, D3DPOOL_DEFAULT, &p_dx_VertexBuffer, NULL)))
 	{
@@ -65,7 +74,14 @@ void RenderItem::Init(const std::wstring textureFile)
 
 	memcpy(p_Indices, s_Indices, indexSize);
 	p_dx_IndexBuffer->Unlock();
-		
+	
+	UseTexture(textureFile);
+}
+
+void RenderItem::UseTexture( const std::wstring textureFile )
+{
+	// In the case of a texture change, clean up the previous texture
+	CleanUp();
 	if (FAILED(D3DXCreateTextureFromFile(m_pDxDevice, textureFile.c_str(), &m_Texture)))
 	{
 		throw std::runtime_error("Error trying to open texture file");

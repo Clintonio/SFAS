@@ -54,6 +54,7 @@ World::World(LPDIRECT3DDEVICE9 p_dx_Device, HWND han_Window, int w, int h)
 	m_SoundProvider = new Engine::SoundProvider();
 	m_SoundProvider->Init(han_Window);
 
+	m_SkyBox = new Engine::SkyBox(p_dx_Device, w, h);
 	m_EntityList = new EntityList;
 
 	Entity::Init(p_dx_Device);
@@ -79,12 +80,9 @@ World::World(LPDIRECT3DDEVICE9 p_dx_Device, HWND han_Window, int w, int h)
 	AddEntity(wall3);
 	AddEntity(wall4);
 
-	m_SkyBox = new Engine::SkyBox(p_dx_Device, w, h);
-	m_SkyBox->Init(L"textures/skybox.png");
-
 	Engine::Sound* sound = m_SoundProvider->CreateSoundBufferFromFile("Sound/menumusic.wav");
 	sound->PlaySoundFromStart();
-
+	
 	m_LevelMusic = m_SoundProvider->CreateSoundBufferFromFile("Sound/level1.wav");
 }
 
@@ -220,12 +218,16 @@ void World::OpenLevel( int level )
 {
 	Level l = getLevel1();
 
+	// This section loads the enemies
 	for(unsigned int i = 0; i < l.enemyCount; i++)
 	{
 		D3DXVECTOR3 pos = l.enemies[i].pos;
 		Enemy* enemy = new Enemy(pos.x, pos.y);
 		AddEntity(enemy);
 	}
+	
+	// This section loads a skybox
+	m_SkyBox->Init(l.skyboxTextureFile);
 }
 
 void World::ClearLevel()

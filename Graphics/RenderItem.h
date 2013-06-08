@@ -31,7 +31,10 @@ public:
 	RenderItem(LPDIRECT3DDEVICE9 p_dx_Device);
 	virtual ~RenderItem(void);
 
-	void Init(const std::wstring textureFile);
+	// Initialise vertices, indicies and texture
+	void Init( const std::wstring textureFile );
+	// Load a new texture. Does not affect verticies and indicies
+	void UseTexture( const std::wstring textureFile );
 	void Draw() const;
 	void Draw( D3DXVECTOR3 & translation ) const;
 	void Draw( D3DXVECTOR3 & translation, D3DXVECTOR3 & scale ) const;
@@ -42,6 +45,8 @@ protected:
 	D3DXMATRIX m_World;
 
 private:
+	// In the case of texture swapping we want to erase old texture data
+	void CleanUp();
 	void FillVertices();
 	void FillIndices();
 

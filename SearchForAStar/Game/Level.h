@@ -31,7 +31,7 @@ struct Level
 	std::string id;
 	std::string name;
 	//std::string musicFile;
-	//std::string skyboxTextureFile;
+	std::wstring skyboxTextureFile;
 	unsigned int enemyCount;
 	Level::Enemy* enemies;
 
@@ -39,8 +39,14 @@ struct Level
 		std::string id, 
 		std::string name, 
 		unsigned int enemyCount, 
-		Level::Enemy* enemies
-	) : id(id), name(name), enemyCount(enemyCount), enemies(enemies) { }
+		Level::Enemy* enemies,
+		std::wstring skyboxTexture
+	) : 
+		id(id), 
+		name(name), 
+		enemyCount(enemyCount),
+		enemies(enemies),
+		skyboxTextureFile(skyboxTexture) { }
 	
 };
 }

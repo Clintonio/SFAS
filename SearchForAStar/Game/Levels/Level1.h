@@ -25,7 +25,8 @@ Level getLevel1() {
 		"L0",
 		"Level 0",
 		4,
-		level1Enemies
+		level1Enemies,
+		L"textures/skybox.png"
 	);
 
 	return level1;
