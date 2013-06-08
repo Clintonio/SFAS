@@ -6,7 +6,7 @@
 // 
 // Add a summary of your changes here:
 // - Added mouse capture function signatures
-// 
+// - Made it possible for child classes to exit the application
 // 
 
 #pragma once
@@ -43,7 +43,8 @@ protected:
 	inline HWND GetWindow() { return m_Window; } 
 	inline LPDIRECT3DDEVICE9 GetDevice() { return m_Device; }	
 	inline const Input * GetInput() const { return m_Input; }
-
+	
+	static bool m_AppRunning;
 private:
 
 	// The game specific code is required to define it's own draw and update methods
@@ -67,7 +68,6 @@ private:
     bool m_bPaused;
     LARGE_INTEGER m_llLastTime;
 
-	static int m_AppRunning;
 
 };
 };

@@ -16,7 +16,14 @@
 
 
 // Forward declare
-namespace Engine { class RenderItem; class Input; class TextRenderer; class SkyBox; }
+namespace Engine 
+{ 
+	class RenderItem; 
+	class Input; 
+	class TextRenderer; 
+	class SkyBox; 
+	class SoundProvider; 
+}
 
 namespace SFAS
 {
@@ -69,6 +76,7 @@ private:
 
 	EntityList *			m_EntityList;
 	Engine::SkyBox *		m_SkyBox;
+	Engine::SoundProvider *	m_SoundProvider;
 
 	float					m_Width;
 	float					m_Height;

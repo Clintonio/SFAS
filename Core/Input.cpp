@@ -13,7 +13,7 @@
 
 using Engine::Input;
 
-const int Input::sKeyCodes[kNumInputOptions] = { 32, 87, 83, 65, 68, 73, 75, 74, 76 };
+const int Input::sKeyCodes[kNumInputOptions] = { 32, 87, 83, 65, 68, 73, 75, 74, 76, VK_ESCAPE };
 const float Input::kfButtonRepeatTime = 0.2f;
 
 Input::Input()
@@ -96,11 +96,11 @@ void Input::OnMouseMove( Button btn, WPARAM status, LPARAM pos )
 {
 	if ( Input::Button::MouseButton1 == btn ) 
 	{
-		int newX = GET_X_LPARAM(pos);
-		int newY = GET_Y_LPARAM(pos);
+		float newX = (float) GET_X_LPARAM(pos);
+		float newY = (float) GET_Y_LPARAM(pos);
 		// Mouse coordinates are based in top left, graphics coordinates bottom left
 		// so translate the coordinates to match
-		m_MouseButton1.position = D3DXVECTOR2(newX, m_WindowHeight - (float) newY);
+		m_MouseButton1.position = D3DXVECTOR2(newX, m_WindowHeight - newY);
 	}
 }
 

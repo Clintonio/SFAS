@@ -30,6 +30,7 @@
 #include "Level.h"
 #include "Graphics/SkyBox.h"
 #include "Explosion.h"
+#include "Audio/SoundProvider.h"
 
 // Binary level includes
 #include "Levels/Level1.h"
@@ -39,7 +40,8 @@ using SFAS::Game::Entity;
 using SFAS::Game::Wall;
 using SFAS::Game::Player;
 
-World::World(LPDIRECT3DDEVICE9 p_dx_Device, HWND han_Window, int w, int h) : m_Width( (float)w ), m_Height( (float)h ), m_Level( 0 ), m_NumActiveEnemies( INT_MAX )
+World::World(LPDIRECT3DDEVICE9 p_dx_Device, HWND han_Window, int w, int h) 
+	: m_Width( (float)w ), m_Height( (float)h ), m_Level( 0 ), m_NumActiveEnemies( INT_MAX )
 {
 	float wallWidth = 10.0f;
 	float halfWallWidth = wallWidth * 0.5f;
@@ -75,12 +77,16 @@ World::World(LPDIRECT3DDEVICE9 p_dx_Device, HWND han_Window, int w, int h) : m_W
 
 	m_SkyBox = new Engine::SkyBox(p_dx_Device, w, h);
 	m_SkyBox->Init(L"textures/skybox.png");
+
+	m_SoundProvider = new Engine::SoundProvider();
+	m_SoundProvider->Init(han_Window);
 }
 
 World::~World(void)
 {
 	delete m_EntityList;
 	delete m_SkyBox;
+	delete m_SoundProvider;
 }
 
 void World::AddEntity(Entity* entity) 

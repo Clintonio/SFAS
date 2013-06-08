@@ -19,6 +19,9 @@
     <Filter Include="SearchForAStar\Game\Level">
       <UniqueIdentifier>{5790cc95-9af7-4016-9e6f-1e290ede7ba8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Audio">
+      <UniqueIdentifier>{7f88e263-fb00-416a-a1f0-dc59c8212302}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Core\Application.cpp">
@@ -83,6 +86,12 @@
     </ClCompile>
     <ClCompile Include="Graphics\SkyBox.cpp">
       <Filter>Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Audio\Sound.cpp">
+      <Filter>Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="Audio\SoundProvider.cpp">
+      <Filter>Audio</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -154,6 +163,12 @@
     </ClInclude>
     <ClInclude Include="Graphics\SkyBox.h">
       <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Audio\Sound.h">
+      <Filter>Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="Audio\SoundProvider.h">
+      <Filter>Audio</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

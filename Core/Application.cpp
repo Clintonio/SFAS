@@ -13,7 +13,7 @@
 
 using Engine::Application;
 
-int Application::m_AppRunning = 1;
+bool Application::m_AppRunning = true;
 
 Application::Application(LPCTSTR str_Title, LPCTSTR str_Class, int int_Width, int int_Height, WNDPROC proc) : m_Window(), m_Device(0), m_Title(str_Title), m_Class(str_Class), m_Width(int_Width), m_Height(int_Height)
 {
@@ -31,7 +31,6 @@ Application::~Application(void)
 void Application::Run()
 {
 	MSG msg_Message;
-	m_AppRunning = true;
 	while(m_AppRunning)
 	{
 		// Timing

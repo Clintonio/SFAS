@@ -50,6 +50,7 @@ public:
 		kFireDown,
 		kFireLeft,
 		kFireRight,
+		kExit,
 
 		kNumInputOptions
 	};

@@ -7,8 +7,7 @@
 // Add a summary of your changes here:
 // - Fixed the fuction definition for the window procedure.
 // - Added mouse capture functionality
-// 
-// 
+// - Mapped windows cancel message to the escape key
 
 #include "SearchForAStar.h"
 #include "SearchForAStar/States/StartState.h"
@@ -20,6 +19,7 @@
 #include "Graphics/TextRenderer.h"
 #include <wchar.h>
 #include <windows.h>
+#include <stdexcept>
 
 using Engine::Application;
 using SFAS::SearchForAStar;
@@ -32,12 +32,18 @@ SearchForAStar::SearchForAStar(WNDPROC proc) : Application(L"SearchForAStar", L"
 	D3DXCreateSprite( GetDevice(), &m_pSprite );
 	m_TextColour = D3DXCOLOR( 1.0f, 1.0f, 0.0f, 1.0f );
 
-	m_StateArray[keStart] = new States::StartState();
-	m_StateArray[keGame] = new States::MainGameState( GetDevice(), GetWindow(), keScreenWidth, keScreenHeight );
-	m_StateArray[keGameOver] = new States::SummaryState();
-	m_StateArray[keOptions] = new States::OptionsState();
-	
-	m_Camera.Init( GetDevice() );
+	try {
+		m_StateArray[keStart] = new States::StartState();
+		m_StateArray[keGame] = new States::MainGameState( GetDevice(), GetWindow(), keScreenWidth, keScreenHeight );
+		m_StateArray[keGameOver] = new States::SummaryState();
+		m_StateArray[keOptions] = new States::OptionsState();
+		m_Camera.Init( GetDevice() );
+	} 
+	catch (std::runtime_error e)
+	{
+		MessageBox(GetWindow(), L"Could not start game due to an error", L"Runtime Error", MB_OK);
+		m_AppRunning = false;
+	}
 }
 
 SearchForAStar::~SearchForAStar(void)
@@ -81,9 +87,14 @@ void SearchForAStar::Update(float dt)
 	
 	// This updates the matrices we need to render in 3D
 	m_Camera.Update( GetDevice() );
-
+	
+	const Engine::Input* input = GetInput();
+	if(input->JustPressed(Engine::Input::Key::kExit))
+	{
+		m_AppRunning = false;
+	}
 	// Update game logic here
-	if( m_StateArray[m_State]->Update( GetInput(), dt ) )
+	else if( m_StateArray[m_State]->Update( input, dt ) )
 	{
 		// Reset the time spent in this state
 		m_TimeInState = 0.0f;
@@ -118,6 +129,14 @@ LRESULT CALLBACK SFAS::GameAppWindowProcedure(HWND han_Wind,UINT uint_Message,WP
 		case WM_KEYDOWN:
 			// Send these to the application
 			SFAS::app.OnKeyDown( parameter1, parameter2 );
+			break;
+
+		case WM_COMMAND:
+			// Capture the escape key
+			if (LOWORD(parameter1) == IDCANCEL)
+			{
+				SFAS::app.OnKeyDown( VK_ESCAPE, parameter2 );
+			}
 			break;
 
 		case WM_KEYUP:
