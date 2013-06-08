@@ -14,7 +14,12 @@
 #include <d3dx9.h>
 #include "Graphics/TextureLoader.h"
 
-namespace Engine { class RenderItem; class TextRenderer; }
+namespace Engine 
+{ 
+	class RenderItem; 
+	class TextRenderer; 
+	class SoundProvider;
+}
 
 namespace SFAS
 {
@@ -63,6 +68,9 @@ public:
 	void SetPosition( const D3DXVECTOR3 & vec ) { m_Position = vec; }
 	void SetVelocity( const D3DXVECTOR3 & vec ) { m_Velocity = vec; }
 	void AddForce( const D3DXVECTOR3 & force ) { m_ForceAccumulator += force; }
+
+	// Load the entities sounds if necessary
+	virtual void LoadSounds(Engine::SoundProvider* soundProvider) { }
 
 	// Are we active and set active status 
 	bool IsActive() const { return m_Active; }

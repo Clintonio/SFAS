@@ -162,7 +162,7 @@ bool SoundProvider::ValidWaveFormat(FILE* filePtr, WaveHeaderType & waveFileHead
 	{
 		return false;
 	}
- 
+	
 	// Check for the data chunk header.
 	if((waveFileHeader.dataChunkId[0] != 'd') || (waveFileHeader.dataChunkId[1] != 'a') ||
 	   (waveFileHeader.dataChunkId[2] != 't') || (waveFileHeader.dataChunkId[3] != 'a'))

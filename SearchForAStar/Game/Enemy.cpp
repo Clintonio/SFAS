@@ -13,6 +13,8 @@
 #include "Player.h"
 #include "World.h"
 #include "Explosion.h"
+#include "Audio/SoundProvider.h"
+#include "Audio/Sound.h"
 
 using namespace SFAS::Game;
 
@@ -22,6 +24,7 @@ const float Enemy::sMass = 100.0f;
 const float Enemy::sDamping = 0.6f;
 
 const Entity::EntityType Enemy::kEntityType(2);
+Engine::Sound* Enemy::sExplosionSound = 0;
 
 Enemy::Enemy( float x, float y ) : Entity( D3DXVECTOR3( x, y, 0.0f ), D3DXVECTOR3( sSize, sSize, 0.0f ), sDamping )
 {
@@ -32,6 +35,18 @@ Enemy::Enemy( float x, float y ) : Entity( D3DXVECTOR3( x, y, 0.0f ), D3DXVECTOR
 
 Enemy::~Enemy(void)
 {
+}
+
+void Enemy::LoadSounds(Engine::SoundProvider* soundProvider)
+{
+	if( sExplosionSound == 0 )
+	{
+		Engine::Sound* explosionSound = soundProvider->CreateSoundBufferFromFile("Sound/enemy-explosion.wav");
+		if( explosionSound != 0 )
+		{
+			sExplosionSound = explosionSound;
+		}
+	}
 }
 
 void Enemy::Update( World * world, float dt )
@@ -74,5 +89,10 @@ void Enemy::OnCollision( Entity& other, World * world )
 
 		Explosion* explosion = new Explosion(GetPosition(), GetScale() );
 		world->AddEntity( explosion );
+
+		if( sExplosionSound != 0 )
+		{
+			sExplosionSound->PlaySoundFromStart();
+		}
 	}
 }

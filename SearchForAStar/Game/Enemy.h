@@ -13,6 +13,12 @@
 #include "Entity.h"
 #include "World.h"
 
+namespace Engine
+{
+	class Sound;
+	class SoundProvider;
+}
+
 namespace SFAS
 {
 
@@ -40,6 +46,11 @@ private:
 	WCHAR * ToString()  const { return L"Enemy"; }
 
 	void OnCollision( Entity& other, World * world );
+
+	// Override the sound loading
+	void LoadSounds(Engine::SoundProvider* soundProvider);
+
+	static Engine::Sound* sExplosionSound;
 };
 }
 }

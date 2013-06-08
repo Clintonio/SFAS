@@ -20,6 +20,7 @@
 #include "Core/Input.h"
 #include "Entity.h"
 #include "Explosion.h"
+#include "Audio/SoundProvider.h"
 
 using Engine::Input;
 using namespace SFAS::Game;
@@ -43,6 +44,9 @@ Player::Player( int lives ) : Entity( D3DXVECTOR3(), D3DXVECTOR3( sSize, sSize, 
 	}
 
 	m_RenderItem = sTextureLoader->LoadTexturedRenderItem(L"textures/player.png", 1.0f);
+	// Initialise sounds so that they're not played incorrectly
+	m_BulletSound = 0;
+	m_ExplosionSound = 0;
 }
 
 Player::~Player(void)
@@ -51,6 +55,16 @@ Player::~Player(void)
 	{
 		delete m_Bullets[count];
 		m_Bullets[count] = 0;
+	}
+
+	if( m_BulletSound != 0 )
+	{
+		delete m_BulletSound;
+	}
+
+	if( m_ExplosionSound != 0 )
+	{
+		delete m_ExplosionSound;
 	}
 }
 
@@ -102,12 +116,27 @@ void Player::DoInput(World * world, const Engine::Input * input )
 			{
 				world->AddEntity(bullet);
 				m_TimeSinceLastFire = 0;
+
+				if(	m_BulletSound != 0 )
+				{
+					m_BulletSound->PlaySoundFromStart();
+				}
 			} 
 			else 
 			{
 				bullet->SetActive(false);
 			}
 		}
+	}
+
+}
+
+void Player::LoadSounds(Engine::SoundProvider* soundProvider)
+{
+	Engine::Sound* bulletSound = soundProvider->CreateSoundBufferFromFile("Sound/laser1.wav");
+	if( bulletSound != 0 )
+	{
+		m_BulletSound = bulletSound;
 	}
 
 }

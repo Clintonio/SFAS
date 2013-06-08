@@ -13,9 +13,13 @@
 
 #include "Entity.h"
 #include <list>
+#include "Audio/Sound.h"
 
 // Forward declare
-namespace Engine { class Input; } 
+namespace Engine { 
+	class Input;
+	class SoundProvider;
+} 
 
 
 
@@ -63,10 +67,14 @@ public:
 private:
 	// Override called when a collision is dectected
 	void OnCollision( Entity& other, World * world );
-
+	// Override the sound loading
+	void LoadSounds(Engine::SoundProvider* soundProvider);
 	WCHAR * ToString()  const { return L"Player"; }
-
 	Bullet * Fire( float vx, float vy );
+	
+	Engine::Sound* m_BulletSound;
+	Engine::Sound* m_ExplosionSound;
+
 	inline bool Player::CanFire() const;
 
 	enum { keScore = 100, kNumBullets = 50 };

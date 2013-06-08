@@ -50,6 +50,9 @@ World::World(LPDIRECT3DDEVICE9 p_dx_Device, HWND han_Window, int w, int h)
 	float halfAreaHeight = m_Height * 0.5f;
 	float windowHeight = (float) h;
 	float windowWidth = (float) w;
+	
+	m_SoundProvider = new Engine::SoundProvider();
+	m_SoundProvider->Init(han_Window);
 
 	m_EntityList = new EntityList;
 
@@ -59,7 +62,7 @@ World::World(LPDIRECT3DDEVICE9 p_dx_Device, HWND han_Window, int w, int h)
 	Player * player = new Player(  kePlayerLives );
 	player->SetPosition( D3DXVECTOR3( halfAreaWidth, halfAreaHeight, 0.0f ) );
 	player->SetCollidable();
-	m_EntityList->insert(player);
+	AddEntity(player);
 
 	// Create walls
 	Wall * wall1 = new Wall( halfWallWidth, halfAreaHeight, wallWidth, windowHeight );
@@ -71,16 +74,14 @@ World::World(LPDIRECT3DDEVICE9 p_dx_Device, HWND han_Window, int w, int h)
 	wall2->SetActive( true );
 	wall3->SetActive( true );
 	wall4->SetActive( true );
-	m_EntityList->insert(wall1);
-	m_EntityList->insert(wall2);
-	m_EntityList->insert(wall3);
-	m_EntityList->insert(wall4);
+	AddEntity(wall1);
+	AddEntity(wall2);
+	AddEntity(wall3);
+	AddEntity(wall4);
 
 	m_SkyBox = new Engine::SkyBox(p_dx_Device, w, h);
 	m_SkyBox->Init(L"textures/skybox.png");
 
-	m_SoundProvider = new Engine::SoundProvider();
-	m_SoundProvider->Init(han_Window);
 	Engine::Sound* sound = m_SoundProvider->CreateSoundBufferFromFile("Sound/menumusic.wav");
 	sound->PlaySoundFromStart();
 }
@@ -95,6 +96,7 @@ World::~World(void)
 void World::AddEntity(Entity* entity) 
 {
 	m_EntityList->insert(entity);
+	entity->LoadSounds(m_SoundProvider);
 }
 
 void World::Render( float dt )
