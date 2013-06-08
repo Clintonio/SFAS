@@ -18,7 +18,7 @@ public:
 
 	void Init(HWND window);
 
-	const Sound * CreateSoundBufferFromFile(const std::string file);
+	Sound * CreateSoundBufferFromFile(const std::string file);
 private:
 	struct WaveHeaderType
 	{
@@ -38,11 +38,11 @@ private:
 	};
 	
 	// Load a wave file into the given buffer
-	bool LoadWaveFile(const char* filename, LPDIRECTSOUNDBUFFER* secondaryBuffer, WAVEFORMATEX & waveFormat) const;
+	bool LoadWaveFile(const char* filename, LPDIRECTSOUNDBUFFER & buffer) const;
 	// Create a wave format from the given file header
 	void GetWaveFormat(const WaveHeaderType &waveHeader, WAVEFORMATEX & waveFormat) const;
 	// Check if the header for this wave file is valid
-	bool ValidWaveFormat( FILE* filePtr, const WaveHeaderType * waveFileHeader) const;
+	bool ValidWaveFormat( FILE* filePtr, WaveHeaderType & waveFileHeader) const;
 
 	LPDIRECTSOUND8 m_DirectSound;
 

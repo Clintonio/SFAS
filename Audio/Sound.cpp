@@ -28,10 +28,10 @@ bool Sound::PlaySoundFromStart()
 	}
  
 	// Play the contents of the secondary sound buffer.
-	if(FAILED(m_Buffer->Play(0, 0, 0)))
+	if(FAILED(m_Buffer->Play(0, 0, DSBPLAY_LOOPING)))
 	{
 		return false;
 	}
- 
+
 	return true;
 }

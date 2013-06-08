@@ -31,6 +31,7 @@
 #include "Graphics/SkyBox.h"
 #include "Explosion.h"
 #include "Audio/SoundProvider.h"
+#include "Audio/Sound.h"
 
 // Binary level includes
 #include "Levels/Level1.h"
@@ -80,6 +81,8 @@ World::World(LPDIRECT3DDEVICE9 p_dx_Device, HWND han_Window, int w, int h)
 
 	m_SoundProvider = new Engine::SoundProvider();
 	m_SoundProvider->Init(han_Window);
+	Engine::Sound* sound = m_SoundProvider->CreateSoundBufferFromFile("Sound/menumusic.wav");
+	sound->PlaySoundFromStart();
 }
 
 World::~World(void)
