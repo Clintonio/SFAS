@@ -10,7 +10,7 @@ Sound::Sound(LPDIRECTSOUNDBUFFER buffer) : m_Buffer(buffer)
 
 Sound::~Sound()
 {
-	m_Buffer->Release();
+	//m_Buffer->Release();
 }
 
 bool Sound::SetVolume( const float volume )
@@ -36,4 +36,9 @@ bool Sound::PlaySoundFromStart()
 	}
 
 	return true;
+}
+
+bool Sound::Stop()
+{
+	return FAILED(m_Buffer->Stop());
 }

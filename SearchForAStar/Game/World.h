@@ -23,6 +23,7 @@ namespace Engine
 	class TextRenderer; 
 	class SkyBox; 
 	class SoundProvider; 
+	class Sound;
 }
 
 namespace SFAS
@@ -73,6 +74,9 @@ private:
 	bool DoCollision( Entity * lh, Entity * rh, float dt );
 
 	enum { kePlayerLives = 3, keNumLevels = 10, keHitScore = 100 };
+
+	// The music for this level
+	Engine::Sound*			m_LevelMusic;
 
 	EntityList *			m_EntityList;
 	Engine::SkyBox *		m_SkyBox;

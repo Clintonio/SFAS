@@ -84,6 +84,8 @@ World::World(LPDIRECT3DDEVICE9 p_dx_Device, HWND han_Window, int w, int h)
 
 	Engine::Sound* sound = m_SoundProvider->CreateSoundBufferFromFile("Sound/menumusic.wav");
 	sound->PlaySoundFromStart();
+
+	m_LevelMusic = m_SoundProvider->CreateSoundBufferFromFile("Sound/level1.wav");
 }
 
 World::~World(void)
@@ -91,6 +93,10 @@ World::~World(void)
 	delete m_EntityList;
 	delete m_SkyBox;
 	delete m_SoundProvider;
+	if( m_LevelMusic != 0 )
+	{
+		delete m_LevelMusic;
+	}
 }
 
 void World::AddEntity(Entity* entity) 
@@ -183,6 +189,10 @@ void World::NewGame()
 	Player * player = GetPlayerHelper();
 	player->ResetScore();
 	player->ResetLives( kePlayerLives );
+	if( m_LevelMusic != 0 )
+	{
+		m_LevelMusic->PlaySoundFromStart();
+	}
 }
 
 bool World::IsGameOver() const
@@ -223,6 +233,10 @@ void World::ClearLevel()
 	m_EntityList->erase(Enemy::kEntityType);
 	m_EntityList->erase(Bullet::kEntityType);
 	m_EntityList->erase(Explosion::kEntityType);
+	if( m_LevelMusic != 0 )
+	{
+		m_LevelMusic->Stop();
+	}
 }
 
 void World::ResetLevel()

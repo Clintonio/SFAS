@@ -13,7 +13,8 @@ public:
 	~Sound();
 	// Set the volume
 	bool SetVolume( const float volume );
-	
+	bool Stop();
+
 	bool PlaySoundFromStart();
 private:
 
