@@ -47,7 +47,8 @@ void Explosion::Update( World * world, float dt )
 
 }
 
-void Explosion::OnCollision( Entity& other, World * world )
+bool Explosion::OnCollision( Entity& other, World * world )
 {
 	// Explosions aren't affected by other entities
+	return false;
 }

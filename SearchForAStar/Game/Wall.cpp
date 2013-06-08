@@ -31,7 +31,8 @@ void Wall::Update( float dt )
 	// Do nothing
 }
 
-void Wall::OnCollision( Entity& other, World * world )
+bool Wall::OnCollision( Entity& other, World * world )
 {
 	// Do nothing
+	return true;
 }

@@ -35,7 +35,7 @@ private:
 
 	WCHAR * ToString()  const { return L"Wall"; }
 
-	void OnCollision( Entity& other, World* world );
+	bool OnCollision( Entity& other, World* world );
 	
 	static const Entity::EntityType kEntityType;
 };

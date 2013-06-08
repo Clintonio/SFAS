@@ -152,10 +152,12 @@ bool Entity::CheckForCollision( const Entity& other, float dt )
 	return true;
 }
 
-void Entity::OnCollision( Entity& other, World * world )
+bool Entity::OnCollision( Entity& other, World * world )
 {
 	// Default behavour
 	SetActive( false );
+
+	return true;
 }
 
 void Entity::LinearIntegration( float dt )

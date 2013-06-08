@@ -13,13 +13,17 @@
 
 #include "Entity.h"
 
+namespace Engine
+{
+	class Sound;
+}
 
 namespace SFAS
 {
 
 namespace Game                  
 {          
-class Player;
+class ShipEntity;
 
 class Bullet : public Entity
 {
@@ -27,9 +31,9 @@ public:
 	Bullet( );
 
 	void Update( World * world, float dt );
-	void Fire( float vx, float vy, Player * owner );
+	void Fire( D3DXVECTOR3 direction, ShipEntity * owner );
 
-	bool IsPlayerControlled() const { return true; }
+	bool IsPlayerControlled() const;
 	
 	static const Entity::EntityType kEntityType;
 	
@@ -39,17 +43,20 @@ private:
 
 	WCHAR * ToString()  const { return L"Bullet"; }
 
-	enum { kLifetime = 10, kForce = 2000 };
+	enum { kLifetime = 5, kForce = 4000 };
 
 	static const float sSize;
 	static const float sMass;
 	static const float sDamping;
 
+	// The sound of this bullet
+	static Engine::Sound* sBulletSound;
 	// The player that fired this bullet
-	Player * m_Owner;
+	ShipEntity * m_Owner;
+	bool m_SoundPlayed;
 
-	void OnCollision( Entity& other, World * world );
-	
+	bool OnCollision( Entity& other, World * world );
+	void LoadSounds(Engine::SoundProvider* soundProvider);
 };
 }
 }

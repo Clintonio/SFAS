@@ -221,8 +221,9 @@ void World::OpenLevel( int level )
 	// This section loads the enemies
 	for(unsigned int i = 0; i < l.enemyCount; i++)
 	{
-		D3DXVECTOR3 pos = l.enemies[i].pos;
-		Enemy* enemy = new Enemy(pos.x, pos.y);
+		Level::Enemy curEnemy = l.enemies[i];
+		D3DXVECTOR3 pos = curEnemy.pos;
+		Enemy* enemy = new Enemy(l.enemyTypes[curEnemy.type], pos.x, pos.y);
 		AddEntity(enemy);
 	}
 	
@@ -277,9 +278,12 @@ bool World::DoCollision( Entity * lh, Entity * rh, float dt )
 
 			if( lh->IsCollidable() && rh->IsCollidable() )
 			{
-				lh->Resolve( *rh, dt );
-				lh->OnCollision( *rh, this );
-				rh->OnCollision( *lh, this );
+				bool physics = lh->OnCollision( *rh, this );
+				physics &= rh->OnCollision( *lh, this );
+				if( physics ) 
+				{
+					lh->Resolve( *rh, dt );
+				}
 			}
 		}
 	}

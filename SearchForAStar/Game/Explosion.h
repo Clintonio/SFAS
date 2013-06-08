@@ -19,7 +19,7 @@ public:
 	const Entity::EntityType GetEntityType() { return kEntityType; }
 private:
 	void Update( World * world, float dt );
-	void OnCollision( Entity& other, World * world );
+	bool OnCollision( Entity& other, World * world );
 	void ShowExplosionStage( const int stage );
 
 	WCHAR * ToString()  const { return L"Explosion"; }

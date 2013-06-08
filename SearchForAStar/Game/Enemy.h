@@ -12,6 +12,8 @@
 
 #include "Entity.h"
 #include "World.h"
+#include "Level.h"
+#include "ShipEntity.h"
 
 namespace Engine
 {
@@ -25,10 +27,10 @@ namespace SFAS
 namespace Game                  
 {          
 
-class Enemy : public Entity
+class Enemy : public ShipEntity
 {
 public:
-	Enemy( float x, float y );
+	Enemy( Level::EnemyType & type, float x, float y );
 	virtual ~Enemy(void);
 
 	virtual void Update( World * world, float dt );
@@ -40,15 +42,34 @@ public:
 
 	static const Entity::EntityType kEntityType;
 	
+	bool OnBulletHit( Entity &other );
 	// Get the entity type for this entity
 	const Entity::EntityType GetEntityType() { return kEntityType; }
 private:
+	enum Weapon 
+	{
+		none,
+		laser
+	};
+
+	enum AIRoutine 
+	{
+		suicide,
+		avoid
+	};
+
 	WCHAR * ToString()  const { return L"Enemy"; }
 
-	void OnCollision( Entity& other, World * world );
-
+	void SetAIRoutine( std::string & type );
+	void SetWeapon( std::string & type );
+	// Overridden collision
+	bool OnCollision( Entity& other, World * world );
 	// Override the sound loading
 	void LoadSounds(Engine::SoundProvider* soundProvider);
+	
+	Weapon		m_WeaponType;
+	AIRoutine	m_AIRoutine;
+	float		m_LastFireTime;
 
 	static Engine::Sound* sExplosionSound;
 };

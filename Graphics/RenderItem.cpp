@@ -29,9 +29,9 @@ RenderItem::~RenderItem(void)
 	if( m_Texture != 0 )
 	{
 		CleanUp();
+		p_dx_VertexBuffer->Release();
+		p_dx_IndexBuffer->Release();
 	}
-	p_dx_VertexBuffer->Release();
-	p_dx_IndexBuffer->Release();
 }
 
 void RenderItem::CleanUp() 

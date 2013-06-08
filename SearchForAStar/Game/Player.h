@@ -14,14 +14,13 @@
 #include "Entity.h"
 #include <list>
 #include "Audio/Sound.h"
+#include "ShipEntity.h"
 
 // Forward declare
 namespace Engine { 
 	class Input;
 	class SoundProvider;
 } 
-
-
 
 namespace SFAS
 {
@@ -31,7 +30,7 @@ namespace Game
 	class Bullet;
 	class World;
  
-class Player : public SFAS::Game::Entity
+class Player : public ShipEntity
 {
 public:
 
@@ -66,18 +65,19 @@ public:
 	const Entity::EntityType GetEntityType() { return kEntityType; }
 private:
 	// Override called when a collision is dectected
-	void OnCollision( Entity& other, World * world );
+	bool OnCollision( Entity& other, World * world );
 	// Override the sound loading
 	void LoadSounds(Engine::SoundProvider* soundProvider);
 	WCHAR * ToString()  const { return L"Player"; }
 	Bullet * Fire( float vx, float vy );
 	
-	Engine::Sound* m_BulletSound;
 	Engine::Sound* m_ExplosionSound;
 
 	inline bool Player::CanFire() const;
+	// Override the bullet hit to add score to player
+	bool OnBulletHit( Entity & other );
 
-	enum { keScore = 100, kNumBullets = 50 };
+	enum { keScore = 100, kNumBullets = 25 };
 
 	static const float sMoveForce;
 	static const float sSize;

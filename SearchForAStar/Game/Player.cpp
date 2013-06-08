@@ -21,6 +21,7 @@
 #include "Entity.h"
 #include "Explosion.h"
 #include "Audio/SoundProvider.h"
+#include "Enemy.h"
 
 using Engine::Input;
 using namespace SFAS::Game;
@@ -29,11 +30,11 @@ const float Player::sMoveForce	= 8000.0f;
 const float Player::sSize		= 20.0f;
 const float Player::sMass		= 100.0f;
 const float Player::sDamping	= 0.39f;
-const float Player::sFireDelay	= 0.1f;
+const float Player::sFireDelay	= 0.2f;
 
 const Entity::EntityType Player::kEntityType(1);
 
-Player::Player( int lives ) : Entity( D3DXVECTOR3(), D3DXVECTOR3( sSize, sSize, 0.0f ), sDamping ), 
+Player::Player( int lives ) : ShipEntity( D3DXVECTOR3(), D3DXVECTOR3( sSize, sSize, 0.0f ), sDamping ), 
 	m_Lives( lives ), m_Score( 0 ), m_Multiplier( 1 ), m_Best( 0 ), m_TimeSinceLastFire( 0 )
 {
 	SetMass( sMass );
@@ -45,7 +46,6 @@ Player::Player( int lives ) : Entity( D3DXVECTOR3(), D3DXVECTOR3( sSize, sSize, 
 
 	m_RenderItem = sTextureLoader->LoadTexturedRenderItem(L"textures/player.png", 1.0f);
 	// Initialise sounds so that they're not played incorrectly
-	m_BulletSound = 0;
 	m_ExplosionSound = 0;
 }
 
@@ -55,11 +55,6 @@ Player::~Player(void)
 	{
 		delete m_Bullets[count];
 		m_Bullets[count] = 0;
-	}
-
-	if( m_BulletSound != 0 )
-	{
-		delete m_BulletSound;
 	}
 
 	if( m_ExplosionSound != 0 )
@@ -116,11 +111,6 @@ void Player::DoInput(World * world, const Engine::Input * input )
 			{
 				world->AddEntity(bullet);
 				m_TimeSinceLastFire = 0;
-
-				if(	m_BulletSound != 0 )
-				{
-					m_BulletSound->PlaySoundFromStart();
-				}
 			} 
 			else 
 			{
@@ -133,12 +123,7 @@ void Player::DoInput(World * world, const Engine::Input * input )
 
 void Player::LoadSounds(Engine::SoundProvider* soundProvider)
 {
-	Engine::Sound* bulletSound = soundProvider->CreateSoundBufferFromFile("Sound/laser1.wav");
 	Engine::Sound* explosionSound = soundProvider->CreateSoundBufferFromFile("Sound/player-explosion.wav");
-	if( bulletSound != 0 )
-	{
-		m_BulletSound = bulletSound;
-	}
 
 	if( explosionSound != 0 )
 	{
@@ -159,7 +144,7 @@ inline bool Player::CanFire() const
 	return ( sFireDelay < m_TimeSinceLastFire );
 }
 
-void Player::OnCollision( Entity& other, World * world )
+bool Player::OnCollision( Entity& other, World * world )
 {
 	if( other.IsMoveable() || !other.IsPlayerControlled() )
 	{
@@ -180,6 +165,8 @@ void Player::OnCollision( Entity& other, World * world )
 			m_ExplosionSound->PlaySoundFromStart();
 		}
 	}
+
+	return true;
 }
 
 void Player::OnReset()
@@ -205,10 +192,18 @@ Bullet * Player::Fire( float vx, float vy )
 
 	if( bullet != 0 )
 	{
-		bullet->SetPosition( GetPosition() + D3DXVECTOR3(vx, vy, 0.0) * sSize );
-		bullet->Fire( vx, vy, this );
+		bullet->Fire( D3DXVECTOR3(vx, vy, 0.0), this );
 	}
 
 	return bullet;
 }
 
+
+bool Player::OnBulletHit( Entity & other ) {
+	if( Enemy::kEntityType == other.GetEntityType() )
+	{
+		AddScore(100);
+	}
+
+	return true;
+}

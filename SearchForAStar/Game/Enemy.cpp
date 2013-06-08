@@ -15,6 +15,7 @@
 #include "Explosion.h"
 #include "Audio/SoundProvider.h"
 #include "Audio/Sound.h"
+#include "Bullet.h"
 
 using namespace SFAS::Game;
 
@@ -26,11 +27,16 @@ const float Enemy::sDamping = 0.6f;
 const Entity::EntityType Enemy::kEntityType(2);
 Engine::Sound* Enemy::sExplosionSound = 0;
 
-Enemy::Enemy( float x, float y ) : Entity( D3DXVECTOR3( x, y, 0.0f ), D3DXVECTOR3( sSize, sSize, 0.0f ), sDamping )
+Enemy::Enemy( Level::EnemyType & type, float x, float y ) : 
+	ShipEntity( D3DXVECTOR3( x, y, 0.0f ), D3DXVECTOR3( sSize, sSize, 0.0f ), sDamping ),
+	m_LastFireTime(0.0f)
 {
+	SetScale( type.dimensions );
 	SetMass( sMass );
 	SetActive(true);
-	m_RenderItem = sTextureLoader->LoadTexturedRenderItem(L"textures/enemy.png", 1.0f);
+	SetWeapon( type.weapon );
+	SetAIRoutine( type.aiType );
+	m_RenderItem = sTextureLoader->LoadTexturedRenderItem(type.textureFile, 1.0f);
 }
 
 Enemy::~Enemy(void)
@@ -51,36 +57,68 @@ void Enemy::LoadSounds(Engine::SoundProvider* soundProvider)
 
 void Enemy::Update( World * world, float dt )
 {
-	D3DXVECTOR2 direction;
 	Player * player = (Player*) world->FindNearestEntityOfType( this, Player::kEntityType );
+	D3DXVECTOR3 directionToPlayer = DirectionToEntity( player );
 
-	switch( rand() % 4 )
+	if( m_AIRoutine == AIRoutine::avoid )
 	{
-	case 0:
-		AddForce( D3DXVECTOR3( sSpeed, 0.0f, 0.0f ) );
-		break;
-	case 1:
-		AddForce( D3DXVECTOR3( 0.0f, sSpeed, 0.0f ) );
-		break;
-	case 2:
-		AddForce( D3DXVECTOR3( -sSpeed, 0.0f, 0.0f ) );
-		break;
-	case 3:
-		AddForce( D3DXVECTOR3( 0.0f, -sSpeed, 0.0f ) );
-		break;
+		float playerDistance = DistanceTo(player);
+		if( playerDistance < 200.0f )
+		{
+			AddForce( sSpeed * -directionToPlayer);
+		} 
+		else if( playerDistance > 210.0f )
+		{
+			AddForce( sSpeed * directionToPlayer);
+		}
+	} 
+	else
+	{
+		if(player != NULL)
+		{
+			AddForce( sSpeed * directionToPlayer);
+		}
 	}
 
-	if(player != NULL)
+	m_LastFireTime += dt;
+	if( m_WeaponType == Weapon::laser && ( m_LastFireTime > 1.0f ) )
 	{
-		AddForce( sSpeed * DirectionToEntity ( player ));
+		Bullet * bullet = new Bullet();
+		bullet->Fire(directionToPlayer, this);
+		world->AddEntity(bullet);
+		m_LastFireTime = 0.0f;
 	}
 
-	FaceDirection(DirectionToEntity ( player ));
+	FaceDirection( DirectionToEntity ( player ) );
 
-	Entity::Update( world, dt);
+	Entity::Update( world, dt );
 }
 
-void Enemy::OnCollision( Entity& other, World * world )
+void Enemy::SetAIRoutine( std::string & type )
+{
+	if( type == "avoid" )
+	{
+		m_AIRoutine = AIRoutine::avoid;
+	} 
+	else 
+	{
+		m_AIRoutine = AIRoutine::suicide;
+	}
+}
+
+void Enemy::SetWeapon( std::string & type )
+{
+	if( type == "laser" )
+	{
+		m_WeaponType = Weapon::laser;
+	} 
+	else
+	{
+		m_WeaponType = Weapon::none;
+	}
+}
+
+bool Enemy::OnCollision( Entity& other, World * world )
 {
 	if( other.IsPlayerControlled() )
 	{
@@ -95,4 +133,11 @@ void Enemy::OnCollision( Entity& other, World * world )
 			sExplosionSound->PlaySoundFromStart();
 		}
 	}
+
+	return true;
+}
+
+bool Enemy::OnBulletHit( Entity &other ) 
+{
+	return !( other.GetEntityType() == Enemy::kEntityType );
 }

@@ -92,8 +92,8 @@ public:
 	void FaceDirection( const D3DXVECTOR3 direction );
 
 	float GetMass() const;
-
-	virtual void OnCollision( Entity& other, World * world );
+	// Returns true if the physics calculation takes place for this entity
+	virtual bool OnCollision( Entity& other, World * world );
 
 	virtual void OnReset() {
 		m_ForceAccumulator = D3DXVECTOR3( 0.0f, 0.0f, 0.0f );

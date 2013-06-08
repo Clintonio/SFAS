@@ -12,17 +12,28 @@ namespace Game
 
 struct Level
 {
+	struct EnemyType 
+	{
+		unsigned int id;
+		std::string aiType;
+		std::string weapon;
+		D3DXVECTOR3 dimensions;
+		std::wstring textureFile;
+	};
+
 	struct Enemy 
 	{
-		//unsigned int type;
+		unsigned int type;
 		D3DXVECTOR3 pos;
 		
 		// struct SpawnCondition
 
 		Enemy(
+			unsigned int type,
 			D3DXVECTOR3 pos
-		) : pos(pos) { };
+		) : type(type), pos(pos) { };
 	};
+
 	struct Prop
 	{
 		D3DXVECTOR3 pos;
@@ -31,22 +42,11 @@ struct Level
 	std::string id;
 	std::string name;
 	//std::string musicFile;
-	std::wstring skyboxTextureFile;
+	unsigned int enemyTypeCount;
+	EnemyType* enemyTypes;
 	unsigned int enemyCount;
 	Level::Enemy* enemies;
-
-	Level(
-		std::string id, 
-		std::string name, 
-		unsigned int enemyCount, 
-		Level::Enemy* enemies,
-		std::wstring skyboxTexture
-	) : 
-		id(id), 
-		name(name), 
-		enemyCount(enemyCount),
-		enemies(enemies),
-		skyboxTextureFile(skyboxTexture) { }
+	std::wstring skyboxTextureFile;
 	
 };
 }
