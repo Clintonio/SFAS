@@ -5,7 +5,8 @@
 using namespace Engine;
 
 JSONParser::JSONParser() :
-	m_ErrorPosition( 0 )
+	m_ErrorPosition( 0 ),
+	m_Error( false )
 {
 
 }
@@ -166,6 +167,7 @@ void JSONParser::ParseObject( const std::string json, unsigned int & cur, const 
 				std::string variableName = ParseString( json, cur, length );
 				if( ParseMapSeparator( json, cur, length ) )
 				{
+					char curChar = json[cur];
 					ParseVariable( json, ++cur, length );
 					allowAnother = ParseVariableSeparator( json, cur, length );
 				}
@@ -265,17 +267,22 @@ bool JSONParser::ParseVariableSeparator( const std::string json, unsigned int & 
 	JSONSymbol curSymbol;
 	while( cur < length && !done )
 	{
-		curSymbol = ParseSymbol( json[cur++] );
+		curSymbol = ParseSymbol( json[cur] );
 		if( curSymbol == JSONSymbol::VariableSeparator )
 		{
 			done = true;
 			result = true;
+			cur++;
 		}
 		else if( curSymbol != JSONSymbol::WhiteSpace )
 		{
-			throw ParseException( cur, json[cur], "," );
 			done = true;
 		}
+		else
+		{
+			cur++;
+		}
+		
 	}
 
 	return result;
@@ -287,6 +294,7 @@ void JSONParser::ParseVariable( const std::string json, unsigned int & cur, cons
 	JSONSymbol curSymbol;
 	while( cur < length && !done )
 	{
+		done = true;
 		curSymbol = ParseSymbol( json[cur++] );
 		if( curSymbol == JSONSymbol::String )
 		{
@@ -318,8 +326,13 @@ void JSONParser::ParseVariable( const std::string json, unsigned int & cur, cons
 		}
 		else if( curSymbol != JSONSymbol::WhiteSpace )
 		{
+			cur--;
 			throw ParseException( cur, json[cur], "variable" );
-			done = true;
+			done = false;
+		} 
+		else
+		{
+			done = false;
 		}
 	}
 
@@ -370,6 +383,7 @@ void JSONParser::ParseNumber( const std::string json, unsigned int & cur, const 
 	std::vector<char> leftSide;
 	std::vector<char> rightSide;
 	std::vector<char> exponentPart;
+	char curChar;
 
 	curSymbol = ParseSymbol( json[cur] );
 	if( curSymbol == JSONSymbol::Negative )
@@ -380,36 +394,33 @@ void JSONParser::ParseNumber( const std::string json, unsigned int & cur, const 
 
 	while( cur < length && !done )
 	{
-		curSymbol = ParseSymbol( json[cur] );
+		curChar = json[cur];
+		curSymbol = ParseSymbol( curChar );
 		if( curSymbol == JSONSymbol::Number )
 		{
-			leftSide.push_back( json[cur] );
+			leftSide.push_back( curChar );
+			cur++;
 		}
-		else if( curSymbol == JSONSymbol::WhiteSpace )
-		{
-			done = true;
-		}
-		else if( curSymbol == JSONSymbol::Dot )
-		{
-			if( leftSide.size() > 0 )
-			{
-				done = true;
-				hasRightSide = true;
-			}
-			else
-			{
-				done = true;
-				throw ParseException( cur, json[cur], "digit" );
-				return;
-			}
-		} 
 		else
 		{
 			done = true;
-			throw ParseException( cur, json[cur], "number/." );
+		}
+	}
+
+	curSymbol = ParseSymbol( json[cur] );
+	if( curSymbol == JSONSymbol::Dot )
+	{
+		if( leftSide.size() > 0 )
+		{
+			hasRightSide = true;
+			cur++;
+		}
+		else
+		{
+			done = true;
+			throw ParseException( cur, json[cur], "digit" );
 			return;
 		}
-		cur++;
 	}
 
 	done = hasRightSide;
@@ -419,25 +430,28 @@ void JSONParser::ParseNumber( const std::string json, unsigned int & cur, const 
 		if( curSymbol == JSONSymbol::Number )
 		{
 			rightSide.push_back( json[cur] );
-		}
-		else if( curSymbol == JSONSymbol::WhiteSpace )
-		{
-			done = true;
+			cur++;
 		}
 		else
 		{
 			done = true;
-			throw ParseException( cur, json[cur], "number" );
-			return;
 		}
-		cur++;
 	}
 
 	curSymbol = ParseSymbol( json[cur] );
 	if( curSymbol == JSONParser::Exponent )
 	{
-		exponent = true;
-		cur++;
+		if(( leftSide.size() > 0 ) || ( hasRightSide && rightSide.size() > 0 ))
+		{
+			exponent = true;
+			cur++;
+		} 
+		else
+		{
+			done = true;
+			throw ParseException( cur, json[cur], "digit" );
+			return;
+		}
 	}
 	
 	done = exponent;
@@ -447,18 +461,12 @@ void JSONParser::ParseNumber( const std::string json, unsigned int & cur, const 
 		if( curSymbol == JSONSymbol::Number )
 		{
 			exponentPart.push_back( json[cur] );
-		}
-		else if( curSymbol == JSONSymbol::WhiteSpace )
-		{
-			done = true;
+			cur++;
 		}
 		else
 		{
 			done = true;
-			throw ParseException( cur, json[cur], "number" );
-			return;
 		}
-		cur++;
 	}
 
 
