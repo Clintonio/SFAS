@@ -1,0 +1,17 @@
+{
+	id: 						"L0",
+	name:					"Level 0",
+	enemyCount: 		1,
+	skyboxTextureFile: "textures/skybox.png",
+	enemies: [
+		{
+			type: 		3,
+			position: 	[ 100, 100, 0 ]
+		}
+	],
+	player: {
+		weapon: 		4,
+		startPos: 		[ 0.5, 0.5, 0 ],
+		textureFile: 	"textures/player.png"
+	}
+}

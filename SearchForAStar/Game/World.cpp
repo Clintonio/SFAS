@@ -32,6 +32,7 @@
 #include "Explosion.h"
 #include "Audio/SoundProvider.h"
 #include "Audio/Sound.h"
+#include "LevelLoader.h"
 
 // Binary level includes
 #include "Levels/Level1.h"
@@ -194,6 +195,8 @@ void World::NextLevel()
 
 void World::OpenLevel( int level )
 {
+	LevelLoader loader;
+	loader.LoadLevelFromFile( "Levels/level1.json" );
 	Level * l = getLevel1();
 	
 	// Player Setup

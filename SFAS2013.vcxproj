@@ -16,6 +16,7 @@
     <ClCompile Include="Core\Application.cpp" />
     <ClCompile Include="Core\GamePadInput.cpp" />
     <ClCompile Include="Core\Input.cpp" />
+    <ClCompile Include="Core\JSONParser.cpp" />
     <ClCompile Include="Graphics\Camera.cpp" />
     <ClCompile Include="Graphics\RenderItem.cpp" />
     <ClCompile Include="Graphics\SkyBox.cpp" />
@@ -26,6 +27,7 @@
     <ClCompile Include="SearchForAStar\Game\Entity.cpp" />
     <ClCompile Include="SearchForAStar\Game\EntityList.cpp" />
     <ClCompile Include="SearchForAStar\Game\Explosion.cpp" />
+    <ClCompile Include="SearchForAStar\Game\LevelLoader.cpp" />
     <ClCompile Include="SearchForAStar\Game\Player.cpp" />
     <ClCompile Include="SearchForAStar\Game\Wall.cpp" />
     <ClCompile Include="SearchForAStar\Game\World.cpp" />
@@ -42,6 +44,7 @@
     <ClInclude Include="Core\Application.h" />
     <ClInclude Include="Core\GamePadInput.h" />
     <ClInclude Include="Core\Input.h" />
+    <ClInclude Include="Core\JSONParser.h" />
     <ClInclude Include="Graphics\Camera.h" />
     <ClInclude Include="Graphics\RenderItem.h" />
     <ClInclude Include="Graphics\SkyBox.h" />
@@ -53,6 +56,7 @@
     <ClInclude Include="SearchForAStar\Game\EntityList.h" />
     <ClInclude Include="SearchForAStar\Game\Explosion.h" />
     <ClInclude Include="SearchForAStar\Game\Level.h" />
+    <ClInclude Include="SearchForAStar\Game\LevelLoader.h" />
     <ClInclude Include="SearchForAStar\Game\Levels\Level1.h" />
     <ClInclude Include="SearchForAStar\Game\Player.h" />
     <ClInclude Include="SearchForAStar\Game\ShipEntity.h" />

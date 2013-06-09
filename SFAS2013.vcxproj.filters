@@ -96,6 +96,12 @@
     <ClCompile Include="Core\GamePadInput.cpp">
       <Filter>Core</Filter>
     </ClCompile>
+    <ClCompile Include="SearchForAStar\Game\LevelLoader.cpp">
+      <Filter>SearchForAStar\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\JSONParser.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Core\Application.h">
@@ -180,6 +186,12 @@
       <Filter>SearchForAStar\Game</Filter>
     </ClInclude>
     <ClInclude Include="Core\GamePadInput.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="SearchForAStar\Game\LevelLoader.h">
+      <Filter>SearchForAStar\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\JSONParser.h">
       <Filter>Core</Filter>
     </ClInclude>
   </ItemGroup>
