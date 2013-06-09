@@ -44,7 +44,7 @@ private:
 
 	WCHAR * ToString()  const { return L"Bullet"; }
 
-	enum { kLifetime = 5, kForce = 4000 };
+	enum { kLifetime = 5 };
 
 	static const float sSize;
 	static const float sMass;

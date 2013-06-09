@@ -17,7 +17,7 @@ struct WeaponType
 	float			fireDelay;
 	std::string		weaponAIType;
 	std::wstring	textureFile;
-	std::string	soundFile;
+	std::string		soundFile;
 };
 }
 }

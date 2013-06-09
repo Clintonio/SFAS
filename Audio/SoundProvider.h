@@ -5,6 +5,7 @@
 
 #include <dsound.h>
 #include <string>
+#include <map>
 
 namespace Engine
 {
@@ -38,7 +39,7 @@ private:
 	};
 	
 	// Load a wave file into the given buffer
-	bool LoadWaveFile(const char* filename, LPDIRECTSOUNDBUFFER & buffer) const;
+	bool LoadWaveFile(const std::string filename, LPDIRECTSOUNDBUFFER & buffer) const;
 	// Create a wave format from the given file header
 	void GetWaveFormat(const WaveHeaderType &waveHeader, WAVEFORMATEX & waveFormat) const;
 	// Check if the header for this wave file is valid
@@ -47,6 +48,8 @@ private:
 	LPDIRECTSOUND8 m_DirectSound;
 
 	static const DWORD sDirectSoundFlags;
+
+	static std::map<std::string, Sound*> sSoundPool;
 
 };
 }

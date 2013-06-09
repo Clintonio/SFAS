@@ -75,7 +75,7 @@ void Bullet::Fire( D3DXVECTOR3 direction, ShipEntity * owner )
 	OnReset();
 	m_SoundPlayed = false;
 	SetPosition( owner->GetPosition() + direction * max(owner->GetScale().x, owner->GetScale().y) );
-	AddForce( direction * kForce );
+	AddForce( direction * m_WeaponType->speed );
 	SetActive( true );
 	m_Owner = owner;
 }

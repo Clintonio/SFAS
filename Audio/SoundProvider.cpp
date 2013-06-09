@@ -7,6 +7,9 @@ using namespace Engine;
 
 const DWORD SoundProvider::sDirectSoundFlags = DSSCL_PRIORITY;
 
+std::map<std::string, Sound*> SoundProvider::sSoundPool;
+
+
 SoundProvider::SoundProvider()
 {
 
@@ -69,18 +72,19 @@ void SoundProvider::GetWaveFormat(const WaveHeaderType &waveHeader, WAVEFORMATEX
 
 Sound * SoundProvider::CreateSoundBufferFromFile(const std::string file)
 {
-	Sound * sound = 0;
+	Sound * sound = sSoundPool[file];
 	LPDIRECTSOUNDBUFFER buffer;
 	
-	if( LoadWaveFile( file.c_str(), buffer ) )
+	if( ( sound == 0 ) && LoadWaveFile( file.c_str(), buffer ) )
 	{
 		sound = new Sound(buffer);
+		sSoundPool[file] = sound;
 	}
 
 	return sound;
 }
 
-bool SoundProvider::LoadWaveFile(const char* filename, LPDIRECTSOUNDBUFFER& buffer) const
+bool SoundProvider::LoadWaveFile(const std::string filename, LPDIRECTSOUNDBUFFER& buffer) const
 {
 	FILE* filePtr;
 	WaveHeaderType waveFileHeader;
@@ -92,7 +96,7 @@ bool SoundProvider::LoadWaveFile(const char* filename, LPDIRECTSOUNDBUFFER& buff
 	WAVEFORMATEX waveFormat;
 	HRESULT result;
 	
-	if((fopen_s(&filePtr, filename, "rb") != 0) || !ValidWaveFormat(filePtr, waveFileHeader))
+	if((fopen_s(&filePtr, filename.c_str(), "rb") != 0) || !ValidWaveFormat(filePtr, waveFileHeader))
 	{
 		return false;
 	}

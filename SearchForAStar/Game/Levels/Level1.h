@@ -6,7 +6,7 @@ using SFAS::Game::Level;
 #include "WeaponType.h"
 
 Level getLevel1() {
-	WeaponType* weaponTypes = new WeaponType[2];
+	WeaponType* weaponTypes = new WeaponType[3];
 	weaponTypes[0].name = "None";
 	weaponTypes[0].ranged   = false;
 
@@ -19,6 +19,15 @@ Level getLevel1() {
 	weaponTypes[1].textureFile	= L"textures/bullet.png";
 	weaponTypes[1].weaponAIType = "direct";
 
+	weaponTypes[2].name			= "Homing Rocket";
+	weaponTypes[2].damage		= 5;
+	weaponTypes[2].ranged		= true;
+	weaponTypes[2].fireDelay	= 2.5f;
+	weaponTypes[2].soundFile	= "Sound/laser1.wav";
+	weaponTypes[2].speed		= 1000.0f;
+	weaponTypes[2].textureFile	= L"textures/bullet.png";
+	weaponTypes[2].weaponAIType = "follow";
+
 	Level::EnemyType* enemyTypes = new Level::EnemyType[2];
 	enemyTypes[0].id			= 0;
 	enemyTypes[0].health		= 1;
@@ -30,7 +39,7 @@ Level getLevel1() {
 	enemyTypes[1].id			= 0;
 	enemyTypes[1].health		= 3;
 	enemyTypes[1].aiType		= "avoid";
-	enemyTypes[1].weaponType	= &weaponTypes[1];
+	enemyTypes[1].weaponType	= &weaponTypes[2];
 	enemyTypes[1].dimensions	= D3DXVECTOR3(30.0f, 30.0f, 0.0f);
 	enemyTypes[1].textureFile	= L"textures/enemy2.png";
 	
