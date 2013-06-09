@@ -60,6 +60,7 @@ private:
 	float				m_TimeSinceStateChange;
 	Engine::RenderItem	m_Cursor;
 	D3DXVECTOR2			m_PlayerMousePosition;
+	bool				m_DrawCursor;
 };
 }
 }

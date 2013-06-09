@@ -75,40 +75,43 @@ GamePadInput::~GamePadInput(void)
 
 void GamePadInput::Update( float dt )
 {
-	XInputGetState(m_ControllerNumber, &m_InputState);
-
-	for( unsigned int i = 0; i < kNumInputOptions; i++ )
+	if( m_Enabled )
 	{
-		Key key = sKeyCodes[i].key;
-		m_KeyStates[key].time += dt;
-		m_KeyStates[key].LastFrameKeyDown = m_KeyStates[key].KeyDown;
-		m_KeyStates[key].KeyDown = (m_InputState.Gamepad.wButtons & sKeyCodes[i].code);
+		XInputGetState(m_ControllerNumber, &m_InputState);
 
-		if( m_KeyStates[key].KeyDown && m_KeyStates[key].time >= kfButtonRepeatTime )
+		for( unsigned int i = 0; i < kNumInputOptions; i++ )
 		{
-			m_KeyStates[key].Repeat = true;
-			m_KeyStates[key].time = 0.0f;
+			Key key = sKeyCodes[i].key;
+			m_KeyStates[key].time += dt;
+			m_KeyStates[key].LastFrameKeyDown = m_KeyStates[key].KeyDown;
+			m_KeyStates[key].KeyDown = (m_InputState.Gamepad.wButtons & sKeyCodes[i].code);
+
+			if( m_KeyStates[key].KeyDown && m_KeyStates[key].time >= kfButtonRepeatTime )
+			{
+				m_KeyStates[key].Repeat = true;
+				m_KeyStates[key].time = 0.0f;
+			}
+			else
+			{
+				m_KeyStates[key].Repeat = false;
+			}
 		}
-		else
+
+		DoGamePadMouseEmulation();
+		// In this implementation we're mapping right joystick to the mouse
+		DoRightJoyStickInput();
+		DoLeftJoyStickInput();
+
+		// Update the vibration
+		if ( m_VibrateTimeRemaining > 0.0f )
 		{
-			m_KeyStates[key].Repeat = false;
-		}
-	}
+			m_VibrateTimeRemaining -= dt;
 
-	DoGamePadMouseEmulation();
-	// In this implementation we're mapping right joystick to the mouse
-	DoRightJoyStickInput();
-	DoLeftJoyStickInput();
-
-	// Update the vibration
-	if ( m_VibrateTimeRemaining > 0.0f )
-	{
-		m_VibrateTimeRemaining -= dt;
-
-		if ( m_VibrateTimeRemaining <= 0.0f )
-		{
-			m_VibrateTimeRemaining = 0.0f;
-			Vibrate(0.0f, 0.0f); // Disables vibration
+			if ( m_VibrateTimeRemaining <= 0.0f )
+			{
+				m_VibrateTimeRemaining = 0.0f;
+				Vibrate(0.0f, 0.0f); // Disables vibration
+			}
 		}
 	}
 }

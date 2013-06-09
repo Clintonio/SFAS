@@ -44,10 +44,14 @@ void MainGameState::RenderOverlay( Engine::TextRenderer* txt )
 void MainGameState::Render(float dt)
 {
 	m_World.Render(dt);
-	m_Cursor.Draw(
-		D3DXVECTOR3(m_PlayerMousePosition.x, m_PlayerMousePosition.y, 0),
-		D3DXVECTOR3(50, 50, 0)
-	);
+
+	if( m_DrawCursor )
+	{
+		m_Cursor.Draw(
+			D3DXVECTOR3(m_PlayerMousePosition.x, m_PlayerMousePosition.y, 0),
+			D3DXVECTOR3(50, 50, 0)
+		);
+	}
 }
 
 bool MainGameState::Update( Engine::Input * input, float dt)
@@ -92,6 +96,13 @@ bool MainGameState::Update( Engine::Input * input, float dt)
 					SetPageText( L"" );
 					m_GameState = keGamePlay;
 					m_World.NextLevel();
+					input->Enable();
+					m_DrawCursor = true;
+				}
+				else
+				{
+					m_DrawCursor = false;
+					input->Disable();
 				}
 				break;
 			case keGamePlay:
@@ -102,7 +113,9 @@ bool MainGameState::Update( Engine::Input * input, float dt)
 					{
 						SetPageText( L"Level Complete!" );
 					}
-				
+					
+					input->Disable();
+					m_DrawCursor = false;
 					m_GameState = keNewLevel;
 				}
 				else if( m_World.IsGameOver() )

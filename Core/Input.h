@@ -29,8 +29,12 @@ public:
 
 	// Provides vibration feedback if supported
 	virtual void Vibrate(float duration, float strength) { }
-
+	// Update the current state of input
 	virtual void Update( float dt );
+	// Disable input updating
+	void Disable() { m_Enabled = false; }
+	// Enable input updating
+	void Enable() { m_Enabled = true; }
 
 	enum Key
 	{
@@ -87,6 +91,8 @@ protected:
 	MouseButton m_MouseButton1;
 	
 	int m_WindowHeight, m_WindowWidth;
+
+	bool m_Enabled;
 private:
 
 	static const int sKeyCodes[kNumInputOptions];

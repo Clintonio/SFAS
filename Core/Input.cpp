@@ -16,7 +16,7 @@ using Engine::Input;
 const int Input::sKeyCodes[kNumInputOptions] = { 32, 87, 83, 65, 68, VK_ESCAPE, 0x50 };
 const float Input::kfButtonRepeatTime = 0.2f;
 
-Input::Input()
+Input::Input() : m_Enabled( true )
 {
 	for( int count = 0; count < kNumInputOptions; count++ )
 	{
@@ -112,52 +112,55 @@ const bool Input::inClickRadius( MouseButton btn, int xPos, int yPos )
 
 void Input::Update( float dt )
 {
-	for( int count = 0; count < kNumInputOptions; count++ )
+	if( m_Enabled )
 	{
-		m_KeyStates[count].time += dt;
-		m_KeyStates[count].LastFrameKeyDown = m_KeyStates[count].KeyDown;
-
-		if( m_KeyStates[count].KeyDown && m_KeyStates[count].time >= kfButtonRepeatTime )
+		for( int count = 0; count < kNumInputOptions; count++ )
 		{
-			m_KeyStates[count].Repeat = true;
-			m_KeyStates[count].time = 0.0f;
-		}
-		else
-		{
-			m_KeyStates[count].Repeat = false;
-		}
+			m_KeyStates[count].time += dt;
+			m_KeyStates[count].LastFrameKeyDown = m_KeyStates[count].KeyDown;
 
-		// Reset the mouse clicks
-		m_MouseButton1.lastFrameClicked = false;
-		m_MouseButton1.lastClickX = 0;
-		m_MouseButton1.lastClickY = 0;
+			if( m_KeyStates[count].KeyDown && m_KeyStates[count].time >= kfButtonRepeatTime )
+			{
+				m_KeyStates[count].Repeat = true;
+				m_KeyStates[count].time = 0.0f;
+			}
+			else
+			{
+				m_KeyStates[count].Repeat = false;
+			}
 
+			// Reset the mouse clicks
+			m_MouseButton1.lastFrameClicked = false;
+			m_MouseButton1.lastClickX = 0;
+			m_MouseButton1.lastClickY = 0;
+
+		}
 	}
 }
 
 bool Input::JustPressed( Key key ) const
 {
-	return ( m_KeyStates[key].KeyDown && !m_KeyStates[key].LastFrameKeyDown );
+	return ( m_Enabled && m_KeyStates[key].KeyDown && !m_KeyStates[key].LastFrameKeyDown );
 }
 
 bool Input::JustReleased( Key key ) const
 {
-	return ( !m_KeyStates[key].KeyDown && m_KeyStates[key].LastFrameKeyDown );
+	return ( m_Enabled && !m_KeyStates[key].KeyDown && m_KeyStates[key].LastFrameKeyDown );
 }
 
 bool Input::Held( Key key ) const
 {
-	return ( m_KeyStates[key].KeyDown && m_KeyStates[key].LastFrameKeyDown );
+	return ( m_Enabled && m_KeyStates[key].KeyDown && m_KeyStates[key].LastFrameKeyDown );
 }
 
 bool Input::PressedWithRepeat( Key key ) const
 {
-	return ( m_KeyStates[key].KeyDown && m_KeyStates[key].Repeat );
+	return ( m_Enabled && m_KeyStates[key].KeyDown && m_KeyStates[key].Repeat );
 }
 
 bool Input::HasUserClicked( Button btn ) const
 {
-	if ( btn == Button::MouseButton1 && m_MouseButton1.lastFrameClicked)
+	if ( m_Enabled && btn == Button::MouseButton1 && m_MouseButton1.lastFrameClicked)
 	{
 		return true;
 	}
@@ -167,7 +170,7 @@ bool Input::HasUserClicked( Button btn ) const
 
 bool Input::IsButtonHeld ( Button btn ) const 
 {
-	if ( btn == Button::MouseButton1 && m_MouseButton1.pressed ) 
+	if ( m_Enabled && btn == Button::MouseButton1 && m_MouseButton1.pressed ) 
 	{
 		return true;
 	}
