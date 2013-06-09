@@ -83,7 +83,7 @@ void Enemy::Update( World * world, float dt )
 	}
 
 	m_LastFireTime += dt;
-	if( m_WeaponType->ranged && ( m_LastFireTime > 1.0f ) )
+	if( m_WeaponType->ranged && ( m_LastFireTime > m_WeaponType->fireDelay ) )
 	{
 		Bullet * bullet = new Bullet( m_WeaponType );
 		bullet->Fire(directionToPlayer, this);
