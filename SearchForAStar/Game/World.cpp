@@ -244,10 +244,6 @@ void World::OpenLevel( int level )
 void World::ClearLevel()
 {
 	m_EntityList->clear();
-	if( m_LevelMusic != 0 )
-	{
-		m_LevelMusic->Stop();
-	}
 }
 
 void World::ResetLevel()

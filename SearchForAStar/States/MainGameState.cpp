@@ -117,6 +117,7 @@ bool MainGameState::Update( Engine::Input * input, float dt)
 					input->Disable();
 					m_DrawCursor = false;
 					m_GameState = keNewLevel;
+					m_World.ClearLevel();
 				}
 				else if( m_World.IsGameOver() )
 				{
