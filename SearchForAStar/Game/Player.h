@@ -15,6 +15,7 @@
 #include <list>
 #include "Audio/Sound.h"
 #include "ShipEntity.h"
+#include "WeaponType.h"
 
 // Forward declare
 namespace Engine { 
@@ -72,6 +73,8 @@ private:
 	Bullet * Fire( float vx, float vy );
 	
 	Engine::Sound* m_ExplosionSound;
+	// The player's weapon description
+	WeaponType m_WeaponType;
 
 	inline bool Player::CanFire() const;
 	// Override the bullet hit to add score to player
@@ -83,7 +86,6 @@ private:
 	static const float sSize;
 	static const float sMass;
 	static const float sDamping;
-	static const float sFireDelay;
 
 	// Player Data
 	Bullet * m_Bullets[kNumBullets];	// List of bullets for the player to shoot

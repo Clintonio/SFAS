@@ -4,6 +4,7 @@
 
 #include <string>
 #include <d3dx9.h>
+#include "WeaponType.h"
 
 namespace SFAS
 {
@@ -12,22 +13,21 @@ namespace Game
 
 struct Level
 {
+
 	struct EnemyType 
 	{
-		unsigned int id;
-		int health;
-		std::string aiType;
-		std::string weapon;
-		D3DXVECTOR3 dimensions;
-		std::wstring textureFile;
+		unsigned int	id;
+		int				health;
+		std::string		aiType;
+		WeaponType*		weaponType;
+		D3DXVECTOR3		dimensions;
+		std::wstring	textureFile;
 	};
 
 	struct Enemy 
 	{
-		unsigned int type;
-		D3DXVECTOR3 pos;
-		
-		// struct SpawnCondition
+		unsigned int	type;
+		D3DXVECTOR3		pos;
 
 		Enemy(
 			unsigned int type,
@@ -40,15 +40,15 @@ struct Level
 		D3DXVECTOR3 pos;
 	};
 
-	std::string id;
-	std::string name;
+	std::string			id;
+	std::string			name;
 	//std::string musicFile;
-	unsigned int enemyTypeCount;
-	EnemyType* enemyTypes;
-	unsigned int enemyCount;
-	Level::Enemy* enemies;
-	std::wstring skyboxTextureFile;
-	
+	unsigned int		enemyTypeCount;
+	EnemyType*			enemyTypes;
+	unsigned int		enemyCount;
+	Level::Enemy*		enemies;
+	std::wstring		skyboxTextureFile;
+	Level::WeaponType*	weaponTypes;
 };
 }
 }

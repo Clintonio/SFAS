@@ -12,6 +12,8 @@
 #pragma once
 
 #include "Entity.h"
+#include <map>
+#include "WeaponType.h"
 
 namespace Engine
 {
@@ -28,7 +30,7 @@ class ShipEntity;
 class Bullet : public Entity
 {
 public:
-	Bullet( );
+	Bullet( WeaponType* weaponType );
 
 	void Update( World * world, float dt );
 	void Fire( D3DXVECTOR3 direction, ShipEntity * owner );
@@ -36,7 +38,6 @@ public:
 	bool IsPlayerControlled() const;
 	
 	static const Entity::EntityType kEntityType;
-	
 	// Get the entity type for this entity
 	const Entity::EntityType GetEntityType() { return kEntityType; }
 private: 
@@ -49,10 +50,15 @@ private:
 	static const float sMass;
 	static const float sDamping;
 
-	// The sound of this bullet
-	static Engine::Sound* sBulletSound;
+	// The available bullet sounds
+	static std::map<std::string, Engine::Sound*> sBulletSound;
+	// The available bullet textures
+	static std::map<std::string, Engine::RenderItem*> sRenderItem;
 	// The player that fired this bullet
 	ShipEntity * m_Owner;
+	// Weapon type descriptor
+	WeaponType* m_WeaponType;
+	// Whether the sound has played or not
 	bool m_SoundPlayed;
 
 	bool OnCollision( Entity& other, World * world );

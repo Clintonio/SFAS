@@ -3,22 +3,36 @@
 using SFAS::Game::Level;
 
 #include <d3dx9.h>
+#include "WeaponType.h"
 
 Level getLevel1() {
-	Level::EnemyType* enemyTypes = new Level::EnemyType[2];
-	enemyTypes[0].id = 0;
-	enemyTypes[0].health = 1;
-	enemyTypes[0].aiType = "suicide";
-	enemyTypes[0].weapon = "none";
-	enemyTypes[0].dimensions = D3DXVECTOR3(20.0f, 20.0f, 0.0f);
-	enemyTypes[0].textureFile = L"textures/enemy.png";
+	WeaponType* weaponTypes = new WeaponType[2];
+	weaponTypes[0].name = "None";
+	weaponTypes[0].ranged   = false;
 
-	enemyTypes[1].id = 0;
-	enemyTypes[1].health = 3;
-	enemyTypes[1].aiType = "avoid";
-	enemyTypes[1].weapon = "laser";
-	enemyTypes[1].dimensions = D3DXVECTOR3(30.0f, 30.0f, 0.0f);
-	enemyTypes[1].textureFile = L"textures/enemy2.png";
+	weaponTypes[1].name			= "Laser";
+	weaponTypes[1].damage		= 1;
+	weaponTypes[1].ranged		= true;
+	weaponTypes[1].fireDelay	= 0.5f;
+	weaponTypes[1].soundFile	= "Sound/laser1.wav";
+	weaponTypes[1].speed		= 4000.0f;
+	weaponTypes[1].textureFile	= L"textures/bullet.png";
+	weaponTypes[1].weaponAIType = "direct";
+
+	Level::EnemyType* enemyTypes = new Level::EnemyType[2];
+	enemyTypes[0].id			= 0;
+	enemyTypes[0].health		= 1;
+	enemyTypes[0].aiType		= "suicide";
+	enemyTypes[0].weaponType	= &weaponTypes[0];
+	enemyTypes[0].dimensions	= D3DXVECTOR3(20.0f, 20.0f, 0.0f);
+	enemyTypes[0].textureFile	= L"textures/enemy.png";
+
+	enemyTypes[1].id			= 0;
+	enemyTypes[1].health		= 3;
+	enemyTypes[1].aiType		= "avoid";
+	enemyTypes[1].weaponType	= &weaponTypes[1];
+	enemyTypes[1].dimensions	= D3DXVECTOR3(30.0f, 30.0f, 0.0f);
+	enemyTypes[1].textureFile	= L"textures/enemy2.png";
 	
 
 	Level::Enemy* level1Enemies = static_cast<Level::Enemy*> 
@@ -41,13 +55,14 @@ Level getLevel1() {
 
 	Level level1;
 	
-	level1.id   = "L0";
-	level1.name = "Level 0";
-	level1.enemyCount = 5;
-	level1.enemies = level1Enemies;
+	level1.id				 = "L0";
+	level1.name				 = "Level 0";
+	level1.enemyCount		 = 5;
+	level1.enemies			 = level1Enemies;
 	level1.skyboxTextureFile = L"textures/skybox.png";
-	level1.enemyTypeCount = 1;
-	level1.enemyTypes = enemyTypes;
+	level1.enemyTypeCount	 = 1;
+	level1.enemyTypes		 = enemyTypes;
+	level1.weaponTypes		 = weaponTypes;
 
 	return level1;
 }

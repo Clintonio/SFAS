@@ -12,8 +12,9 @@
 
 #include "Entity.h"
 #include "World.h"
-#include "Level.h"
 #include "ShipEntity.h"
+#include "Level.h"
+#include "WeaponType.h"
 
 namespace Engine
 {
@@ -46,12 +47,6 @@ public:
 	// Get the entity type for this entity
 	const Entity::EntityType GetEntityType() { return kEntityType; }
 private:
-	enum Weapon 
-	{
-		none,
-		laser
-	};
-
 	enum AIRoutine 
 	{
 		suicide,
@@ -61,16 +56,15 @@ private:
 	WCHAR * ToString()  const { return L"Enemy"; }
 
 	void SetAIRoutine( std::string & type );
-	void SetWeapon( std::string & type );
 	// Overridden collision
 	bool OnCollision( Entity& other, World * world );
 	// Override the sound loading
 	void LoadSounds(Engine::SoundProvider* soundProvider);
 	
-	Weapon		m_WeaponType;
-	AIRoutine	m_AIRoutine;
-	float		m_LastFireTime;
-	int			m_Health;
+	WeaponType*			m_WeaponType;
+	AIRoutine			m_AIRoutine;
+	float				m_LastFireTime;
+	int					m_Health;
 
 	static Engine::Sound* sExplosionSound;
 };

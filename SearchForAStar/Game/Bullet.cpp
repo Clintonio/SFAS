@@ -14,6 +14,7 @@
 #include "Player.h"
 #include "Enemy.h" 
 #include "Audio/SoundProvider.h"
+#include "WeaponType.h"
 
 using namespace SFAS::Game;
 
@@ -21,24 +22,33 @@ const float Bullet::sSize = 2.0f;
 const float Bullet::sMass = 0.5f;
 const float Bullet::sDamping = 0.9999f;
 
-Engine::Sound* Bullet::sBulletSound = 0;
+std::map<std::string, Engine::Sound*> Bullet::sBulletSound;
+std::map<std::string, Engine::RenderItem*> Bullet::sRenderItem;
 
 const Entity::EntityType Bullet::kEntityType(20);
 
-Bullet::Bullet( ) : Entity( D3DXVECTOR3(), D3DXVECTOR3( sSize, sSize, 0.0f ), sDamping ), m_SoundPlayed(false)
+Bullet::Bullet( WeaponType* weaponType ) : 
+	Entity( D3DXVECTOR3(), D3DXVECTOR3( sSize, sSize, 0.0f ), sDamping ), 
+	m_SoundPlayed(false)
 {
 	SetMass( sMass );
-	m_RenderItem = sTextureLoader->LoadTexturedRenderItem(L"textures/bullet.png", 1.0f);
+	m_WeaponType = weaponType;
+	if( sRenderItem[m_WeaponType->name] == NULL ) 
+	{
+		sRenderItem[m_WeaponType->name] = sTextureLoader->LoadTexturedRenderItem(m_WeaponType->textureFile, 1.0f);
+	}
+
+	m_RenderItem = sRenderItem[m_WeaponType->name];
 }
 
 void Bullet::LoadSounds(Engine::SoundProvider* soundProvider)
 {
-	if( sBulletSound == 0 )
+	if( sBulletSound[m_WeaponType->name] == NULL )
 	{
-		Engine::Sound* bulletSound = soundProvider->CreateSoundBufferFromFile("Sound/laser1.wav");
+		Engine::Sound* bulletSound = soundProvider->CreateSoundBufferFromFile( m_WeaponType->soundFile );
 		if( bulletSound != 0 )
 		{
-			sBulletSound = bulletSound;
+			sBulletSound[m_WeaponType->name] = bulletSound;
 		}
 	}
 }
@@ -48,9 +58,9 @@ void Bullet::Update( World * world, float dt )
 {
 	Entity::Update( world, dt );
 	
-	if( !m_SoundPlayed && ( sBulletSound != 0 ) ) 
+	if( !m_SoundPlayed && ( sBulletSound[m_WeaponType->name] != NULL ) ) 
 	{
-		sBulletSound->PlaySoundFromStart();
+		sBulletSound[m_WeaponType->name]->PlaySoundFromStart();
 		m_SoundPlayed = true;
 	}
 

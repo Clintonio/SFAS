@@ -22,6 +22,7 @@
 #include "Explosion.h"
 #include "Audio/SoundProvider.h"
 #include "Enemy.h"
+#include "Level.h"
 
 using Engine::Input;
 using namespace SFAS::Game;
@@ -30,7 +31,6 @@ const float Player::sMoveForce	= 8000.0f;
 const float Player::sSize		= 20.0f;
 const float Player::sMass		= 100.0f;
 const float Player::sDamping	= 0.39f;
-const float Player::sFireDelay	= 0.2f;
 
 const Entity::EntityType Player::kEntityType(1);
 
@@ -38,10 +38,19 @@ Player::Player( int lives ) : ShipEntity( D3DXVECTOR3(), D3DXVECTOR3( sSize, sSi
 	m_Lives( lives ), m_Score( 0 ), m_Multiplier( 1 ), m_Best( 0 ), m_TimeSinceLastFire( 0 )
 {
 	SetMass( sMass );
-
+	
+	// Setup the player weapon
+	m_WeaponType.name		= "Laser";
+	m_WeaponType.damage		= 1;
+	m_WeaponType.ranged		= true;
+	m_WeaponType.fireDelay	= 0.2f;
+	m_WeaponType.soundFile	= "Sound/laser1.wav";
+	m_WeaponType.speed		= 4000.0f;
+	m_WeaponType.textureFile	= L"textures/bullet.png";
+	m_WeaponType.weaponAIType = "direct";
 	for( int count = 0; count < kNumBullets; count++ )
 	{
-		m_Bullets[count] = new Bullet( );
+		m_Bullets[count] = new Bullet( &m_WeaponType );
 	}
 
 	m_RenderItem = sTextureLoader->LoadTexturedRenderItem(L"textures/player.png", 1.0f);
@@ -141,7 +150,7 @@ void Player::Update( World * world, float dt )
 
 inline bool Player::CanFire() const
 {
-	return ( sFireDelay < m_TimeSinceLastFire );
+	return ( m_WeaponType.fireDelay < m_TimeSinceLastFire );
 }
 
 bool Player::OnCollision( Entity& other, World * world )

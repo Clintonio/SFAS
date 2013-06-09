@@ -34,10 +34,11 @@ Enemy::Enemy( Level::EnemyType & type, float x, float y ) :
 	SetScale( type.dimensions );
 	SetMass( sMass );
 	SetActive(true);
-	SetWeapon( type.weapon );
 	SetAIRoutine( type.aiType );
-	m_Health = type.health;
-	m_RenderItem = sTextureLoader->LoadTexturedRenderItem(type.textureFile, 1.0f);
+
+	m_WeaponType	= type.weaponType; 
+	m_Health		= type.health;
+	m_RenderItem	= sTextureLoader->LoadTexturedRenderItem(type.textureFile, 1.0f);
 }
 
 Enemy::~Enemy(void)
@@ -82,9 +83,9 @@ void Enemy::Update( World * world, float dt )
 	}
 
 	m_LastFireTime += dt;
-	if( m_WeaponType == Weapon::laser && ( m_LastFireTime > 1.0f ) )
+	if( m_WeaponType->ranged && ( m_LastFireTime > 1.0f ) )
 	{
-		Bullet * bullet = new Bullet();
+		Bullet * bullet = new Bullet( m_WeaponType );
 		bullet->Fire(directionToPlayer, this);
 		world->AddEntity(bullet);
 		m_LastFireTime = 0.0f;
@@ -104,18 +105,6 @@ void Enemy::SetAIRoutine( std::string & type )
 	else 
 	{
 		m_AIRoutine = AIRoutine::suicide;
-	}
-}
-
-void Enemy::SetWeapon( std::string & type )
-{
-	if( type == "laser" )
-	{
-		m_WeaponType = Weapon::laser;
-	} 
-	else
-	{
-		m_WeaponType = Weapon::none;
 	}
 }
 
