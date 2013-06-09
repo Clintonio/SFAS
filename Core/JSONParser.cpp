@@ -1,5 +1,6 @@
 #include "JSONParser.h"
 #include <vector>
+#include <sstream>
 
 using namespace Engine;
 
@@ -7,6 +8,19 @@ JSONParser::JSONParser() :
 	m_ErrorPosition( 0 )
 {
 
+}
+
+const std::string JSONParser::GetErrorMessage() const
+{
+	std::stringstream ss;
+	ss << "Parser error: Expecting ";
+	ss << m_ExpectedString;
+	ss << ", but got: ";
+	ss << m_ErrorChar;
+	ss << " at string index ";
+	ss << m_ErrorPosition;
+
+	return ss.str();
 }
 
 void JSONParser::ParseJSONFile( const std::string file )
@@ -17,14 +31,20 @@ void JSONParser::ParseJSONFile( const std::string file )
 	unsigned int length = json.length();
 	unsigned int cur = 0;
 
-	curSymbol = ParseSymbol( json[cur++] );
-	if( curSymbol == JSONSymbol::Object )
+	try {
+		curSymbol = ParseSymbol( json[cur++] );
+		if( curSymbol == JSONSymbol::Object )
+		{
+			ParseObject( json, cur, length );
+		}
+		else
+		{
+			throw ParseException( cur, json[cur], "{" );
+		}
+	} 
+	catch ( ParseException e )
 	{
-		ParseObject( json, cur, length );
-	}
-	else
-	{
-		SetError( cur, json[cur], "{" );
+		SetError( e.m_ErrorPosition, e.m_ErrorChar, e.m_ExpectedString );
 	}
 }
 
@@ -152,26 +172,26 @@ void JSONParser::ParseObject( const std::string json, unsigned int & cur, const 
 				else
 				{
 					done = true;
-					SetError( cur, json[cur], ":" );
+					throw ParseException( cur, json[cur], ":" );
 				}
 			}
 			else
 			{
 				done = true;
-				SetError( cur, json[cur], "}" );
+				throw ParseException( cur, json[cur], "}" );
 			}
 		}
 		else if( curSymbol == JSONSymbol::ObjectEnd )
 		{
 			if( allowAnother )
 			{
-				SetError( cur, json[cur], "," );
+				throw ParseException( cur, json[cur], "," );
 			}
 			done = true;
 		}
 		else if( curSymbol != JSONSymbol::WhiteSpace )
 		{
-			SetError( cur, json[cur], "\\" );
+			throw ParseException( cur, json[cur], "\"" );
 			done = true;
 		}
 
@@ -230,7 +250,7 @@ bool JSONParser::ParseMapSeparator( const std::string json, unsigned int & cur, 
 		}
 		else if( curSymbol != JSONSymbol::WhiteSpace )
 		{
-			SetError( cur, json[cur], ":" );
+			throw ParseException( cur, json[cur], ":" );
 			done = true;
 		}
 	}
@@ -253,7 +273,7 @@ bool JSONParser::ParseVariableSeparator( const std::string json, unsigned int & 
 		}
 		else if( curSymbol != JSONSymbol::WhiteSpace )
 		{
-			SetError( cur, json[cur], ":" );
+			throw ParseException( cur, json[cur], "," );
 			done = true;
 		}
 	}
@@ -298,7 +318,7 @@ void JSONParser::ParseVariable( const std::string json, unsigned int & cur, cons
 		}
 		else if( curSymbol != JSONSymbol::WhiteSpace )
 		{
-			SetError( cur, json[cur], "variable" );
+			throw ParseException( cur, json[cur], "variable" );
 			done = true;
 		}
 	}
@@ -318,7 +338,7 @@ void JSONParser::ParseArray( const std::string json, unsigned int & cur, const u
 		{
 			if( allowAnother )
 			{
-				SetError( cur, json[cur], "variable" );
+				throw ParseException( cur, json[cur], "variable" );
 			} 
 			done = true;
 		}
@@ -332,7 +352,7 @@ void JSONParser::ParseArray( const std::string json, unsigned int & cur, const u
 			}
 			else
 			{
-				SetError( cur, json[cur], "]" );
+				throw ParseException( cur, json[cur], "]" );
 				done = true;
 			}
 		}
@@ -379,14 +399,14 @@ void JSONParser::ParseNumber( const std::string json, unsigned int & cur, const 
 			else
 			{
 				done = true;
-				SetError( cur, json[cur], "digit" );
+				throw ParseException( cur, json[cur], "digit" );
 				return;
 			}
 		} 
 		else
 		{
 			done = true;
-			SetError( cur, json[cur], "number/." );
+			throw ParseException( cur, json[cur], "number/." );
 			return;
 		}
 		cur++;
@@ -407,7 +427,7 @@ void JSONParser::ParseNumber( const std::string json, unsigned int & cur, const 
 		else
 		{
 			done = true;
-			SetError( cur, json[cur], "number" );
+			throw ParseException( cur, json[cur], "number" );
 			return;
 		}
 		cur++;
@@ -435,7 +455,7 @@ void JSONParser::ParseNumber( const std::string json, unsigned int & cur, const 
 		else
 		{
 			done = true;
-			SetError( cur, json[cur], "number" );
+			throw ParseException( cur, json[cur], "number" );
 			return;
 		}
 		cur++;
@@ -452,7 +472,7 @@ bool JSONParser::ParseTrue( const std::string json, unsigned int & cur, const un
 	}
 	else
 	{
-		SetError( cur, json[--cur], "true" );
+		throw ParseException( cur, json[--cur], "true" );
 		return false;
 	}
 }
@@ -465,7 +485,7 @@ bool JSONParser::ParseFalse( const std::string json, unsigned int & cur, const u
 	}
 	else
 	{
-		SetError( cur, json[--cur], "true" );
+		throw ParseException( cur, json[--cur], "true" );
 		return false;
 	}
 }
@@ -478,7 +498,7 @@ bool JSONParser::ParseNull( const std::string json, unsigned int & cur, const un
 	}
 	else
 	{
-		SetError( cur, json[--cur], "true" );
+		throw ParseException( cur, json[--cur], "true" );
 		return false;
 	}
 }

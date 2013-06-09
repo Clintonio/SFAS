@@ -4,9 +4,11 @@
 #pragma once
 
 #include <string>
+#include <stdexcept>
 
 namespace Engine
 {
+
 class JSONParser
 {
 public:
@@ -14,9 +16,10 @@ public:
 	
 	// Gets the position of the last error
 	const unsigned int GetErrorPosition() const { return m_ErrorPosition; }
-	const bool HasError() { return m_Error; }
-	const std::string GetExpectedString() { return m_ExpectedString; }
-	const char GetErrorChar() { return m_ErrorChar; }
+	const bool HasError() const { return m_Error; }
+	const std::string GetExpectedString() const { return m_ExpectedString; }
+	const char GetErrorChar() const { return m_ErrorChar; }
+	const std::string GetErrorMessage() const;
 	
 	void ParseJSONFile( std::string file );
 private:
@@ -72,5 +75,26 @@ private:
 	unsigned int m_ErrorPosition;
 	// True if parsing failed
 	bool m_Error;
+};
+
+class ParseException : public std::runtime_error {
+public:
+
+	ParseException( unsigned int pos, char errorChar, std::string expectedString ) : 
+		std::runtime_error( "Parse exception" ),
+		m_ExpectedString( expectedString ),
+		m_ErrorPosition( pos ),
+		m_ErrorChar( errorChar ) 
+	{
+
+	}
+
+public:
+	// The error character
+	const char m_ErrorChar;
+	// Text for the error
+	const std::string m_ExpectedString;
+	// The position of an error that stopped parsing
+	const unsigned int m_ErrorPosition;
 };
 }

@@ -16,9 +16,10 @@ const Level* LevelLoader::LoadLevelFromFile( std::string file )
 
 	parser.ParseJSONFile( file );
 
+	std::string error;
 	if( parser.HasError() )
 	{
-		unsigned int errorPosition = parser.GetErrorPosition();
+		error = parser.GetErrorMessage();
 	}
 
 
