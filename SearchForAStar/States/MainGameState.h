@@ -54,6 +54,7 @@ private:
 
 	enum { keMessageDisplayTime = 1 };
 
+	bool				m_GamePaused;
 	State				m_GameState;
 	Game::World			m_World;
 	float				m_TimeSinceStateChange;

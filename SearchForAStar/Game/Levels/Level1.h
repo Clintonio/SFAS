@@ -79,7 +79,7 @@ Level getLevel1() {
 	
 	// Define enemies
 	level1Enemies[0] = Level::Enemy (3, D3DXVECTOR3(100,100,0));
-
+	
 	Level level1;
 	
 	level1.id				 = "L0";
