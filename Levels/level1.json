@@ -6,7 +6,7 @@
 	"enemies": [
 		{
 			"type": 		3,
-			"position": 	[ 100, 100, 0 ]
+			"pos": 	[ 100, 100, 0 ]
 		}
 	],
 	"player": {

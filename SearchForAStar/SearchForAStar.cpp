@@ -22,6 +22,8 @@
 #include <windows.h>
 #include <stdexcept>
 
+#include "Game/LevelLoader.h"
+
 using Engine::Application;
 using SFAS::SearchForAStar;
 
@@ -90,30 +92,38 @@ void SearchForAStar::Update(float dt)
 	// This updates the matrices we need to render in 3D
 	m_Camera.Update( GetDevice() );
 	
-	Engine::Input* input = GetInput();
-	if(input->JustPressed(Engine::Input::Key::kExit))
+	try 
 	{
-		m_AppRunning = false;
-	}
-	// Update game logic here
-	else if( m_StateArray[m_State]->Update( input, dt ) )
-	{
-		// Reset the time spent in this state
-		m_TimeInState = 0.0f;
-
-		// Change state
-		GameState old_state = m_State;
-		m_State = (GameState)( ( m_State + 1 ) % keNumStates );
-
-		// If the game is over then update the next state
-		if( m_State == keGameOver )
+		Engine::Input* input = GetInput();
+		if(input->JustPressed(Engine::Input::Key::kExit))
 		{
-			const Game::Player * player = reinterpret_cast<States::MainGameState*>( m_StateArray[old_state] )->GetWorld()->GetPlayer();
-			reinterpret_cast<States::SummaryState*>( m_StateArray[m_State] )->Setup(player->GetScore(), player->GetBestScore() );
+			m_AppRunning = false;
 		}
+		// Update game logic here
+		else if( m_StateArray[m_State]->Update( input, dt ) )
+		{
+			// Reset the time spent in this state
+			m_TimeInState = 0.0f;
 
-		m_StateArray[m_State]->OnEnteringState();
-		m_StateArray[old_state]->OnLeavingState();
+			// Change state
+			GameState old_state = m_State;
+			m_State = (GameState)( ( m_State + 1 ) % keNumStates );
+
+			// If the game is over then update the next state
+			if( m_State == keGameOver )
+			{
+				const Game::Player * player = reinterpret_cast<States::MainGameState*>( m_StateArray[old_state] )->GetWorld()->GetPlayer();
+				reinterpret_cast<States::SummaryState*>( m_StateArray[m_State] )->Setup(player->GetScore(), player->GetBestScore() );
+			}
+
+			m_StateArray[m_State]->OnEnteringState();
+			m_StateArray[old_state]->OnLeavingState();
+		}
+	}
+	catch( LevelLoaderException e )
+	{
+		MessageBox( GetWindow(), L"The game has crashed. One of the level JSON files are invalid", L"Game Has Crashed", MB_OK );
+		m_AppRunning = false;
 	}
 }
 

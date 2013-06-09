@@ -197,8 +197,8 @@ void World::OpenLevel( int level )
 {
 	LevelLoader loader;
 
-	const Level * l = getLevel1();
-	//const Level * l = loader.LoadLevelFromFile( "Levels/level1.json" );
+	//const Level * l = getLevel1();
+	const Level * l = loader.LoadLevelFromFile( "Levels/level1.json" );
 	
 	// Player Setup
 	D3DXVECTOR3 start = l->player.startPos;

@@ -16,7 +16,8 @@ using Engine::Application;
 
 bool Application::m_AppRunning = true;
 
-Application::Application(LPCTSTR str_Title, LPCTSTR str_Class, int int_Width, int int_Height, WNDPROC proc) : m_Window(), m_Device(0), m_Title(str_Title), m_Class(str_Class), m_Width(int_Width), m_Height(int_Height)
+Application::Application(LPCTSTR str_Title, LPCTSTR str_Class, int int_Width, int int_Height, WNDPROC proc) : 
+	m_Window(), m_Device(0), m_Title(str_Title), m_Class(str_Class), m_Width(int_Width), m_Height(int_Height)
 {
 	CreateApplicationWindow(10, 10, proc);
 	InitializeApplicationDevice();
