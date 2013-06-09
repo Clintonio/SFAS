@@ -13,16 +13,16 @@
 
 using Engine::Input;
 
-const int Input::sKeyCodes[kNumInputOptions] = { 32, 87, 83, 65, 68, 73, 75, 74, 76, VK_ESCAPE, 0x50 };
+const int Input::sKeyCodes[kNumInputOptions] = { 32, 87, 83, 65, 68, VK_ESCAPE, 0x50 };
 const float Input::kfButtonRepeatTime = 0.2f;
 
 Input::Input()
 {
 	for( int count = 0; count < kNumInputOptions; count++ )
 	{
-		mKeyStates[count].time = 0.0f;
-		mKeyStates[count].KeyDown = false;
-		mKeyStates[count].LastFrameKeyDown = false;
+		m_KeyStates[count].time = 0.0f;
+		m_KeyStates[count].KeyDown = false;
+		m_KeyStates[count].LastFrameKeyDown = false;
 	}
 
 	m_MouseButton1.lastFrameClicked = false;
@@ -46,8 +46,8 @@ void Input::OnKeyDown( WPARAM parameter1, LPARAM parameter2 )
 		if( sKeyCodes[count] == parameter1 )
 		{
 			// This key is now down
-			mKeyStates[count].time = 0.0f;
-			mKeyStates[count].KeyDown = true;
+			m_KeyStates[count].time = 0.0f;
+			m_KeyStates[count].KeyDown = true;
 		}
 	}
 }
@@ -59,8 +59,8 @@ void Input::OnKeyUp( WPARAM parameter1, LPARAM parameter2 )
 		if( sKeyCodes[count] == parameter1 )
 		{
 			// This key is now down
-			mKeyStates[count].time = 0.0f;
-			mKeyStates[count].KeyDown = false;
+			m_KeyStates[count].time = 0.0f;
+			m_KeyStates[count].KeyDown = false;
 		}
 	}
 }
@@ -114,17 +114,17 @@ void Input::Update( float dt )
 {
 	for( int count = 0; count < kNumInputOptions; count++ )
 	{
-		mKeyStates[count].time += dt;
-		mKeyStates[count].LastFrameKeyDown = mKeyStates[count].KeyDown;
+		m_KeyStates[count].time += dt;
+		m_KeyStates[count].LastFrameKeyDown = m_KeyStates[count].KeyDown;
 
-		if( mKeyStates[count].KeyDown && mKeyStates[count].time >= kfButtonRepeatTime )
+		if( m_KeyStates[count].KeyDown && m_KeyStates[count].time >= kfButtonRepeatTime )
 		{
-			mKeyStates[count].Repeat = true;
-			mKeyStates[count].time = 0.0f;
+			m_KeyStates[count].Repeat = true;
+			m_KeyStates[count].time = 0.0f;
 		}
 		else
 		{
-			mKeyStates[count].Repeat = false;
+			m_KeyStates[count].Repeat = false;
 		}
 
 		// Reset the mouse clicks
@@ -137,22 +137,22 @@ void Input::Update( float dt )
 
 bool Input::JustPressed( Key key ) const
 {
-	return ( mKeyStates[key].KeyDown && !mKeyStates[key].LastFrameKeyDown );
+	return ( m_KeyStates[key].KeyDown && !m_KeyStates[key].LastFrameKeyDown );
 }
 
 bool Input::JustReleased( Key key ) const
 {
-	return ( !mKeyStates[key].KeyDown && mKeyStates[key].LastFrameKeyDown );
+	return ( !m_KeyStates[key].KeyDown && m_KeyStates[key].LastFrameKeyDown );
 }
 
 bool Input::Held( Key key ) const
 {
-	return ( mKeyStates[key].KeyDown && mKeyStates[key].LastFrameKeyDown );
+	return ( m_KeyStates[key].KeyDown && m_KeyStates[key].LastFrameKeyDown );
 }
 
 bool Input::PressedWithRepeat( Key key ) const
 {
-	return ( mKeyStates[key].KeyDown && mKeyStates[key].Repeat );
+	return ( m_KeyStates[key].KeyDown && m_KeyStates[key].Repeat );
 }
 
 bool Input::HasUserClicked( Button btn ) const

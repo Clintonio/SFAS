@@ -42,7 +42,7 @@ protected:
 
 	inline HWND GetWindow() { return m_Window; } 
 	inline LPDIRECT3DDEVICE9 GetDevice() { return m_Device; }	
-	inline const Input * GetInput() const { return m_Input; }
+	inline Input * GetInput() const { return m_Input; }
 	
 	static bool m_AppRunning;
 private:
@@ -53,6 +53,7 @@ private:
 
 	void CreateApplicationWindow(int int_XPos, int int_YPos, WNDPROC proc);
 	void InitializeApplicationDevice();
+	void InitialiseInput();
 
 	LARGE_INTEGER GetCurrentTime();
 

@@ -45,7 +45,7 @@ public:
 
 	virtual void Render( float dt );
 	virtual void RenderDebug( Engine::TextRenderer * txt );
-	virtual void Update( const Engine::Input * input, float dt );
+	virtual void Update( Engine::Input * input, float dt );
 
 	// Return a constant pointer to the player so that its state can be examined safely
 	const Player * GetPlayer() const;

@@ -31,7 +31,7 @@ public:
 	// Overrides
 	void RenderOverlay( Engine::TextRenderer* txt );
 	void Render( float dt );
-	bool Update( const Engine::Input * input, float dt );
+	bool Update( Engine::Input * input, float dt );
 	void OnEnteringState();
 
 	// Test whether the current game is over

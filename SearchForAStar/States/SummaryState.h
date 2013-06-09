@@ -25,7 +25,7 @@ public:
 	~SummaryState(void);
 
 	void Render( float dt ) {};
-	bool Update( const Engine::Input *input, float dt );
+	bool Update( Engine::Input *input, float dt );
 
 	void Setup( int score, int best );
 

@@ -14,6 +14,7 @@
     <ClCompile Include="Audio\Sound.cpp" />
     <ClCompile Include="Audio\SoundProvider.cpp" />
     <ClCompile Include="Core\Application.cpp" />
+    <ClCompile Include="Core\GamePadInput.cpp" />
     <ClCompile Include="Core\Input.cpp" />
     <ClCompile Include="Graphics\Camera.cpp" />
     <ClCompile Include="Graphics\RenderItem.cpp" />
@@ -39,6 +40,7 @@
     <ClInclude Include="Audio\Sound.h" />
     <ClInclude Include="Audio\SoundProvider.h" />
     <ClInclude Include="Core\Application.h" />
+    <ClInclude Include="Core\GamePadInput.h" />
     <ClInclude Include="Core\Input.h" />
     <ClInclude Include="Graphics\Camera.h" />
     <ClInclude Include="Graphics\RenderItem.h" />

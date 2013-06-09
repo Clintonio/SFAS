@@ -32,7 +32,7 @@ void SummaryState::Setup( int score, int best )
 	SetPageText( strBuffer );
 }
 
-bool SummaryState::Update( const Engine::Input * input, float dt)
+bool SummaryState::Update( Engine::Input * input, float dt)
 {
 	return input->JustPressed( Engine::Input::kContinue ) || input->HasUserClicked( Engine::Input::Button::MouseButton1);
 }

@@ -6,10 +6,11 @@
 // 
 // Add a summary of your changes here:
 // - Added mouse capture functions
-// 
+// - Added game pad input
 // 
 
 #include "Application.h"
+#include "GamePadInput.h"
 
 using Engine::Application;
 
@@ -19,8 +20,7 @@ Application::Application(LPCTSTR str_Title, LPCTSTR str_Class, int int_Width, in
 {
 	CreateApplicationWindow(10, 10, proc);
 	InitializeApplicationDevice();
-	m_Input = new Input();
-	m_Input->SetWindowDimensions(m_Width, m_Height);
+	InitialiseInput();
 }
 
 Application::~Application(void)
@@ -113,6 +113,21 @@ void Application::OnMouseMove( Engine::Input::Button btn, WPARAM parameter1, LPA
 	{
 		m_Input->OnMouseMove(btn, parameter1, parameter2);
 	}
+}
+
+void Application::InitialiseInput()
+{
+	GamePadInput * gpadInput = new GamePadInput(1);
+	if( gpadInput->IsConnected() )
+	{
+		m_Input = gpadInput;
+	} 
+	else
+	{
+		delete gpadInput;
+		m_Input = new Input();
+	}
+	m_Input->SetWindowDimensions(m_Width, m_Height);
 }
 
 void Application::CreateApplicationWindow(int int_XPos, int int_YPos, WNDPROC proc)

@@ -30,7 +30,7 @@ void StartState::Render(float dt)
 
 }
 
-bool StartState::Update( const Engine::Input * input, float dt)
+bool StartState::Update( Engine::Input * input, float dt)
 {
 	return input->JustPressed( Engine::Input::kContinue ) || input->HasUserClicked( Engine::Input::Button::MouseButton1);
 }

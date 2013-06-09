@@ -28,7 +28,7 @@ void OptionsState::Render(float dt)
 	
 }
 
-bool OptionsState::Update( const Engine::Input * input, float dt)
+bool OptionsState::Update( Engine::Input * input, float dt)
 {
 	return true;
 }

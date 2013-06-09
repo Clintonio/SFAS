@@ -1,13 +1,4 @@
-//
-// Source files for Search For A Star competition
-// Copyright (c) 2013 L. Attwood
-//
-// The base application, creates the window and device.
-// 
-// Add a summary of your changes here:
-// - Added mouse click function signatures
-// 
-// 
+// XBox 360 XInput gamepad input mode
 
 #pragma once
 
@@ -18,7 +9,6 @@
 
 namespace Engine
 {
-
 class Input
 {
 public:
@@ -37,7 +27,10 @@ public:
 	void OnMouseUp ( Button btn, WPARAM status, LPARAM pos );
 	void OnMouseMove ( Button btn, WPARAM status, LPARAM pos );
 
-	void Update( float dt );
+	// Provides vibration feedback if supported
+	virtual void Vibrate(float duration, float strength) { }
+
+	virtual void Update( float dt );
 
 	enum Key
 	{
@@ -46,27 +39,23 @@ public:
 		kDown,
 		kLeft,
 		kRight,
-		kFireUp,
-		kFireDown,
-		kFireLeft,
-		kFireRight,
 		kExit,
 		kPause,
 
 		kNumInputOptions
 	};
 
-	bool JustPressed( Key key ) const;
-	bool JustReleased( Key key ) const;
-	bool Held( Key key ) const;
-	bool PressedWithRepeat( Key key ) const;
+	virtual bool JustPressed( Key key ) const;
+	virtual bool JustReleased( Key key ) const;
+	virtual bool Held( Key key ) const;
+	virtual bool PressedWithRepeat( Key key ) const;
 
 	// Returns true if the user has clicked in the last frame
-	bool HasUserClicked ( Button btn ) const;
+	virtual bool HasUserClicked ( Button btn ) const;
 	// Returns true if the given button is currently held down
-	bool IsButtonHeld ( Button btn ) const;
+	virtual bool IsButtonHeld ( Button btn ) const;
 	// Get the current position of the given mouse cursor
-	const D3DXVECTOR2 &GetMousePosition ( Button btn ) const;
+	virtual const D3DXVECTOR2 &GetMousePosition ( Button btn ) const;
 	
 	// Set the window height for mapping mouse inputs
 	void SetWindowDimensions( int width, int height );
@@ -81,12 +70,6 @@ protected:
 		bool Repeat;
 	};
 
-private:
-
-	static const int sKeyCodes[kNumInputOptions];
-	static const float kfButtonRepeatTime;
-	static const int kClickTolerance = 5;
-	
 	struct MouseButton 
 	{
 		int startX;
@@ -97,14 +80,22 @@ private:
 		int lastClickY;
 		D3DXVECTOR2 position;
 	};
+	
+	KeyState m_KeyStates[kNumInputOptions];
+	static const float kfButtonRepeatTime;
 
+	MouseButton m_MouseButton1;
+	
 	int m_WindowHeight, m_WindowWidth;
+private:
+
+	static const int sKeyCodes[kNumInputOptions];
+	static const int kClickTolerance = 5;
+	
 
 	// Verify whether the given mouse event is a click
 	const bool inClickRadius( MouseButton btn, int xPos, int yPos );
 
-	MouseButton m_MouseButton1;
 
-	KeyState mKeyStates[kNumInputOptions];
 };
 };

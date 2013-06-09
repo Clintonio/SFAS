@@ -50,7 +50,7 @@ void MainGameState::Render(float dt)
 	);
 }
 
-bool MainGameState::Update( const Engine::Input * input, float dt)
+bool MainGameState::Update( Engine::Input * input, float dt)
 {
 	bool gameOver = false;
 

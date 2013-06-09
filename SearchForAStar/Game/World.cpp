@@ -124,7 +124,7 @@ void World::RenderDebug( Engine::TextRenderer * txt )
 	}
 }
 
-void World::Update( const Engine::Input * input, float dt )
+void World::Update( Engine::Input * input, float dt )
 {
 	Player * player = GetPlayerHelper();
 	
@@ -175,6 +175,9 @@ void World::Update( const Engine::Input * input, float dt )
 	{
 		if( m_NumActiveEnemies > 0 )
 		{
+			float vibrateStrength = 1.0f;
+			float vibrateTime = 0.5f;
+			input->Vibrate(vibrateTime, vibrateStrength);
 			ResetLevel();
 			player->OnReset();
 		}

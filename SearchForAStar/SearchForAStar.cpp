@@ -90,7 +90,7 @@ void SearchForAStar::Update(float dt)
 	// This updates the matrices we need to render in 3D
 	m_Camera.Update( GetDevice() );
 	
-	const Engine::Input* input = GetInput();
+	Engine::Input* input = GetInput();
 	if(input->JustPressed(Engine::Input::Key::kExit))
 	{
 		m_AppRunning = false;

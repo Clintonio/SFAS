@@ -36,7 +36,7 @@ public:
 
 	// Basic rendering and updating - must be implemented by inheriting classes
 	virtual void Render( float dt ) = 0;
-	virtual bool Update( const Engine::Input * input, float dt ) = 0;
+	virtual bool Update( Engine::Input * input, float dt ) = 0;
 
 	// Inheriting classes can override these events but not required
 	virtual void OnEnteringState() {}
