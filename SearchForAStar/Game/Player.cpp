@@ -210,8 +210,8 @@ Bullet * Player::Fire( float vx, float vy )
 }
 
 
-bool Player::OnBulletHit( Entity & other ) {
-	if( Enemy::kEntityType == other.GetEntityType() )
+bool Player::OnBulletHit( Entity * other ) {
+	if( Enemy::kEntityType == other->GetEntityType() )
 	{
 		AddScore(100);
 	}

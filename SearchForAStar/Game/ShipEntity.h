@@ -17,7 +17,7 @@ class ShipEntity : public Entity
 public:
 	ShipEntity( const D3DXVECTOR3& pos, const D3DXVECTOR3& scale, float damping ) : Entity(pos, scale, damping) {} 
 
-	virtual bool OnBulletHit( Entity &other ) { return true; }
+	virtual bool OnBulletHit( Entity * other ) { return true; }
 };
 }
 }

@@ -113,7 +113,7 @@ public:
 	virtual bool IsPlayerControlled() const { return false; }
 
 	// Get the entity type for this entity
-	virtual const Entity::EntityType GetEntityType() = 0;
+	virtual const Entity::EntityType GetEntityType() const = 0;
 
 	static void Init(LPDIRECT3DDEVICE9 p_dx_Device);
 protected:

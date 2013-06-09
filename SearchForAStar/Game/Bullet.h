@@ -38,10 +38,12 @@ public:
 	bool IsPlayerControlled() const;
 	// Set the target ship for targetting weapons
 	void SetTarget( const ShipEntity * other );
+	// Get the owner of this bullet, if any
+	const ShipEntity* GetOwner() const { return m_Owner; }
 	
 	static const Entity::EntityType kEntityType;
 	// Get the entity type for this entity
-	const Entity::EntityType GetEntityType() { return kEntityType; }
+	const Entity::EntityType GetEntityType() const { return kEntityType; }
 private: 
 
 	WCHAR * ToString()  const { return L"Bullet"; }

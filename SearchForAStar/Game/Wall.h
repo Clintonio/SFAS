@@ -30,7 +30,7 @@ public:
 	virtual void Update( float dt );
 	
 	// Get the entity type for this entity
-	const Entity::EntityType GetEntityType() { return kEntityType; }
+	const Entity::EntityType GetEntityType() const { return kEntityType; }
 private: 
 
 	WCHAR * ToString()  const { return L"Wall"; }

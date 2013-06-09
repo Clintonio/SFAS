@@ -63,7 +63,7 @@ public:
 	static const Entity::EntityType kEntityType;
 
 	// Get the entity type for this entity
-	const Entity::EntityType GetEntityType() { return kEntityType; }
+	const Entity::EntityType GetEntityType() const { return kEntityType; }
 private:
 	// Override called when a collision is dectected
 	bool OnCollision( Entity& other, World * world );
@@ -78,7 +78,7 @@ private:
 
 	inline bool Player::CanFire() const;
 	// Override the bullet hit to add score to player
-	bool OnBulletHit( Entity & other );
+	bool OnBulletHit( Entity * other );
 
 	enum { keScore = 100, kNumBullets = 25 };
 

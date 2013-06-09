@@ -53,6 +53,7 @@
     <ClInclude Include="SearchForAStar\Game\Level.h" />
     <ClInclude Include="SearchForAStar\Game\Levels\Level1.h" />
     <ClInclude Include="SearchForAStar\Game\Player.h" />
+    <ClInclude Include="SearchForAStar\Game\ShipEntity.h" />
     <ClInclude Include="SearchForAStar\Game\Wall.h" />
     <ClInclude Include="SearchForAStar\Game\WeaponType.h" />
     <ClInclude Include="SearchForAStar\Game\World.h" />

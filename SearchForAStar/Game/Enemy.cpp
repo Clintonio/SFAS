@@ -131,7 +131,11 @@ bool Enemy::OnCollision( Entity& other, World * world )
 	return true;
 }
 
-bool Enemy::OnBulletHit( Entity &other ) 
+bool Enemy::OnBulletHit( Entity * other ) 
 {
-	return ( other.GetEntityType() == Player::kEntityType );
+	return ( 
+		other->GetEntityType() == Player::kEntityType 
+		|| (other->GetEntityType() == Bullet::kEntityType
+		&& dynamic_cast<Bullet*>(other)->GetOwner()->GetEntityType() == Player::kEntityType)
+	);
 }

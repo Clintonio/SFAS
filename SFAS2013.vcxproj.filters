@@ -173,5 +173,8 @@
     <ClInclude Include="SearchForAStar\Game\WeaponType.h">
       <Filter>SearchForAStar\Game</Filter>
     </ClInclude>
+    <ClInclude Include="SearchForAStar\Game\ShipEntity.h">
+      <Filter>SearchForAStar\Game</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

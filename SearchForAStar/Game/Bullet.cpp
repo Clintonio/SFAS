@@ -94,7 +94,7 @@ void Bullet::Fire( D3DXVECTOR3 direction, ShipEntity * owner )
 
 bool Bullet::OnCollision( Entity& other, World * world )
 {
-	if( m_Owner->OnBulletHit(other) ) 
+	if( m_Owner->OnBulletHit(&other) ) 
 	{
 		SetActive( false );
 		return true;

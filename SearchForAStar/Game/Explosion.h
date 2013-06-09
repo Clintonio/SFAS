@@ -16,7 +16,7 @@ public:
 
 	// Get the entity type for this entity
 	static const Entity::EntityType kEntityType;
-	const Entity::EntityType GetEntityType() { return kEntityType; }
+	const Entity::EntityType GetEntityType() const { return kEntityType; }
 private:
 	void Update( World * world, float dt );
 	bool OnCollision( Entity& other, World * world );

@@ -42,9 +42,8 @@ public:
 
 	static const Entity::EntityType kEntityType;
 	
-	bool OnBulletHit( Entity &other );
 	// Get the entity type for this entity
-	const Entity::EntityType GetEntityType() { return kEntityType; }
+	const Entity::EntityType GetEntityType() const { return kEntityType; }
 private:
 	enum AIRoutine 
 	{
@@ -59,7 +58,8 @@ private:
 	bool OnCollision( Entity& other, World * world );
 	// Override the sound loading
 	void LoadSounds(Engine::SoundProvider* soundProvider);
-	
+	bool OnBulletHit( Entity * other );
+
 	WeaponType*			m_WeaponType;
 	AIRoutine			m_AIRoutine;
 	float				m_LastFireTime;
