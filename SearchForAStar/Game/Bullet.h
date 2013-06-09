@@ -36,6 +36,8 @@ public:
 	void Fire( D3DXVECTOR3 direction, ShipEntity * owner );
 
 	bool IsPlayerControlled() const;
+	// Set the target ship for targetting weapons
+	void SetTarget( const ShipEntity * other );
 	
 	static const Entity::EntityType kEntityType;
 	// Get the entity type for this entity
@@ -44,9 +46,6 @@ private:
 
 	WCHAR * ToString()  const { return L"Bullet"; }
 
-	enum { kLifetime = 5 };
-
-	static const float sSize;
 	static const float sMass;
 	static const float sDamping;
 
@@ -60,6 +59,8 @@ private:
 	WeaponType* m_WeaponType;
 	// Whether the sound has played or not
 	bool m_SoundPlayed;
+	// The target ship for targetting type weapons
+	const ShipEntity * m_TargetShip;
 
 	bool OnCollision( Entity& other, World * world );
 	void LoadSounds(Engine::SoundProvider* soundProvider);

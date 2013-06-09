@@ -44,6 +44,8 @@ Player::Player( int lives ) : ShipEntity( D3DXVECTOR3(), D3DXVECTOR3( sSize, sSi
 	m_WeaponType.damage		= 1;
 	m_WeaponType.ranged		= true;
 	m_WeaponType.fireDelay	= 0.2f;
+	m_WeaponType.lifetime	= 5.0f;
+	m_WeaponType.dimensions	= D3DXVECTOR3( 2.0f, 2.0f, 0.0f );
 	m_WeaponType.soundFile	= "Sound/laser1.wav";
 	m_WeaponType.speed		= 4000.0f;
 	m_WeaponType.textureFile	= L"textures/bullet.png";

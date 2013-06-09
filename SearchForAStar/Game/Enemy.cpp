@@ -19,7 +19,6 @@
 
 using namespace SFAS::Game;
 
-const float Enemy::sSize = 20.0f;
 const float Enemy::sSpeed = 10000.0f;
 const float Enemy::sMass = 100.0f;
 const float Enemy::sDamping = 0.6f;
@@ -28,7 +27,7 @@ const Entity::EntityType Enemy::kEntityType(2);
 Engine::Sound* Enemy::sExplosionSound = 0;
 
 Enemy::Enemy( Level::EnemyType & type, float x, float y ) : 
-	ShipEntity( D3DXVECTOR3( x, y, 0.0f ), D3DXVECTOR3( sSize, sSize, 0.0f ), sDamping ),
+	ShipEntity( D3DXVECTOR3( x, y, 0.0f ), D3DXVECTOR3( 1, 1, 0.0f ), sDamping ),
 	m_LastFireTime(0.0f)
 {
 	SetScale( type.dimensions );
@@ -87,6 +86,7 @@ void Enemy::Update( World * world, float dt )
 	{
 		Bullet * bullet = new Bullet( m_WeaponType );
 		bullet->Fire(directionToPlayer, this);
+		bullet->SetTarget( player );
 		world->AddEntity(bullet);
 		m_LastFireTime = 0.0f;
 	}
@@ -133,5 +133,5 @@ bool Enemy::OnCollision( Entity& other, World * world )
 
 bool Enemy::OnBulletHit( Entity &other ) 
 {
-	return !( other.GetEntityType() == Enemy::kEntityType );
+	return ( other.GetEntityType() == Player::kEntityType );
 }

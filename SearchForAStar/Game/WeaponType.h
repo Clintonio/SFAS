@@ -15,6 +15,8 @@ struct WeaponType
 	int				damage;
 	float			speed;
 	float			fireDelay;
+	float			lifetime;
+	D3DXVECTOR3		dimensions;
 	std::string		weaponAIType;
 	std::wstring	textureFile;
 	std::string		soundFile;

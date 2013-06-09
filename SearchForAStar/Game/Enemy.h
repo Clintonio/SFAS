@@ -36,7 +36,6 @@ public:
 
 	virtual void Update( World * world, float dt );
 
-	static const float sSize;
 	static const float sSpeed;
 	static const float sMass;
 	static const float sDamping;

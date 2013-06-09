@@ -120,10 +120,14 @@ protected:
 
 	void SetInverseMass( float iv ) { m_InverseMass = iv; }
 	void SetMass( float mass );
+	void SetForce( D3DXVECTOR3 force ) { m_ForceAccumulator = force; }
 
 	static bool Intersection( const D3DXVECTOR3 & p1, const D3DXVECTOR3 & p2, const D3DXVECTOR3 & s1, const D3DXVECTOR3 & s2, D3DXVECTOR3 & contact, float & penetration ); 
 	
-	void SetScale( D3DXVECTOR3 scale ) { m_Scale = scale; }
+	void SetScale( D3DXVECTOR3 scale ) { 
+		m_Radius = max( scale.x, scale.y ) * 0.5f;
+		m_Scale = scale; 
+	}
 
 	// Return unit direction to the other entity
 	const D3DXVECTOR3 DirectionToEntity( const Entity * other ) const;

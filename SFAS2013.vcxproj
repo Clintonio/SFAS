@@ -54,6 +54,7 @@
     <ClInclude Include="SearchForAStar\Game\Levels\Level1.h" />
     <ClInclude Include="SearchForAStar\Game\Player.h" />
     <ClInclude Include="SearchForAStar\Game\Wall.h" />
+    <ClInclude Include="SearchForAStar\Game\WeaponType.h" />
     <ClInclude Include="SearchForAStar\Game\World.h" />
     <ClInclude Include="SearchForAStar\SearchForAStar.h" />
     <ClInclude Include="SearchForAStar\States\GameStateBase.h" />

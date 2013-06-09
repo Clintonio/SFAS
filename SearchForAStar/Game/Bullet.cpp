@@ -18,7 +18,6 @@
 
 using namespace SFAS::Game;
 
-const float Bullet::sSize = 2.0f;
 const float Bullet::sMass = 0.5f;
 const float Bullet::sDamping = 0.9999f;
 
@@ -28,10 +27,11 @@ std::map<std::string, Engine::RenderItem*> Bullet::sRenderItem;
 const Entity::EntityType Bullet::kEntityType(20);
 
 Bullet::Bullet( WeaponType* weaponType ) : 
-	Entity( D3DXVECTOR3(), D3DXVECTOR3( sSize, sSize, 0.0f ), sDamping ), 
+	Entity( D3DXVECTOR3(), D3DXVECTOR3( 1, 1, 0.0f ), sDamping ), 
 	m_SoundPlayed(false)
 {
 	SetMass( sMass );
+	SetScale( weaponType->dimensions );
 	m_WeaponType = weaponType;
 	if( sRenderItem[m_WeaponType->name] == NULL ) 
 	{
@@ -53,21 +53,33 @@ void Bullet::LoadSounds(Engine::SoundProvider* soundProvider)
 	}
 }
 
+void Bullet::SetTarget( const ShipEntity * other )
+{
+	m_TargetShip = other;
+}
 
 void Bullet::Update( World * world, float dt )
 {
-	Entity::Update( world, dt );
-	
 	if( !m_SoundPlayed && ( sBulletSound[m_WeaponType->name] != NULL ) ) 
 	{
 		sBulletSound[m_WeaponType->name]->PlaySoundFromStart();
 		m_SoundPlayed = true;
 	}
+	
+	if( m_WeaponType->weaponAIType == "target" )
+	{
+		D3DXVECTOR3 targetDir = DirectionToEntity( m_TargetShip );
+		FaceDirection( targetDir );
+		SetVelocity( targetDir * m_WeaponType->speed );
+		SetForce( D3DXVECTOR3( 0, 0, 0 ) );
+	}
 
-	if( GetTimeSpentActive() >= kLifetime )
+	if( GetTimeSpentActive() >= m_WeaponType->lifetime )
 	{
 		SetActive( false );
 	}
+
+	Entity::Update( world, dt );
 }
 
 void Bullet::Fire( D3DXVECTOR3 direction, ShipEntity * owner )

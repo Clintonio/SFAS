@@ -59,7 +59,7 @@ void SoundProvider::Init(HWND window)
 	}
 }
 
-void SoundProvider::GetWaveFormat(const WaveHeaderType &waveHeader, WAVEFORMATEX & waveFormat) const
+void SoundProvider::GetWaveFormat(const WaveHeaderType &waveHeader, WAVEFORMATEX & waveFormat) 
 {
 	waveFormat.wFormatTag = waveHeader.audioFormat;
 	waveFormat.nSamplesPerSec = waveHeader.sampleRate;
@@ -84,7 +84,7 @@ Sound * SoundProvider::CreateSoundBufferFromFile(const std::string file)
 	return sound;
 }
 
-bool SoundProvider::LoadWaveFile(const std::string filename, LPDIRECTSOUNDBUFFER& buffer) const
+bool SoundProvider::LoadWaveFile(const std::string filename, LPDIRECTSOUNDBUFFER& buffer) 
 {
 	FILE* filePtr;
 	WaveHeaderType waveFileHeader;
@@ -105,7 +105,7 @@ bool SoundProvider::LoadWaveFile(const std::string filename, LPDIRECTSOUNDBUFFER
 	
 	bufferDesc.dwSize = sizeof(DSBUFFERDESC);
 	bufferDesc.dwFlags =  DSBCAPS_CTRLFX | DSBCAPS_CTRLVOLUME | DSBCAPS_GLOBALFOCUS | DSBCAPS_CTRLFREQUENCY | DSBCAPS_CTRLPAN;
-	bufferDesc.dwBufferBytes = DSBSIZE_MAX;
+	bufferDesc.dwBufferBytes = waveFileHeader.dataSize;
 	bufferDesc.dwReserved = 0;
 	bufferDesc.lpwfxFormat = &waveFormat;
 	bufferDesc.guid3DAlgorithm = DS3DALG_DEFAULT;
@@ -140,7 +140,7 @@ bool SoundProvider::LoadWaveFile(const std::string filename, LPDIRECTSOUNDBUFFER
 	return true;
 }
 
-bool SoundProvider::ValidWaveFormat(FILE* filePtr, WaveHeaderType & waveFileHeader) const
+bool SoundProvider::ValidWaveFormat(FILE* filePtr, WaveHeaderType & waveFileHeader) 
 {
 	if(fread((void*) &waveFileHeader, sizeof(waveFileHeader), 1, filePtr) != 1)
 	{
