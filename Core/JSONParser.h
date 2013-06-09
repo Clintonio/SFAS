@@ -8,20 +8,72 @@
 
 namespace Engine
 {
+namespace JSON
+{
+enum JSONType
+{
+	Object,
+	Array,
+	String,
+	Float,
+	Int,
+	Bool,
+	Null
+};
+
+// Forward declaration to avoid the circular dependency
+struct JSONArrayNode;
+
+
+struct JSONNode
+{
+	JSONArrayNode * parent;
+	JSONType type;
+	void*	value;
+};
+
+struct JSONArrayNode : public JSONNode
+{
+	JSONNode **	child;
+	unsigned int	childCount;
+};
+
+struct JSONMapNode : public JSONArrayNode
+{
+	std::string	**	childTags; // Only in object
+
+	// Search through child tags for the given tag and
+	// return that child
+	const JSONNode * operator [] ( const std::string tagName ) const 
+	{
+		for( unsigned int i = 0; i < childCount; i++ )
+		{
+			if( (*childTags[i]) == tagName )
+			{
+				return child[i];
+			}
+		}
+
+		return 0;
+	}
+};
 
 class JSONParser
 {
 public:
 	JSONParser();
 	
-	// Gets the position of the last error
+	// Error handling methods
 	const unsigned int GetErrorPosition() const { return m_ErrorPosition; }
 	const bool HasError() const { return m_Error; }
 	const std::string GetExpectedString() const { return m_ExpectedString; }
 	const char GetErrorChar() const { return m_ErrorChar; }
 	const std::string GetErrorMessage() const;
-	
-	void ParseJSONFile( std::string file );
+
+	// This returns the final, parsed, tree to the user (0 if fail or none)
+	const JSONMapNode * GetParsedTree() const { return m_RootNode; }
+	// Generate and return the final, parsed, tree. 0 if fail or none.
+	const JSONMapNode *  ParseJSONFile( const std::string file );
 private:
 	enum JSONSymbol 
 	{
@@ -43,22 +95,23 @@ private:
 		VariableSeparator,
 		Dot,
 		Negative,
+		Positive,
 		Exponent
 	};
 
 	std::string LoadJSONFile( const std::string file ) const;
 
-	JSONSymbol ParseSymbol( const char c );
-	void ParseObject( const std::string json, unsigned int & cur, const unsigned int index );
-	std::string ParseString( const std::string json, unsigned int & cur, const unsigned int index );
-	bool ParseMapSeparator( const std::string json, unsigned int & cur, const unsigned int index );
-	void ParseVariable( const std::string json, unsigned int & cur, const unsigned int index );
-	void ParseArray( const std::string json, unsigned int & cur, const unsigned int index );
-	bool ParseTrue( const std::string json, unsigned int & cur, const unsigned int index );
-	bool ParseFalse( const std::string json, unsigned int & cur, const unsigned int index );
-	bool ParseNull( const std::string json, unsigned int & cur, const unsigned int index );
-	void ParseNumber( const std::string json, unsigned int & cur, const unsigned int index );
-	bool ParseVariableSeparator( const std::string json, unsigned int & cur, const unsigned int index );
+	JSONSymbol		ParseSymbol( const char c );
+	JSONMapNode *	ParseObject( const std::string json, unsigned int & cur, const unsigned int index );
+	JSONArrayNode *	ParseArray( const std::string json, unsigned int & cur, const unsigned int index );
+	JSONNode *		ParseVariable( const std::string json, unsigned int & cur, const unsigned int index );
+	JSONNode *		ParseNumber( const std::string json, unsigned int & cur, const unsigned int index );
+	JSONNode *		ParseString( const std::string json, unsigned int & cur, const unsigned int index );
+	JSONNode *		ParseTrue( const std::string json, unsigned int & cur, const unsigned int index );
+	JSONNode *		ParseFalse( const std::string json, unsigned int & cur, const unsigned int index );
+	JSONNode *		ParseNull( const std::string json, unsigned int & cur, const unsigned int index );
+	bool			ParseMapSeparator( const std::string json, unsigned int & cur, const unsigned int index );
+	bool			ParseVariableSeparator( const std::string json, unsigned int & cur, const unsigned int index );
 	
 	inline void SetError( unsigned int pos, char errorChar, std::string expectedString ) { 
 		m_ExpectedString = expectedString;
@@ -66,6 +119,9 @@ private:
 		m_ErrorChar = errorChar;
 		m_Error = true; 
 	}
+
+	// The root node of our parsed tree
+	JSONMapNode * m_RootNode;
 
 	// The error character
 	char m_ErrorChar;
@@ -97,4 +153,5 @@ public:
 	// The position of an error that stopped parsing
 	const unsigned int m_ErrorPosition;
 };
+}
 }

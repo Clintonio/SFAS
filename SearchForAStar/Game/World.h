@@ -84,7 +84,7 @@ private:
 	Engine::SoundProvider *	m_SoundProvider;
 	// Player is a key object, so store it here
 	Player *				m_Player;
-	Level *					m_CurrentLevel;
+	const Level *			m_CurrentLevel;
 
 	float					m_Width;
 	float					m_Height;

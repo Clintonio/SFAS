@@ -2,7 +2,7 @@
 #include <vector>
 #include <sstream>
 
-using namespace Engine;
+using namespace Engine::JSON;
 
 JSONParser::JSONParser() :
 	m_ErrorPosition( 0 ),
@@ -24,8 +24,10 @@ const std::string JSONParser::GetErrorMessage() const
 	return ss.str();
 }
 
-void JSONParser::ParseJSONFile( const std::string file )
+const JSONMapNode * JSONParser::ParseJSONFile( const std::string file )
 {
+	m_RootNode = 0; // Reset the root for this new parsed JSON
+
 	std::string json = LoadJSONFile( file );
 	
 	JSONSymbol curSymbol;
@@ -36,7 +38,7 @@ void JSONParser::ParseJSONFile( const std::string file )
 		curSymbol = ParseSymbol( json[cur++] );
 		if( curSymbol == JSONSymbol::Object )
 		{
-			ParseObject( json, cur, length );
+			m_RootNode = ParseObject( json, cur, length );
 		}
 		else
 		{
@@ -47,6 +49,8 @@ void JSONParser::ParseJSONFile( const std::string file )
 	{
 		SetError( e.m_ErrorPosition, e.m_ErrorChar, e.m_ExpectedString );
 	}
+
+	return m_RootNode;
 }
 
 std::string JSONParser::LoadJSONFile( const std::string file ) const 
@@ -141,6 +145,10 @@ JSONParser::JSONSymbol JSONParser::ParseSymbol( const char c )
 			return JSONSymbol::Negative;
 		break;
 
+		case '+':
+			return JSONSymbol::Positive;
+		break;
+
 		case '.':
 			return JSONSymbol::Dot;
 		break;
@@ -151,8 +159,68 @@ JSONParser::JSONSymbol JSONParser::ParseSymbol( const char c )
 	}
 }
 
-void JSONParser::ParseObject( const std::string json, unsigned int & cur, const unsigned int length )
+JSONNode * JSONParser::ParseVariable( const std::string json, unsigned int & cur, const unsigned int length )
 {
+	bool done = false;
+	JSONSymbol curSymbol;
+	while( cur < length && !done )
+	{
+		done = true;
+		curSymbol = ParseSymbol( json[cur++] );
+		if( curSymbol == JSONSymbol::String )
+		{
+			return ParseString( json, cur, length );
+		}
+		else if( curSymbol == JSONSymbol::Object )
+		{
+			return ParseObject( json, cur, length );
+		}
+		else if( curSymbol == JSONSymbol::Array )
+		{
+			return ParseArray( json, cur, length );
+		}
+		else if( curSymbol == JSONSymbol::Number || curSymbol == JSONSymbol::Negative)
+		{
+			return ParseNumber( json, --cur, length );
+		}
+		else if( curSymbol == JSONSymbol::True )
+		{
+			return ParseTrue( json, cur, length );
+		}
+		else if( curSymbol == JSONSymbol::False )
+		{
+			return ParseFalse( json, cur, length );
+		}
+		else if( curSymbol == JSONSymbol::Null )
+		{
+			return ParseNull( json, cur, length );
+		}
+		else if( curSymbol != JSONSymbol::WhiteSpace )
+		{
+			cur--;
+			throw ParseException( cur, json[cur], "variable" );
+			done = false;
+		} 
+		else
+		{
+			done = false;
+		}
+	}
+
+	return NULL;
+}
+
+JSONMapNode * JSONParser::ParseObject( const std::string json, unsigned int & cur, const unsigned int length )
+{
+	// Output data before processing
+	std::vector<JSONNode*> data;
+	// Tags for data
+	std::vector<std::string*> tags;
+	// Temporary storage for new child nodes
+	JSONNode * child;
+	// Processed output data
+	JSONMapNode * out = new JSONMapNode;
+
 	// Whether a variable separator has been encountered
 	bool allowAnother = true;
 	bool done = false;
@@ -164,11 +232,14 @@ void JSONParser::ParseObject( const std::string json, unsigned int & cur, const 
 		{
 			if( allowAnother )
 			{
-				std::string variableName = ParseString( json, cur, length );
+				tags.push_back((std::string*) ParseString( json, cur, length )->value);
 				if( ParseMapSeparator( json, cur, length ) )
 				{
 					char curChar = json[cur];
-					ParseVariable( json, ++cur, length );
+					child = ParseVariable( json, ++cur, length );
+					child->parent = out;
+					data.push_back( child );
+					// Check if we can take another variable in this map
 					allowAnother = ParseVariableSeparator( json, cur, length );
 				}
 				else
@@ -196,12 +267,80 @@ void JSONParser::ParseObject( const std::string json, unsigned int & cur, const 
 			throw ParseException( cur, json[cur], "\"" );
 			done = true;
 		}
-
 	}
+
+	out->childCount = data.size();
+	out->childTags	= new std::string*[out->childCount];
+	out->child		= new JSONNode*[out->childCount];
+	out->type		= JSONType::Object;
+
+	// Populate the child fields
+	for( unsigned int i = 0; i < out->childCount; i++ )
+	{
+		out->childTags[i]	= tags[i];
+		out->child[i]		= data[i];
+	}
+
+	return out;
 }
 
-std::string JSONParser::ParseString( const std::string json, unsigned int & cur, const unsigned int length )
+JSONArrayNode * JSONParser::ParseArray( const std::string json, unsigned int & cur, const unsigned int length )
 {
+	JSONArrayNode * out = new JSONArrayNode;
+	// Temporary storage for new child nodes
+	JSONNode * child;
+	// Temporary data store for unknown amounts of data
+	std::vector<JSONNode*> data;
+	// Whether to allow another variable (ie; a separator has been encountered)
+	bool allowAnother = true;
+
+	bool done = false;
+	JSONSymbol curSymbol;
+	while( cur < length && !done )
+	{
+		curSymbol = ParseSymbol( json[cur++] );
+		if( curSymbol == JSONSymbol::ArrayEnd )
+		{
+			if( allowAnother )
+			{
+				throw ParseException( cur, json[cur], "variable" );
+			} 
+			done = true;
+		}
+		else if( curSymbol != JSONSymbol::WhiteSpace )
+		{
+			if( allowAnother )
+			{
+				--cur;
+				child = ParseVariable( json, cur, length );
+				child->parent = out;
+				data.push_back( child );
+				// Check if we have a separator for another variable
+				allowAnother = ParseVariableSeparator( json, cur, length );
+			}
+			else
+			{
+				throw ParseException( cur, json[cur], "]" );
+				done = true;
+			}
+		}
+	}
+
+	out->type		= JSONType::Array;
+	out->childCount = data.size();
+	out->child		= new JSONNode*[out->childCount];
+
+	// Populate the child fields
+	for( unsigned int i = 0; i < out->childCount; i++ )
+	{
+		out->child[i] = data[i];
+	}
+	return out;
+}
+
+JSONNode * JSONParser::ParseString( const std::string json, unsigned int & cur, const unsigned int length )
+{
+	JSONNode * out;
 	bool done = false;
 	// Whether escape control is active
 	bool escape = false;
@@ -234,7 +373,219 @@ std::string JSONParser::ParseString( const std::string json, unsigned int & cur,
 		}
 	}
 
-	return std::string( string.begin(), string.end() );
+	out			= new JSONNode;
+	out->type	= JSONType::String;
+	out->value	= (void *) new std::string( string.begin(), string.end() );
+	return out;
+}
+
+JSONNode * JSONParser::ParseNumber( const std::string json, unsigned int & cur, const unsigned int length )
+{
+	// The output data
+	JSONNode * out;
+	JSONSymbol curSymbol;
+	// Flags to determine the kind of number we have
+	bool negative		= false;
+	bool done			= false;
+	bool hasRightSide	= false;
+	bool exponent		= false;
+	bool exponentSign	= true; // true is positive here
+	// The data storage for the various parts of a number
+	std::vector<char> leftSide;
+	std::vector<char> rightSide;
+	std::vector<char> exponentPart;
+	char curChar;
+	// Below are variables relating to the transformation 
+	// to C data types
+	int leftValue;
+	std::stringstream buffer;
+
+
+	curSymbol = ParseSymbol( json[cur] );
+	if( curSymbol == JSONSymbol::Negative )
+	{
+		negative = true;
+		cur++;
+	}
+
+	while( cur < length && !done )
+	{
+		curChar = json[cur];
+		curSymbol = ParseSymbol( curChar );
+		if( curSymbol == JSONSymbol::Number )
+		{
+			leftSide.push_back( curChar );
+			cur++;
+		}
+		else
+		{
+			done = true;
+		}
+	}
+
+	curSymbol = ParseSymbol( json[cur] );
+	if( curSymbol == JSONSymbol::Dot )
+	{
+		if( leftSide.size() > 0 )
+		{
+			hasRightSide = true;
+			cur++;
+		}
+		else
+		{
+			done = true;
+			throw ParseException( cur, json[cur], "digit" );
+		}
+	}
+
+	done = hasRightSide;
+	while( cur < length && !done )
+	{
+		curSymbol = ParseSymbol( json[cur] );
+		if( curSymbol == JSONSymbol::Number )
+		{
+			rightSide.push_back( json[cur] );
+			cur++;
+		}
+		else
+		{
+			done = true;
+		}
+	}
+
+	curSymbol = ParseSymbol( json[cur] );
+	if( curSymbol == JSONParser::Exponent )
+	{
+		if(( leftSide.size() > 0 ) || ( hasRightSide && rightSide.size() > 0 ))
+		{
+			exponent = true;
+			cur++;
+		} 
+		else
+		{
+			done = true;
+			throw ParseException( cur, json[cur], "digit" );
+		}
+	}
+	
+	done = exponent;
+	while( cur < length && !done )
+	{
+		curSymbol = ParseSymbol( json[cur] );
+		if( curSymbol == JSONSymbol::Number )
+		{
+			exponentPart.push_back( json[cur] );
+			cur++;
+
+			// Check for the sign of the exponent
+			if( curSymbol == JSONSymbol::Negative )
+			{
+				exponentSign = false;
+				cur++;
+			} 
+			else if( curSymbol == JSONSymbol::Positive )
+			{
+				exponentSign = true;
+				cur++;
+			}
+		}
+		else
+		{
+			done = true;
+		}
+	}
+	
+	out	= new JSONNode;
+	if( hasRightSide || exponent )
+	{
+		buffer << std::string( leftSide.begin(), leftSide.end() );
+		if( hasRightSide )
+		{
+			buffer << ".";
+			buffer << std::string( rightSide.begin(), rightSide.end() );
+		}
+
+		if( exponent )
+		{
+			buffer << "e";
+			buffer << std::string( exponentPart.begin(), exponentPart.end() );
+		}
+
+		float* values	= new float[1];
+		values[1]		= (float) atof( buffer.str().c_str() );
+
+		out->type		= JSONType::Float;
+		out->value		= values;
+	}
+	else
+	{
+		int* values	= new int[1];
+		leftValue	= ( negative ? -1 : 1 ) * atoi( std::string( leftSide.begin(), leftSide.end() ).c_str() );
+		values[0]	= leftValue;
+
+		out->type	= JSONType::Int;
+		out->value	= values;
+	}
+
+	return out;
+}
+
+JSONNode * JSONParser::ParseTrue( const std::string json, unsigned int & cur, const unsigned int length )
+{
+	JSONNode * node;
+	bool * data;
+	if( cur + 3 < length && json[cur + 1] == 'r' && json[cur + 2] == 'u' && json[cur + 3] == 'e')
+	{
+		node = new JSONNode;
+		data = new bool[1];
+		data[0] = false;
+
+		node->type  = JSONType::Bool;
+		node->value = data;
+
+		return node;
+	}
+	else
+	{
+		throw ParseException( cur, json[--cur], "true" );
+	}
+}
+
+JSONNode * JSONParser::ParseFalse( const std::string json, unsigned int & cur, const unsigned int length )
+{
+	JSONNode * node;
+	bool * data;
+	if( cur + 4 < length && json[cur + 1] == 'a' && json[cur + 2] == 'l' && json[cur + 3] == 's' && json[cur + 4] == 'e')
+	{
+		node = new JSONNode;
+		data = new bool[1];
+		data[0] = true;
+
+		node->type  = JSONType::Bool;
+		node->value = data;
+
+		return node;
+	}
+	else
+	{
+		throw ParseException( cur, json[--cur], "true" );
+	}
+}
+
+JSONNode * JSONParser::ParseNull( const std::string json, unsigned int & cur, const unsigned int length )
+{
+	JSONNode * node;
+	if( cur + 3 < length && json[cur + 1] == 'u' && json[cur + 2] == 'l' && json[cur + 3] == 'l')
+	{
+		node = new JSONNode;
+		node->type	= JSONType::Null;
+		node->value = NULL;
+		return node;
+	}
+	else
+	{
+		throw ParseException( cur, json[--cur], "true" );
+	}
 }
 
 bool JSONParser::ParseMapSeparator( const std::string json, unsigned int & cur, const unsigned int length )
@@ -286,227 +637,4 @@ bool JSONParser::ParseVariableSeparator( const std::string json, unsigned int & 
 	}
 
 	return result;
-}
-
-void JSONParser::ParseVariable( const std::string json, unsigned int & cur, const unsigned int length )
-{
-	bool done = false;
-	JSONSymbol curSymbol;
-	while( cur < length && !done )
-	{
-		done = true;
-		curSymbol = ParseSymbol( json[cur++] );
-		if( curSymbol == JSONSymbol::String )
-		{
-			ParseString( json, cur, length );
-		}
-		else if( curSymbol == JSONSymbol::Object )
-		{
-			ParseObject( json, cur, length );
-		}
-		else if( curSymbol == JSONSymbol::Array )
-		{
-			ParseArray( json, cur, length );
-		}
-		else if( curSymbol == JSONSymbol::Number || curSymbol == JSONSymbol::Negative)
-		{
-			ParseNumber( json, --cur, length );
-		}
-		else if( curSymbol == JSONSymbol::True )
-		{
-			ParseTrue( json, cur, length );
-		}
-		else if( curSymbol == JSONSymbol::False )
-		{
-			ParseFalse( json, cur, length );
-		}
-		else if( curSymbol == JSONSymbol::Null )
-		{
-			ParseNull( json, cur, length );
-		}
-		else if( curSymbol != JSONSymbol::WhiteSpace )
-		{
-			cur--;
-			throw ParseException( cur, json[cur], "variable" );
-			done = false;
-		} 
-		else
-		{
-			done = false;
-		}
-	}
-
-}
-
-void JSONParser::ParseArray( const std::string json, unsigned int & cur, const unsigned int length )
-{
-	bool done = false;
-	// Whether to allow another variable (ie; a separator has been encountered)
-	bool allowAnother = true;
-	JSONSymbol curSymbol;
-	while( cur < length && !done )
-	{
-		curSymbol = ParseSymbol( json[cur++] );
-		if( curSymbol == JSONSymbol::ArrayEnd )
-		{
-			if( allowAnother )
-			{
-				throw ParseException( cur, json[cur], "variable" );
-			} 
-			done = true;
-		}
-		else if( curSymbol != JSONSymbol::WhiteSpace )
-		{
-			if( allowAnother )
-			{
-				--cur;
-				ParseVariable( json, cur, length );
-				allowAnother = ParseVariableSeparator( json, cur, length );
-			}
-			else
-			{
-				throw ParseException( cur, json[cur], "]" );
-				done = true;
-			}
-		}
-	}
-}
-
-// This method returns immediately after error
-void JSONParser::ParseNumber( const std::string json, unsigned int & cur, const unsigned int length )
-{
-	bool negative = false;
-	bool done = false;
-	bool hasRightSide = false;
-	bool exponent = false;
-	JSONSymbol curSymbol;
-	std::vector<char> leftSide;
-	std::vector<char> rightSide;
-	std::vector<char> exponentPart;
-	char curChar;
-
-	curSymbol = ParseSymbol( json[cur] );
-	if( curSymbol == JSONSymbol::Negative )
-	{
-		negative = true;
-		cur++;
-	}
-
-	while( cur < length && !done )
-	{
-		curChar = json[cur];
-		curSymbol = ParseSymbol( curChar );
-		if( curSymbol == JSONSymbol::Number )
-		{
-			leftSide.push_back( curChar );
-			cur++;
-		}
-		else
-		{
-			done = true;
-		}
-	}
-
-	curSymbol = ParseSymbol( json[cur] );
-	if( curSymbol == JSONSymbol::Dot )
-	{
-		if( leftSide.size() > 0 )
-		{
-			hasRightSide = true;
-			cur++;
-		}
-		else
-		{
-			done = true;
-			throw ParseException( cur, json[cur], "digit" );
-			return;
-		}
-	}
-
-	done = hasRightSide;
-	while( cur < length && !done )
-	{
-		curSymbol = ParseSymbol( json[cur] );
-		if( curSymbol == JSONSymbol::Number )
-		{
-			rightSide.push_back( json[cur] );
-			cur++;
-		}
-		else
-		{
-			done = true;
-		}
-	}
-
-	curSymbol = ParseSymbol( json[cur] );
-	if( curSymbol == JSONParser::Exponent )
-	{
-		if(( leftSide.size() > 0 ) || ( hasRightSide && rightSide.size() > 0 ))
-		{
-			exponent = true;
-			cur++;
-		} 
-		else
-		{
-			done = true;
-			throw ParseException( cur, json[cur], "digit" );
-			return;
-		}
-	}
-	
-	done = exponent;
-	while( cur < length && !done )
-	{
-		curSymbol = ParseSymbol( json[cur] );
-		if( curSymbol == JSONSymbol::Number )
-		{
-			exponentPart.push_back( json[cur] );
-			cur++;
-		}
-		else
-		{
-			done = true;
-		}
-	}
-
-
-}
-
-bool JSONParser::ParseTrue( const std::string json, unsigned int & cur, const unsigned int length )
-{
-	if( cur + 3 < length && json[cur + 1] == 'r' && json[cur + 2] == 'u' && json[cur + 3] == 'e')
-	{
-		return true;
-	}
-	else
-	{
-		throw ParseException( cur, json[--cur], "true" );
-		return false;
-	}
-}
-
-bool JSONParser::ParseFalse( const std::string json, unsigned int & cur, const unsigned int length )
-{
-	if( cur + 4 < length && json[cur + 1] == 'a' && json[cur + 2] == 'l' && json[cur + 3] == 's' && json[cur + 4] == 'e')
-	{
-		return true;
-	}
-	else
-	{
-		throw ParseException( cur, json[--cur], "true" );
-		return false;
-	}
-}
-
-bool JSONParser::ParseNull( const std::string json, unsigned int & cur, const unsigned int length )
-{
-	if( cur + 3 < length && json[cur + 1] == 'u' && json[cur + 2] == 'l' && json[cur + 3] == 'l')
-	{
-		return true;
-	}
-	else
-	{
-		throw ParseException( cur, json[--cur], "true" );
-		return false;
-	}
 }
