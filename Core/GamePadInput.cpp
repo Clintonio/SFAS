@@ -21,6 +21,8 @@ XINPUT_GAMEPAD_X                0x4000
 XINPUT_GAMEPAD_Y                0x8000
 */
 
+const float GamePadInput::kJoyStickThreshold = 0.3f;
+
 struct GamePadInput::KeyMap GamePadInput::sKeyCodes[kNumInputOptions] = { 
 	KeyMap(Key::kContinue, INT_MAX),
 	KeyMap(Key::kExit, XINPUT_GAMEPAD_B),
@@ -66,20 +68,21 @@ void GamePadInput::Vibrate( const float time, const float strength )
 
 GamePadInput::~GamePadInput(void)
 {
-
+	// Remove any possible vibration before shutdown to
+	// prevent the gamepad being stuck on vibrate.
+	Vibrate(0.0f,0.0f);
 }
 
 void GamePadInput::Update( float dt )
 {
-	XINPUT_STATE state;
-	XInputGetState(m_ControllerNumber, &state);
+	XInputGetState(m_ControllerNumber, &m_InputState);
 
 	for( unsigned int i = 0; i < kNumInputOptions; i++ )
 	{
 		Key key = sKeyCodes[i].key;
 		m_KeyStates[key].time += dt;
 		m_KeyStates[key].LastFrameKeyDown = m_KeyStates[key].KeyDown;
-		m_KeyStates[key].KeyDown = (state.Gamepad.wButtons & sKeyCodes[i].code);
+		m_KeyStates[key].KeyDown = (m_InputState.Gamepad.wButtons & sKeyCodes[i].code);
 
 		if( m_KeyStates[key].KeyDown && m_KeyStates[key].time >= kfButtonRepeatTime )
 		{
@@ -88,44 +91,14 @@ void GamePadInput::Update( float dt )
 		}
 		else
 		{
-			m_KeyStates[i].Repeat = false;
+			m_KeyStates[key].Repeat = false;
 		}
 	}
 
-	// Update our mouse "positions"
-	if( abs(state.Gamepad.sThumbLX) > kJoyStickThreshold )
-	{
-		m_MouseButton1.position.x += (short) 10 * (state.Gamepad.sThumbLX / SHRT_MAX);
-		m_MouseButton1.position.x = min(max( m_MouseButton1.position.x, 0 ), m_WindowWidth );
-	}
-	if( abs(state.Gamepad.sThumbLY) > kJoyStickThreshold )
-	{
-		m_MouseButton1.position.y += (short) 10 * (state.Gamepad.sThumbLY / SHRT_MAX);
-		m_MouseButton1.position.y = min(max( m_MouseButton1.position.y, 0 ), m_WindowHeight );
-	}
-	
-	m_MouseButton1.lastFrameClicked = m_MouseButton1.pressed;
-	// Right shoulder and trigger, as well as A are mapped to left click
-	m_MouseButton1.pressed = (bool) ( ( state.Gamepad.wButtons 
-		& ( XINPUT_GAMEPAD_RIGHT_SHOULDER | XINPUT_GAMEPAD_A ) ) ||
-		( state.Gamepad.bRightTrigger > kTriggerThreshold ) );
-	// Update our left click to simulate actual mouse behaviour
-	if( !m_MouseButton1.pressed )
-	{
-		m_MouseButton1.startX = 0;
-		m_MouseButton1.startY = 0;
-	} 
-	else if( !m_MouseButton1.lastFrameClicked )
-	{
-		m_MouseButton1.startX = m_MouseButton1.position.x;
-		m_MouseButton1.startY = m_MouseButton1.position.y;
-	}
-
-	if( m_MouseButton1.pressed )
-	{
-		m_MouseButton1.lastClickX = m_MouseButton1.position.x;
-		m_MouseButton1.lastClickY = m_MouseButton1.position.y;
-	}
+	DoGamePadMouseEmulation();
+	// In this implementation we're mapping right joystick to the mouse
+	DoRightJoyStickInput();
+	DoLeftJoyStickInput();
 
 	// Update the vibration
 	if ( m_VibrateTimeRemaining > 0.0f )
@@ -137,5 +110,96 @@ void GamePadInput::Update( float dt )
 			m_VibrateTimeRemaining = 0.0f;
 			Vibrate(0.0f, 0.0f); // Disables vibration
 		}
+	}
+}
+
+void GamePadInput::DoGamePadMouseEmulation()
+{
+	m_MouseButton1.lastFrameClicked = m_MouseButton1.pressed;
+	// Right shoulder and trigger are mapped to left click
+	m_MouseButton1.pressed = (bool) ( ( m_InputState.Gamepad.wButtons 
+		& ( XINPUT_GAMEPAD_RIGHT_SHOULDER ) ) ||
+		( m_InputState.Gamepad.bRightTrigger > kTriggerThreshold ) );
+	// Update our left click to simulate actual mouse behaviour
+	if( !m_MouseButton1.pressed )
+	{
+		m_MouseButton1.startX = 0;
+		m_MouseButton1.startY = 0;
+	} 
+	else if( !m_MouseButton1.lastFrameClicked )
+	{
+		m_MouseButton1.startX = (int) m_MouseButton1.position.x;
+		m_MouseButton1.startY = (int) m_MouseButton1.position.y;
+	}
+
+	if( m_MouseButton1.pressed )
+	{
+		m_MouseButton1.lastClickX = (int) m_MouseButton1.position.x;
+		m_MouseButton1.lastClickY = (int) m_MouseButton1.position.y;
+	}
+}
+
+void GamePadInput::DoLeftJoyStickInput()
+{
+	short xDist = m_InputState.Gamepad.sThumbLX;
+	short yDist = m_InputState.Gamepad.sThumbLY;
+
+	float magnitude = sqrt( (float) xDist * xDist + yDist * yDist );
+
+	if( magnitude > XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE )
+	{
+		//determine the direction the controller is pushed
+		float normalizedX = xDist / magnitude;
+		float normalizedY = yDist / magnitude;
+	
+		if( normalizedX > kJoyStickThreshold )
+		{
+			DoKeyPress(Key::kRight, true);
+		} 
+		else if( normalizedX < -kJoyStickThreshold )
+		{
+			DoKeyPress(Key::kLeft, true);
+		}
+	
+		if( normalizedY > kJoyStickThreshold )
+		{
+			DoKeyPress(Key::kUp, true);
+		} 
+		else if( normalizedY < -kJoyStickThreshold )
+		{
+			DoKeyPress(Key::kDown, true);
+		}
+	}
+}
+
+void GamePadInput::DoRightJoyStickInput()
+{
+	short xDist = m_InputState.Gamepad.sThumbRX;
+	short yDist = m_InputState.Gamepad.sThumbRY;
+
+	float magnitude = sqrt( (float) xDist * xDist + yDist * yDist );
+
+	if( magnitude > XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE )
+	{
+		//determine the direction the controller is pushed
+		float normalizedX = xDist / magnitude;
+		float normalizedY = yDist / magnitude;
+		
+		m_MouseButton1.position.x += 10 * normalizedX;
+		m_MouseButton1.position.y += 10 * normalizedY;
+		
+		m_MouseButton1.position.x = min( m_WindowWidth, max( 0, m_MouseButton1.position.x ) );
+		m_MouseButton1.position.y = min( m_WindowHeight, max( 0, m_MouseButton1.position.y ) );
+	}
+}
+
+void GamePadInput::DoKeyPress(const Key key, const bool pressed)
+{
+	m_KeyStates[key].KeyDown |= pressed;
+
+	if( m_KeyStates[key].KeyDown && m_KeyStates[key].time >= kfButtonRepeatTime )
+	{
+		m_KeyStates[key].Repeat = true;
+		m_KeyStates[key].time = 0.0f;
 	}
 }

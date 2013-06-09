@@ -28,6 +28,16 @@ private:
 
 		KeyMap(Key key, int code) : key(key), code(code) { }
 	};
+
+	// Emulates mouse input from the gamepad using the left joystick
+	void DoGamePadMouseEmulation();
+	// Get input from the right joystick and map it somewhere
+	void DoRightJoyStickInput();
+	// Get input from the left joystick and map it somewhere
+	void DoLeftJoyStickInput();
+	// Do a keypress from a virtual source, must be used after the main
+	// keypress loop in the update method
+	void DoKeyPress(const Key key, const bool pressed);
 	
 	static KeyMap sKeyCodes[kNumInputOptions];
 
@@ -36,7 +46,9 @@ private:
 	// Amount of time left to vibrate
 	float m_VibrateTimeRemaining;
 	
-	static const unsigned short kJoyStickThreshold = 3000;
+	static const float kJoyStickThreshold;
 	static const unsigned char kTriggerThreshold = 50;
+
+	XINPUT_STATE m_InputState;
 };
 };
