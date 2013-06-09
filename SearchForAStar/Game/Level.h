@@ -13,6 +13,11 @@ namespace Game
 
 struct Level
 {
+	struct Player {
+		D3DXVECTOR3		startPos;
+		WeaponType		weapon;
+		std::wstring	textureFile;
+	};
 
 	struct EnemyType 
 	{
@@ -48,7 +53,8 @@ struct Level
 	unsigned int		enemyCount;
 	Level::Enemy*		enemies;
 	std::wstring		skyboxTextureFile;
-	Level::WeaponType*	weaponTypes;
+	WeaponType*			weaponTypes;
+	Level::Player		player;
 };
 }
 }

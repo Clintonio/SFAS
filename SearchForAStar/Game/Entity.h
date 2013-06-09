@@ -97,7 +97,7 @@ public:
 
 	virtual void OnReset() {
 		m_ForceAccumulator = D3DXVECTOR3( 0.0f, 0.0f, 0.0f );
-		m_Velocity = D3DXVECTOR3( 0,0,0);
+		m_Velocity = D3DXVECTOR3( 0, 0, 0);
 	}
 
 	bool IsMoveable() const { return m_InverseMass > 0.0f; }

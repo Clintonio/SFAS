@@ -34,44 +34,39 @@ const float Player::sDamping	= 0.39f;
 
 const Entity::EntityType Player::kEntityType(1);
 
-Player::Player( int lives ) : ShipEntity( D3DXVECTOR3(), D3DXVECTOR3( sSize, sSize, 0.0f ), sDamping ), 
-	m_Lives( lives ), m_Score( 0 ), m_Multiplier( 1 ), m_Best( 0 ), m_TimeSinceLastFire( 0 )
+Player::Player( int lives ) : 
+	ShipEntity( D3DXVECTOR3(), D3DXVECTOR3( sSize, sSize, 0.0f ), sDamping ), 
+	m_Lives( lives ), 
+	m_Score( 0 ), 
+	m_Multiplier( 1 ), 
+	m_Best( 0 ), 
+	m_TimeSinceLastFire( 0 )
 {
 	SetMass( sMass );
-	
-	// Setup the player weapon
-	m_WeaponType.name		= "Laser";
-	m_WeaponType.damage		= 1;
-	m_WeaponType.ranged		= true;
-	m_WeaponType.fireDelay	= 0.2f;
-	m_WeaponType.lifetime	= 5.0f;
-	m_WeaponType.dimensions	= D3DXVECTOR3( 2.0f, 2.0f, 0.0f );
-	m_WeaponType.soundFile	= "Sound/laser1.wav";
-	m_WeaponType.speed		= 4000.0f;
-	m_WeaponType.textureFile	= L"textures/bullet.png";
-	m_WeaponType.weaponAIType = "direct";
-	for( int count = 0; count < kNumBullets; count++ )
-	{
-		m_Bullets[count] = new Bullet( &m_WeaponType );
-	}
 
-	m_RenderItem = sTextureLoader->LoadTexturedRenderItem(L"textures/player.png", 1.0f);
 	// Initialise sounds so that they're not played incorrectly
 	m_ExplosionSound = 0;
 }
 
 Player::~Player(void)
 {
-	for( int count = 0; count < kNumBullets; count++ )
-	{
-		delete m_Bullets[count];
-		m_Bullets[count] = 0;
-	}
-
 	if( m_ExplosionSound != 0 )
 	{
 		delete m_ExplosionSound;
 	}
+}
+
+void Player::Spawn()
+{
+	SetPosition( m_SpawnPosition );
+	SetVelocity( D3DXVECTOR3( 0.0f, 0.0f, 0.0f ) );
+	SetActive( true );
+}
+
+void Player::UpdateWithDescriptor( const Level::Player & player )
+{
+	m_WeaponType = player.weapon;
+	m_RenderItem = sTextureLoader->LoadTexturedRenderItem(player.textureFile, 1.0f);
 }
 
 void Player::DoInput(World * world, const Engine::Input * input )
@@ -182,29 +177,13 @@ bool Player::OnCollision( Entity& other, World * world )
 
 void Player::OnReset()
 {
-	for (int count = 0; count < kNumBullets; count++) 
-	{
-		m_Bullets[count]->SetActive(false);
-	}
+	
 }
 
 Bullet * Player::Fire( float vx, float vy )
 {
-	Bullet * bullet = 0;
-
-	for( int count = 0; count < kNumBullets; count++ )
-	{
-		if( !m_Bullets[count]->IsActive() )
-		{
-			bullet = m_Bullets[count];
-			break;
-		}
-	}
-
-	if( bullet != 0 )
-	{
-		bullet->Fire( D3DXVECTOR3(vx, vy, 0.0), this );
-	}
+	Bullet * bullet = new Bullet( &m_WeaponType );
+	bullet->Fire( D3DXVECTOR3(vx, vy, 0.0), this );
 
 	return bullet;
 }

@@ -5,11 +5,11 @@ using SFAS::Game::Level;
 #include <d3dx9.h>
 #include "WeaponType.h"
 
-Level getLevel1() {
+Level * getLevel1() {
 	Level::Enemy* level1Enemies = static_cast<Level::Enemy*> 
 			(::operator new (sizeof(Level::Enemy[1])));
 	Level::EnemyType* enemyTypes = new Level::EnemyType[4];
-	WeaponType* weaponTypes = new WeaponType[4];
+	WeaponType* weaponTypes = new WeaponType[5];
 
 	// Define weapon types
 	weaponTypes[0].name = "None";
@@ -48,6 +48,18 @@ Level getLevel1() {
 	weaponTypes[3].textureFile	= L"textures/rocket.png";
 	weaponTypes[3].weaponAIType = "target";
 
+	// Setup the player weapon
+	weaponTypes[4].name			= "Rapid Laser";
+	weaponTypes[4].damage		= 1;
+	weaponTypes[4].ranged		= true;
+	weaponTypes[4].fireDelay	= 0.2f;
+	weaponTypes[4].lifetime		= 5.0f;
+	weaponTypes[4].dimensions	= D3DXVECTOR3( 2.0f, 2.0f, 0.0f );
+	weaponTypes[4].soundFile	= "Sound/laser1.wav";
+	weaponTypes[4].speed		= 4000.0f;
+	weaponTypes[4].textureFile	= L"textures/bullet.png";
+	weaponTypes[4].weaponAIType = "direct";
+
 	// Define enemy types
 	enemyTypes[0].id			= 0;
 	enemyTypes[0].health		= 1;
@@ -79,17 +91,24 @@ Level getLevel1() {
 	
 	// Define enemies
 	level1Enemies[0] = Level::Enemy (3, D3DXVECTOR3(100,100,0));
+
+	// Define player
+	Level::Player player;
+	player.weapon				= weaponTypes[4];
+	player.startPos				= D3DXVECTOR3( 0.5f, 0.5f, 0 );
+	player.textureFile			= L"textures/player.png";
 	
-	Level level1;
+	Level*  level1 = new Level;
 	
-	level1.id				 = "L0";
-	level1.name				 = "Level 0";
-	level1.enemyCount		 = 1;
-	level1.enemies			 = level1Enemies;
-	level1.skyboxTextureFile = L"textures/skybox.png";
-	level1.enemyTypeCount	 = 4;
-	level1.enemyTypes		 = enemyTypes;
-	level1.weaponTypes		 = weaponTypes;
+	level1->id				 = "L0";
+	level1->name				 = "Level 0";
+	level1->enemyCount		 = 1;
+	level1->enemies			 = level1Enemies;
+	level1->skyboxTextureFile = L"textures/skybox.png";
+	level1->enemyTypeCount	 = 4;
+	level1->enemyTypes		 = enemyTypes;
+	level1->weaponTypes		 = weaponTypes;
+	level1->player			 = player;
 
 	return level1;
 }

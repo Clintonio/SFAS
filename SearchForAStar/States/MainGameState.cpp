@@ -89,9 +89,9 @@ bool MainGameState::Update( Engine::Input * input, float dt)
 			case keNewLevel:
 				if( m_TimeSinceStateChange > keMessageDisplayTime )
 				{
-					m_World.NextLevel();
 					SetPageText( L"" );
 					m_GameState = keGamePlay;
+					m_World.NextLevel();
 				}
 				break;
 			case keGamePlay:

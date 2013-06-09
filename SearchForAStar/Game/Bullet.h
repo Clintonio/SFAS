@@ -30,7 +30,7 @@ class ShipEntity;
 class Bullet : public Entity
 {
 public:
-	Bullet( WeaponType* weaponType );
+	Bullet( const WeaponType* weaponType );
 
 	void Update( World * world, float dt );
 	void Fire( D3DXVECTOR3 direction, ShipEntity * owner );
@@ -40,6 +40,8 @@ public:
 	void SetTarget( const ShipEntity * other );
 	// Get the owner of this bullet, if any
 	const ShipEntity* GetOwner() const { return m_Owner; }
+	// Set the type of this bullet
+	void SetType( const WeaponType * type );
 	
 	static const Entity::EntityType kEntityType;
 	// Get the entity type for this entity
@@ -58,7 +60,7 @@ private:
 	// The player that fired this bullet
 	ShipEntity * m_Owner;
 	// Weapon type descriptor
-	WeaponType* m_WeaponType;
+	const WeaponType* m_WeaponType;
 	// Whether the sound has played or not
 	bool m_SoundPlayed;
 	// The target ship for targetting type weapons
@@ -66,6 +68,7 @@ private:
 
 	bool OnCollision( Entity& other, World * world );
 	void LoadSounds(Engine::SoundProvider* soundProvider);
+	void OnReset() { }
 };
 }
 }

@@ -16,6 +16,7 @@
 #include "Audio/Sound.h"
 #include "ShipEntity.h"
 #include "WeaponType.h"
+#include "Level.h"
 
 // Forward declare
 namespace Engine { 
@@ -54,6 +55,11 @@ public:
 	int GetLivesRemaining() const { return m_Lives; }
 	void ResetLives( int lives ) { m_Lives = lives; }
 
+	// Update the player with a player level descriptor
+	void UpdateWithDescriptor( const Level::Player & player );
+	// Set the player spawn location for when they die
+	void SetSpawnPosition( const D3DXVECTOR3 & position ) { m_SpawnPosition = position; }
+	void Spawn();
 
 	void OnReset();
 	virtual void Update( World * world, float dt );
@@ -75,6 +81,8 @@ private:
 	Engine::Sound* m_ExplosionSound;
 	// The player's weapon description
 	WeaponType m_WeaponType;
+	// Spawn position for player
+	D3DXVECTOR3 m_SpawnPosition;
 
 	inline bool Player::CanFire() const;
 	// Override the bullet hit to add score to player

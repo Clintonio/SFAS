@@ -44,41 +44,16 @@ using SFAS::Game::Player;
 World::World(LPDIRECT3DDEVICE9 p_dx_Device, HWND han_Window, int w, int h) 
 	: m_Width( (float)w ), m_Height( (float)h ), m_Level( 0 ), m_NumActiveEnemies( INT_MAX )
 {
-	float wallWidth = 10.0f;
-	float halfWallWidth = wallWidth * 0.5f;
-	float halfAreaWidth = m_Width * 0.5f;
-	float halfAreaHeight = m_Height * 0.5f;
-	float windowHeight = (float) h;
-	float windowWidth = (float) w;
-	
 	m_SoundProvider = new Engine::SoundProvider();
 	m_SoundProvider->Init(han_Window);
 
 	m_SkyBox = new Engine::SkyBox(p_dx_Device, w, h);
 	m_EntityList = new EntityList;
+	
+	m_Player = new Player( kePlayerLives );
+	m_Player->SetCollidable();
 
 	Entity::Init(p_dx_Device);
-
-	// Player Object
-	Player * player = new Player(  kePlayerLives );
-	player->SetPosition( D3DXVECTOR3( halfAreaWidth, halfAreaHeight, 0.0f ) );
-	player->SetCollidable();
-	AddEntity(player);
-
-	// Create walls
-	Wall * wall1 = new Wall( halfWallWidth, halfAreaHeight, wallWidth, windowHeight );
-	Wall * wall2 = new Wall( halfAreaWidth, halfWallWidth, windowWidth, wallWidth );
-	Wall * wall3 = new Wall( w - halfWallWidth, halfAreaHeight, wallWidth, windowHeight );
-	Wall * wall4 = new Wall( halfAreaWidth, h - halfWallWidth, windowWidth, wallWidth );
-	
-	wall1->SetActive( true );
-	wall2->SetActive( true );
-	wall3->SetActive( true );
-	wall4->SetActive( true );
-	AddEntity(wall1);
-	AddEntity(wall2);
-	AddEntity(wall3);
-	AddEntity(wall4);
 
 	Engine::Sound* sound = m_SoundProvider->CreateSoundBufferFromFile("Sound/menumusic.wav");
 	sound->PlaySoundFromStart();
@@ -91,6 +66,7 @@ World::~World(void)
 	delete m_EntityList;
 	delete m_SkyBox;
 	delete m_SoundProvider;
+	delete m_Player;
 	if( m_LevelMusic != 0 )
 	{
 		delete m_LevelMusic;
@@ -208,37 +184,66 @@ bool World::IsGameOver() const
 
 void World::NextLevel()
 {
-	Player * player = GetPlayerHelper();
+	OpenLevel(m_Level);
 	// Up the level
 	m_Level++;
 	ResetLevel();
-	player->OnReset();
+	m_Player->OnReset();
 	m_NumActiveEnemies = INT_MAX;
-	OpenLevel(m_Level);
 }
 
 void World::OpenLevel( int level )
 {
-	Level l = getLevel1();
+	Level * l = getLevel1();
+	
+	// Player Setup
+	D3DXVECTOR3 start = l->player.startPos;
+
+	m_Player->SetSpawnPosition( D3DXVECTOR3( m_Width * start.x, m_Height * start.y, 0 * start.z ) );
+	m_Player->UpdateWithDescriptor( l->player );
+	m_Player->SetActive( true );
+	AddEntity(m_Player);
 
 	// This section loads the enemies
-	for(unsigned int i = 0; i < l.enemyCount; i++)
+	for(unsigned int i = 0; i < l->enemyCount; i++)
 	{
-		Level::Enemy curEnemy = l.enemies[i];
+		Level::Enemy curEnemy = l->enemies[i];
 		D3DXVECTOR3 pos = curEnemy.pos;
-		Enemy* enemy = new Enemy(l.enemyTypes[curEnemy.type], pos.x, pos.y);
+		Enemy* enemy = new Enemy(l->enemyTypes[curEnemy.type], pos.x, pos.y);
 		AddEntity(enemy);
 	}
 	
 	// This section loads a skybox
-	m_SkyBox->Init(l.skyboxTextureFile);
+	m_SkyBox->Init(l->skyboxTextureFile);
+
+	float wallWidth = 10.0f;
+	float halfWallWidth = wallWidth * 0.5f;
+	float halfAreaWidth = m_Width * 0.5f;
+	float halfAreaHeight = m_Height * 0.5f;
+	float windowHeight = (float) m_Height;
+	float windowWidth = (float) m_Width;
+	
+	// Create walls
+	Wall * wall1 = new Wall( halfWallWidth, halfAreaHeight, wallWidth, windowHeight );
+	Wall * wall2 = new Wall( halfAreaWidth, halfWallWidth, windowWidth, wallWidth );
+	Wall * wall3 = new Wall( m_Width - halfWallWidth, halfAreaHeight, wallWidth, windowHeight );
+	Wall * wall4 = new Wall( halfAreaWidth, m_Height - halfWallWidth, windowWidth, wallWidth );
+	
+	wall1->SetActive( true );
+	wall2->SetActive( true );
+	wall3->SetActive( true );
+	wall4->SetActive( true );
+	AddEntity(wall1);
+	AddEntity(wall2);
+	AddEntity(wall3);
+	AddEntity(wall4);
+
+	m_CurrentLevel = l;
 }
 
 void World::ClearLevel()
 {
-	m_EntityList->erase(Enemy::kEntityType);
-	m_EntityList->erase(Bullet::kEntityType);
-	m_EntityList->erase(Explosion::kEntityType);
+	m_EntityList->clear();
 	if( m_LevelMusic != 0 )
 	{
 		m_LevelMusic->Stop();
@@ -257,11 +262,7 @@ void World::ResetLevel()
 		((*it).second)->OnReset();
 	}
 
-	Player * player = GetPlayerHelper();
-	// Reset the player position, velocity and rotation - then set to active
-	player->SetPosition( D3DXVECTOR3( halfAreaWidth, halfAreaHeight, 0.0f ) );
-	player->SetVelocity( D3DXVECTOR3( 0.0f, 0.0f, 0.0f ) );
-	player->SetActive( true );
+	m_Player->Spawn();
 }
 
 bool World::IsLevelFinished() const
@@ -296,12 +297,12 @@ bool World::DoCollision( Entity * lh, Entity * rh, float dt )
 
 const Player * World::GetPlayer() const 
 { 
-		return ((Player*) (*m_EntityList->GetAllEntitiesOfType(Player::kEntityType).begin()));
+	return m_Player;
 }
 
 Player * World::GetPlayerHelper() 
 { 
-		return ((Player*) (*m_EntityList->GetAllEntitiesOfType(Player::kEntityType).begin()));
+	return m_Player;
 }
 
 const Entity* World::FindNearestEntityOfType( const Entity * origin, const Entity::EntityType &typeID ) const 

@@ -26,19 +26,12 @@ std::map<std::string, Engine::RenderItem*> Bullet::sRenderItem;
 
 const Entity::EntityType Bullet::kEntityType(20);
 
-Bullet::Bullet( WeaponType* weaponType ) : 
+Bullet::Bullet( const WeaponType* weaponType ) : 
 	Entity( D3DXVECTOR3(), D3DXVECTOR3( 1, 1, 0.0f ), sDamping ), 
 	m_SoundPlayed(false)
 {
 	SetMass( sMass );
-	SetScale( weaponType->dimensions );
-	m_WeaponType = weaponType;
-	if( sRenderItem[m_WeaponType->name] == NULL ) 
-	{
-		sRenderItem[m_WeaponType->name] = sTextureLoader->LoadTexturedRenderItem(m_WeaponType->textureFile, 1.0f);
-	}
-
-	m_RenderItem = sRenderItem[m_WeaponType->name];
+	SetType( weaponType );
 }
 
 void Bullet::LoadSounds(Engine::SoundProvider* soundProvider)
@@ -50,6 +43,21 @@ void Bullet::LoadSounds(Engine::SoundProvider* soundProvider)
 		{
 			sBulletSound[m_WeaponType->name] = bulletSound;
 		}
+	}
+}
+
+void Bullet::SetType( const WeaponType * type )
+{
+	m_WeaponType = type;
+	if( m_WeaponType != NULL ) 
+	{
+		SetScale( m_WeaponType->dimensions );
+		if( sRenderItem[m_WeaponType->name] == NULL )
+		{
+			sRenderItem[m_WeaponType->name] = sTextureLoader->LoadTexturedRenderItem(m_WeaponType->textureFile, 1.0f);
+		}
+
+		m_RenderItem = sRenderItem[m_WeaponType->name];
 	}
 }
 
