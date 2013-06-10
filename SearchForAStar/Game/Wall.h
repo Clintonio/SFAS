@@ -31,13 +31,12 @@ public:
 	
 	// Get the entity type for this entity
 	const Entity::EntityType GetEntityType() const { return kEntityType; }
+	static const Entity::EntityType kEntityType;
 private: 
 
 	WCHAR * ToString()  const { return L"Wall"; }
 
 	bool OnCollision( Entity& other, World* world );
-	
-	static const Entity::EntityType kEntityType;
 };
 }
 }

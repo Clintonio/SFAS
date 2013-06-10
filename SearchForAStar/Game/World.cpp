@@ -216,7 +216,10 @@ void World::OpenLevel( int level )
 	// Player Setup
 	D3DXVECTOR3 start = l->player.startPos;
 
-	m_Player->SetSpawnPosition( D3DXVECTOR3( m_Width * start.x, m_Height * start.y, 0 * start.z ) );
+	m_Player->SetSpawnPosition( 
+		// Player coordinates are relative to the screen in the range [0, 1]
+		D3DXVECTOR3( m_Width * start.x, m_Height * start.y, 0 * start.z ) 
+	);
 	m_Player->UpdateWithDescriptor( l->player );
 	m_Player->SetActive( true );
 	AddEntity(m_Player);
@@ -226,7 +229,11 @@ void World::OpenLevel( int level )
 	{
 		Level::Enemy curEnemy = l->enemies[i];
 		D3DXVECTOR3 pos = curEnemy.pos;
-		Enemy* enemy = new Enemy(m_GameProperties->enemyTypes[curEnemy.type], pos.x, pos.y);
+		Enemy* enemy = new Enemy(
+			// Enemy coordinates are relative to the screen in the range [0, 1]
+			m_GameProperties->enemyTypes[curEnemy.type], 
+			m_Width *pos.x, 
+			m_Height *pos.y);
 		AddEntity(enemy);
 	}
 	

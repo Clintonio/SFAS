@@ -19,18 +19,18 @@ const Level* LevelLoader::LoadLevelFromFile( std::string file )
 
 	// If 0 the parse has failed
 	const JSONMapNode * rootNode = parser.ParseJSONFile( file );
-
 	if( rootNode != NULL )
 	{
 		ParseLevelFile( rootNode, level );
 	}
 	else
 	{
-		std::string error;
+		std::string error = "Could not find level file";
 		if( parser.HasError() )
 		{
 			error = parser.GetErrorMessage();
 		}
+		throw new std::runtime_error( error );
 	}
 
 	return level;

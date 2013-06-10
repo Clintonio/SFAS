@@ -5,7 +5,9 @@
 			"type":			"levels",
 			"levels": [
 				"Levels/level1.json",
-				"Levels/level2.json"
+				"Levels/level2.json",
+				"Levels/level3.json",
+				"Levels/level4.json"
 			]
 		}
 	],

@@ -1,6 +1,6 @@
 {
-	"id": 						"L2",
-	"name":					"Level 2",
+	"id": 						"L3",
+	"name":					"Level 3",
 	"skyboxTextureFile": "textures/skybox.png",
 	"enemies": [
 		{
@@ -9,11 +9,31 @@
 		},
 		{
 			"type": 		0,
+			"pos": 	[ 0.9 , 0.3 , 0.0 ]
+		},
+		{
+			"type": 		0,
 			"pos": 	[ 0.9 , 0.5 , 0.0 ]
 		},
 		{
 			"type": 		0,
+			"pos": 	[ 0.9 , 0.7 , 0.0 ]
+		},
+		{
+			"type": 		0,
 			"pos": 	[ 0.9 , 0.9 , 0.0 ]
+		},
+		{
+			"type": 		0,
+			"pos": 	[ 0.8 , 0.4 , 0.0 ]
+		},
+		{
+			"type": 		0,
+			"pos": 	[ 0.8 , 0.6 , 0.0 ]
+		},
+		{
+			"type": 		0,
+			"pos": 	[ 0.8 , 0.8 , 0.0 ]
 		}
 	],
 	"player": {

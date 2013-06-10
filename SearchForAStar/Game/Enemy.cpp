@@ -17,6 +17,7 @@
 #include "Audio/Sound.h"
 #include "Bullet.h"
 #include "GameProperties.h"
+#include "Wall.h"
 
 using namespace SFAS::Game;
 
@@ -127,6 +128,10 @@ bool Enemy::OnCollision( Entity& other, World * world )
 				sExplosionSound->PlaySoundFromStart();
 			}
 		}
+	}
+	else if( other.GetEntityType() == Wall::kEntityType )
+	{
+		return false;
 	}
 
 	return true;
