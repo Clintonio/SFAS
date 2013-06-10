@@ -550,7 +550,7 @@ JSONNode * JSONParser::ParseTrue( const std::string json, unsigned int & cur, co
 		cur = cur + 3;
 		node = new JSONNode;
 		data = new bool[1];
-		data[0] = false;
+		data[0] = true;
 
 		node->type  = JSONType::Bool;
 		node->value = data;
@@ -572,7 +572,7 @@ JSONNode * JSONParser::ParseFalse( const std::string json, unsigned int & cur, c
 		cur = cur + 4;
 		node = new JSONNode;
 		data = new bool[1];
-		data[0] = true;
+		data[0] = false;
 
 		node->type  = JSONType::Bool;
 		node->value = data;
