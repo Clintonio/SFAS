@@ -38,6 +38,10 @@ struct JSONArrayNode : public JSONNode
 {
 	JSONNode **	child;
 	unsigned int	childCount;
+	
+	const std::string GetChildString( const unsigned int index ) const;
+
+	void CheckForNodeErrors( const Engine::JSON::JSONNode * node, const unsigned int nodeIndex, const JSONType & expectedType ) const;
 };
 
 struct JSONMapNode : public JSONArrayNode
@@ -45,11 +49,11 @@ struct JSONMapNode : public JSONArrayNode
 	std::string	**	childTags; // Only in object
 
 	// Search through child tags for the given tag and return that child
-	const JSONNode * JSONMapNode::operator [] ( const std::string tagName ) const;
-	const std::string JSONMapNode::GetChildString( const std::string nodeName ) const;
-	const std::wstring JSONMapNode::GetChildWString( const std::string nodeName ) const;
-	const int JSONMapNode::GetChildInt( const std::string nodeName ) const;
-	const D3DXVECTOR3 JSONMapNode::GetChildVector3( const std::string nodeName ) const;
+	const JSONNode * operator [] ( const std::string tagName ) const;
+	const std::string GetChildString( const std::string nodeName ) const;
+	const std::wstring GetChildWString( const std::string nodeName ) const;
+	const int GetChildInt( const std::string nodeName ) const;
+	const D3DXVECTOR3 GetChildVector3( const std::string nodeName ) const;
 	const float GetChildFloat( const std::string nodeName ) const;
 	const bool GetChildBool( const std::string nodeName ) const;
 	
@@ -80,26 +84,50 @@ public:
 class JSONCastException : public std::runtime_error
 {
 public:
-	JSONCastException( std::string nodeName, JSONType expectedType  ) :
+	JSONCastException( const std::string nodeName, const JSONType expectedType  ) :
 		std::runtime_error( "Error loading level, missing value" ),
 		m_NodeName( nodeName ),
-		m_ExpectedType( expectedType )
+		m_ExpectedType( expectedType ),
+		m_FoundType( JSONType::Null ),
+		m_NodeIndex( 0 )
 	{
 
 	}
 
-	JSONCastException( std::string nodeName, JSONType expectedType, JSONType foundType  ) :
+	JSONCastException( const std::string nodeName, const JSONType expectedType, const JSONType foundType  ) :
 		std::runtime_error( "Error loading level, data type mismatch" ),
 		m_NodeName( nodeName ),
 		m_ExpectedType( expectedType ),
-		m_FoundType( foundType )
+		m_FoundType( foundType ),
+		m_NodeIndex( 0 )
 	{
 
 	}
 
-	std::string m_NodeName;
-	JSONType m_ExpectedType;
-	JSONType m_FoundType;
+	JSONCastException( const unsigned int index, const JSONType expectedType  ) :
+		std::runtime_error( "Error loading level, missing value" ),
+		m_NodeIndex( index ),
+		m_ExpectedType( expectedType ),
+		m_FoundType( JSONType::Null ),
+		m_NodeName( "" )
+	{
+
+	}
+
+	JSONCastException( const unsigned int index, const JSONType expectedType, const JSONType foundType  ) :
+		std::runtime_error( "Error loading level, data type mismatch" ),
+		m_NodeIndex( index ),
+		m_ExpectedType( expectedType ),
+		m_FoundType( foundType ),
+		m_NodeName( "" )
+	{
+
+	}
+
+	const std::string m_NodeName;   // for object types;
+	const JSONType m_ExpectedType;
+	const JSONType m_FoundType;
+	const unsigned int m_NodeIndex; // For array types
 };
 
 }

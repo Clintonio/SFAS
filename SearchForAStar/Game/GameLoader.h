@@ -35,6 +35,7 @@ private:
 
 	void ParseEnemyTypes( const JSONArrayNode * node, GameProperties * properties ) const;
 	void ParseWeaponTypes( const JSONArrayNode * node, GameProperties * properties ) const;
+	void ParseGameModes( const JSONArrayNode * node, GameProperties * properties ) const;
 };
 }
 }

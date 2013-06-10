@@ -50,9 +50,11 @@ struct GameMode
 struct GameProperties
 {
 	unsigned int		enemyTypeCount;
-	EnemyType*			enemyTypes;
+	EnemyType *			enemyTypes;
 	unsigned int		weaponTypesCount;
-	WeaponType*			weaponTypes;
+	WeaponType *		weaponTypes;
+	unsigned int		gameModeCount;
+	GameMode *			gameModes;
 };
 }
 }

@@ -37,18 +37,25 @@ GameProperties * GameLoader::LoadGamePropertiesFromFile( const std::string file 
 
 void GameLoader::ParseGameFile( const JSONMapNode * root, GameProperties * properties ) const
 {
-	properties->enemyTypeCount		= root->GetChildInt( "enemyTypeCount" );
-	properties->weaponTypesCount	= root->GetChildInt( "weaponTypeCount" );
-	properties->enemyTypes			= new EnemyType[properties->enemyTypeCount];
-	properties->weaponTypes			= new WeaponType[properties->weaponTypesCount];
-	
 	JSONArrayNode * weaponTypes = (JSONArrayNode*) (*root)["weaponTypes"];
 	JSONArrayNode * enemyTypes  = (JSONArrayNode*) (*root)["enemyTypes"];
-	root->CheckForNodeErrors( weaponTypes, "enemyTypes", JSONType::Array ); 
+	JSONArrayNode * gameModes   = (JSONArrayNode*) (*root)["gameModes"];
+
+	root->CheckForNodeErrors( weaponTypes, "weaponTypes", JSONType::Array ); 
 	root->CheckForNodeErrors( enemyTypes, "enemyTypes", JSONType::Array ); 
+	root->CheckForNodeErrors( gameModes, "gameModes", JSONType::Array ); 
+	
+	properties->enemyTypeCount		= enemyTypes->childCount;
+	properties->weaponTypesCount	= weaponTypes->childCount;
+	properties->gameModeCount		= gameModes->childCount;
+
+	properties->enemyTypes	= new EnemyType[properties->enemyTypeCount];
+	properties->weaponTypes	= new WeaponType[properties->weaponTypesCount];
+	properties->gameModes	= new GameMode[properties->gameModeCount];
 	
 	ParseWeaponTypes( weaponTypes, properties );
 	ParseEnemyTypes( enemyTypes , properties );
+	ParseGameModes( gameModes , properties );
 }
 
 void GameLoader::ParseEnemyTypes( const JSONArrayNode * node, GameProperties * properties ) const
@@ -84,5 +91,25 @@ void GameLoader::ParseWeaponTypes( const JSONArrayNode * node, GameProperties * 
 		properties->weaponTypes[i].speed		= weaponNode->GetChildFloat( "speed" );
 		properties->weaponTypes[i].textureFile	= weaponNode->GetChildWString( "textureFile" );
 		properties->weaponTypes[i].weaponAIType	= weaponNode->GetChildString( "AIType" );
+	}
+}
+
+void GameLoader::ParseGameModes( const JSONArrayNode * node, GameProperties * properties ) const
+{
+	for( unsigned int i = 0; i < properties->gameModeCount; i++ )
+	{
+		JSONMapNode * modeNode		= (JSONMapNode*) node->child[i];
+		JSONArrayNode * levelNode	= (JSONArrayNode*) (*modeNode)["levels"];
+		modeNode->CheckForNodeErrors( modeNode, "gameModes", JSONType::Object ); 
+		modeNode->CheckForNodeErrors( levelNode, "levels", JSONType::Array ); 
+		
+		properties->gameModes[i].name	= modeNode->GetChildString( "name" );
+		properties->gameModes[i].type	= modeNode->GetChildString( "type" );
+
+		properties->gameModes[i].levels = new std::string[levelNode->childCount];
+		for( unsigned int j = 0; j < levelNode->childCount; j++ )
+		{
+			properties->gameModes[i].levels[j]	= levelNode->GetChildString( j );
+		}
 	}
 }

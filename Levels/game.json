@@ -1,10 +1,4 @@
-{
-	"_COMMENT": "WARNING: KEEP THESE VALUES CONSISTENT",
-	
-	"weaponTypeCount": 5,
-	"enemyTypeCount": 4,
-	"gameModeCount": 1,
-	
+{	
 	"gameModes": [
 		{
 			"name":		"Story",

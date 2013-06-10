@@ -82,3 +82,28 @@ void JSONMapNode::CheckForNodeErrors( const Engine::JSON::JSONNode * node, const
 		throw JSONCastException( nodeName, expectedType, node->type );
 	}
 }
+
+//===
+// JSONArrayNode Functions
+//===
+
+const std::string JSONArrayNode::GetChildString( const unsigned int index ) const
+{
+	const JSONNode * childNode = child[index];
+	CheckForNodeErrors( childNode, index, JSONType::String );
+
+	return *((std::string*) childNode->value);
+}
+
+void JSONArrayNode::CheckForNodeErrors( const Engine::JSON::JSONNode * node, const unsigned int nodeIndex, const JSONType & expectedType ) const
+{
+	if( node == 0 )
+	{
+		throw JSONCastException( nodeIndex, expectedType );
+	}
+	
+	if ( node->type != expectedType )
+	{
+		throw JSONCastException( nodeIndex, expectedType, node->type );
+	}
+}
