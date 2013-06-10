@@ -37,9 +37,9 @@ ControlsState::ControlsState( LPDIRECT3DDEVICE9 p_dx_Device ) :
 	AddText(0, L"Right Thumbstick", right, yPos, FontSize::Small, grey );
 	
 	yPos += 0.04f;
-	AddText(0, L"Fire", left, yPos, FontSize::Small, grey );
+	AddText(0, L"Fire/Select", left, yPos, FontSize::Small, grey );
 	AddText(0, L"Left Mouse", centre, yPos, FontSize::Small, grey );
-	AddText(0, L"Right Trigger", right, yPos, FontSize::Small, grey );
+	AddText(0, L"Right Trigger/A", right, yPos, FontSize::Small, grey );
 	
 	yPos += 0.04f;
 	AddText(0, L"Exit", left, yPos, FontSize::Small, grey );

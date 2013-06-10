@@ -122,7 +122,7 @@ void GamePadInput::DoGamePadMouseEmulation()
 	m_MouseButton1.lastFrameClicked = m_MouseButton1.pressed;
 	// Right shoulder and trigger are mapped to left click
 	m_MouseButton1.pressed = (bool) ( ( m_InputState.Gamepad.wButtons 
-		& ( XINPUT_GAMEPAD_RIGHT_SHOULDER ) ) ||
+		& ( XINPUT_GAMEPAD_RIGHT_SHOULDER | XINPUT_GAMEPAD_A ) ) ||
 		( m_InputState.Gamepad.bRightTrigger > kTriggerThreshold ) );
 	// Update our left click to simulate actual mouse behaviour
 	if( !m_MouseButton1.pressed )
