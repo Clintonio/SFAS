@@ -23,8 +23,7 @@ const int kStateID = 1;
 MainGameState::MainGameState( LPDIRECT3DDEVICE9 p_dx_Device, HWND han_Window, int w, int h ) : 
 	GameStateBase( p_dx_Device ),
 	m_GameState( keNewLevel ), 
-	m_World(p_dx_Device, han_Window, w, h ), 
-	m_TimeSinceStateChange( 0 ),
+	m_World(p_dx_Device, han_Window, w, h ),
 	m_GamePaused( false )
 {
 	// The crosshair for the player
@@ -78,13 +77,7 @@ int MainGameState::Update( Engine::Input * input, float dt)
 
 	if( !m_GamePaused )
 	{
-		// Cache the old state here to check whether or not the 
-		// state has been changed by the end of this function
-		State old_state = m_GameState;
 		WCHAR strBuffer[512];
-
-		// Update the time in this state
-		m_TimeSinceStateChange += dt;
 
 		if( m_GameState != keIntroText )
 		{
@@ -99,19 +92,11 @@ int MainGameState::Update( Engine::Input * input, float dt)
 		switch( m_GameState )
 		{
 			case keNewLevel:
-				if( m_TimeSinceStateChange > keMessageDisplayTime )
-				{
-					input->SetSensitivity( 1.0f );
-					m_GameState = keIntroText;
-					m_World.NextLevel();
-					input->Enable();
-					m_DrawCursor = true;
-				}
-				else
-				{
-					m_DrawCursor = false;
-					input->Disable();
-				}
+				input->SetSensitivity( 1.0f );
+				m_GameState = keIntroText;
+				m_World.NextLevel();
+				input->Enable();
+				m_DrawCursor = true;
 				break;
 			case keIntroText:
 				if( input->HasUserClicked( Engine::Input::Button::MouseButton1) )
@@ -150,12 +135,6 @@ int MainGameState::Update( Engine::Input * input, float dt)
 				}
 				break;
 		}
-
-		// If the state has changed then reset the timer
-		if( old_state != m_GameState )
-		{
-			m_TimeSinceStateChange = 0.0f;
-		}
 	
 		// Update on screen text
 		const Game::Player * player = m_World.GetPlayer();
@@ -180,8 +159,6 @@ int MainGameState::Update( Engine::Input * input, float dt)
 
 void MainGameState::OnEnteringState()
 {
-	m_TimeSinceStateChange = 0.0f;
-	//SetPageText( L"Get Ready!" );
 	m_World.NewGame();
 }
 
