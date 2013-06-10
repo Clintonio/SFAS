@@ -72,7 +72,7 @@ void Player::UpdateWithDescriptor( const Level::Player & player )
 void Player::DoInput(World * world, const Engine::Input * input )
 {
 	Bullet * bullet = 0;
-	const D3DXVECTOR2 mouseCoords = input->GetMousePosition(Input::Button::MouseButton1);
+	const D3DXVECTOR2 mouseCoords = input->GetMousePosition();
 	const D3DXVECTOR2 playerCoords = GetPosition();
 	D3DXVECTOR2 direction;
 

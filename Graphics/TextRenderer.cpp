@@ -13,9 +13,10 @@
 
 using Engine::TextRenderer;
 
-TextRenderer::TextRenderer(ID3DXFont* font, ID3DXFont* debug_font, ID3DXSprite* sprite)
+TextRenderer::TextRenderer(ID3DXFont* font, ID3DXFont* fontMedium, ID3DXFont* debug_font, ID3DXSprite* sprite)
 {
 	m_pFont = font;
+	m_pFontMedium = fontMedium;
 	m_pDebugFont = debug_font;
 	m_pSprite = sprite;
 
@@ -25,6 +26,15 @@ TextRenderer::TextRenderer(ID3DXFont* font, ID3DXFont* debug_font, ID3DXSprite* 
 TextRenderer::~TextRenderer(void)
 {
 	m_pSprite->End();
+}
+
+HRESULT TextRenderer::DrawMediumTextLine( const std::wstring & strMsg, int x, int y, D3DXCOLOR colour )
+{
+    HRESULT hr;
+    RECT rc;
+    SetRect( &rc, x, y, 0, 0 );
+    hr = m_pFontMedium->DrawText( m_pSprite, strMsg.c_str(), -1, &rc, DT_CENTER | DT_NOCLIP, colour );
+	return hr;
 }
 
 HRESULT TextRenderer::DrawTextLine( const std::wstring & strMsg, int x, int y, D3DXCOLOR colour )

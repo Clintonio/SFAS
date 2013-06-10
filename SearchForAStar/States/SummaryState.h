@@ -21,14 +21,15 @@ namespace States
 class SummaryState : public GameStateBase
 {
 public:
-	SummaryState(void);
+	SummaryState( LPDIRECT3DDEVICE9 p_dx_Device );
 	~SummaryState(void);
 
 	void Render( float dt ) {};
-	bool Update( Engine::Input *input, float dt );
+	int Update( Engine::Input *input, float dt );
 
 	void Setup( int score, int best );
 
+	static const int kStateID = 2;
 };
 }
 }

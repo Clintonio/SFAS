@@ -60,7 +60,7 @@ public:
 	// Returns true if the given button is currently held down
 	virtual bool IsButtonHeld ( Button btn ) const;
 	// Get the current position of the given mouse cursor
-	virtual const D3DXVECTOR2 &GetMousePosition ( Button btn ) const;
+	virtual const D3DXVECTOR2 &GetMousePosition ( ) const;
 	
 	// Set the window height for mapping mouse inputs
 	void SetWindowDimensions( int width, int height );

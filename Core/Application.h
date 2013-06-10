@@ -43,6 +43,8 @@ protected:
 	inline HWND GetWindow() { return m_Window; } 
 	inline LPDIRECT3DDEVICE9 GetDevice() { return m_Device; }	
 	inline Input * GetInput() const { return m_Input; }
+	inline int GetWindowWidth() const { return m_Width; }
+	inline int GetWindowHeight() const { return m_Height; }
 	
 	void ToggleFullScreen();
 	

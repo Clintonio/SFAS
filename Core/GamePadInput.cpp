@@ -85,7 +85,7 @@ void GamePadInput::Update( float dt )
 			Key key = sKeyCodes[i].key;
 			m_KeyStates[key].time += dt;
 			m_KeyStates[key].LastFrameKeyDown = m_KeyStates[key].KeyDown;
-			m_KeyStates[key].KeyDown = (m_InputState.Gamepad.wButtons & sKeyCodes[i].code);
+			m_KeyStates[key].KeyDown = (bool) (m_InputState.Gamepad.wButtons & sKeyCodes[i].code);
 
 			if( m_KeyStates[key].KeyDown && m_KeyStates[key].time >= kfButtonRepeatTime )
 			{

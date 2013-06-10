@@ -34,9 +34,10 @@
     <ClCompile Include="SearchForAStar\Game\Wall.cpp" />
     <ClCompile Include="SearchForAStar\Game\World.cpp" />
     <ClCompile Include="SearchForAStar\SearchForAStar.cpp" />
+    <ClCompile Include="SearchForAStar\States\ControlsState.cpp" />
+    <ClCompile Include="SearchForAStar\States\CreditsState.cpp" />
     <ClCompile Include="SearchForAStar\States\GameStateBase.cpp" />
     <ClCompile Include="SearchForAStar\States\MainGameState.cpp" />
-    <ClCompile Include="SearchForAStar\States\OptionsState.cpp" />
     <ClCompile Include="SearchForAStar\States\StartState.cpp" />
     <ClCompile Include="SearchForAStar\States\SummaryState.cpp" />
   </ItemGroup>
@@ -67,9 +68,10 @@
     <ClInclude Include="SearchForAStar\Game\Wall.h" />
     <ClInclude Include="SearchForAStar\Game\World.h" />
     <ClInclude Include="SearchForAStar\SearchForAStar.h" />
+    <ClInclude Include="SearchForAStar\States\ControlsState.h" />
+    <ClInclude Include="SearchForAStar\States\CreditsState.h" />
     <ClInclude Include="SearchForAStar\States\GameStateBase.h" />
     <ClInclude Include="SearchForAStar\States\MainGameState.h" />
-    <ClInclude Include="SearchForAStar\States\OptionsState.h" />
     <ClInclude Include="SearchForAStar\States\StartState.h" />
     <ClInclude Include="SearchForAStar\States\SummaryState.h" />
   </ItemGroup>

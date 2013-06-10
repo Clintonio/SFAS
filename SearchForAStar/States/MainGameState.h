@@ -14,7 +14,6 @@
 #include "GameStateBase.h"
 #include "SearchForAStar/Game/World.h"
 #include "SearchForAStar/Game/Player.h"
-#include "Graphics/RenderItem.h"
 
 namespace SFAS
 {
@@ -29,9 +28,8 @@ public:
 	~MainGameState(void);
 
 	// Overrides
-	void RenderOverlay( Engine::TextRenderer* txt );
 	void Render( float dt );
-	bool Update( Engine::Input * input, float dt );
+	int Update( Engine::Input * input, float dt );
 	void OnEnteringState();
 
 	// Test whether the current game is over
@@ -40,6 +38,7 @@ public:
 	// Return the world
 	const Game::World* GetWorld() const { return &m_World; }
 
+	static int GetStateID() { return 1; };
 private:
 
 	enum State
@@ -52,15 +51,26 @@ private:
 		keNumStates
 	};
 
-	enum { keMessageDisplayTime = 1 };
+	struct GameScore 
+	{
+		int score;
+		std::string name;
+	};
+
+	enum { keMessageDisplayTime = 1, kNumHighScores = 20 };
+
+	// Load the highest scores from the json database
+	void LoadHighScores( const std::string scoreFile );
+	// Save any new high scores
+	void UpdateHighScores( int newScore );
 
 	bool				m_GamePaused;
 	State				m_GameState;
 	Game::World			m_World;
 	float				m_TimeSinceStateChange;
-	Engine::RenderItem	m_Cursor;
-	D3DXVECTOR2			m_PlayerMousePosition;
 	bool				m_DrawCursor;
+	
+	GameScore m_HighestScores[kNumHighScores];
 };
 }
 }

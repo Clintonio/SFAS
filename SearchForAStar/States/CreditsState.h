@@ -16,18 +16,17 @@ namespace SFAS
 namespace States                  
 {    
 
-class OptionsState : public GameStateBase
+class CreditsState : public GameStateBase
 {
 public:
-	OptionsState( );
-	~OptionsState(void);
+	CreditsState( LPDIRECT3DDEVICE9 p_dx_Device );
+	~CreditsState(void);
 
 	// Overrides
-	void RenderOverlay( Engine::TextRenderer* txt );
-	void Render( float dt );
-	bool Update( Engine::Input * input, float dt );
+	int Update( Engine::Input * input, float dt );
 	void OnEnteringState();
 
+	static const int kStateID = 3;
 private:
 
 };

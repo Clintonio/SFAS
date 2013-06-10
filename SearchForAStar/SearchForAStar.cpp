@@ -11,10 +11,12 @@
 // - Hidden mouse cursor during execution with an internal crosshair icon to represent it in gameplay
 
 #include "SearchForAStar.h"
+#include "States\GameStateBase.h"
 #include "SearchForAStar/States/StartState.h"
 #include "SearchForAStar/States/MainGameState.h"
 #include "SearchForAStar/States/SummaryState.h"
-#include "SearchForAStar/States/OptionsState.h"
+#include "SearchForAStar/States/CreditsState.h"
+#include "SearchForAStar/States/ControlsState.h"
 
 #include "Graphics/RenderItem.h"
 #include "Graphics/TextRenderer.h"
@@ -26,20 +28,25 @@
 
 using Engine::Application;
 using SFAS::SearchForAStar;
+using namespace SFAS;
 
 SearchForAStar::SearchForAStar(WNDPROC proc) : Application(L"SearchForAStar", L"SearchForAStar", keScreenWidth, keScreenHeight, proc), m_Camera( keScreenWidth, keScreenHeight )
 {	
 	// Create anythng that the game needs here 
 	D3DXCreateFont( GetDevice(), 32, 0, FW_BOLD, 1, FALSE, DEFAULT_CHARSET, OUT_DEFAULT_PRECIS, ANTIALIASED_QUALITY, DEFAULT_PITCH | FF_DONTCARE, L"Arial", &m_pFont );
-	D3DXCreateFont( GetDevice(), 12, 0, FW_BOLD, 1, FALSE, DEFAULT_CHARSET, OUT_DEFAULT_PRECIS, ANTIALIASED_QUALITY, DEFAULT_PITCH | FF_DONTCARE, L"Arial", &m_pDebugFont );
+	D3DXCreateFont( GetDevice(), 24, 0, FW_BOLD, 1, FALSE, DEFAULT_CHARSET, OUT_DEFAULT_PRECIS, ANTIALIASED_QUALITY, DEFAULT_PITCH | FF_DONTCARE, L"Arial", &m_pFontMed );
+	D3DXCreateFont( GetDevice(), 14, 0, FW_BOLD, 1, FALSE, DEFAULT_CHARSET, OUT_DEFAULT_PRECIS, ANTIALIASED_QUALITY, DEFAULT_PITCH | FF_DONTCARE, L"Arial", &m_pDebugFont );
 	D3DXCreateSprite( GetDevice(), &m_pSprite );
 	m_TextColour = D3DXCOLOR( 1.0f, 1.0f, 0.0f, 1.0f );
 
 	try {
-		m_StateArray[keStart] = new States::StartState();
-		m_StateArray[keGame] = new States::MainGameState( GetDevice(), GetWindow(), keScreenWidth, keScreenHeight );
-		m_StateArray[keGameOver] = new States::SummaryState();
-		m_StateArray[keOptions] = new States::OptionsState();
+		LPDIRECT3DDEVICE9 device = GetDevice();
+		m_StateArray[0] = new States::StartState( device );
+		m_StateArray[1] = new States::MainGameState( device, GetWindow(), keScreenWidth, keScreenHeight );
+		m_StateArray[2] = new States::SummaryState( device );
+		m_StateArray[3] = new States::CreditsState( device );
+		m_StateArray[4] = new States::ControlsState( device );
+		m_State = m_StateArray[0];
 		m_Camera.Init( GetDevice() );
 		ShowCursor( FALSE );
 	} 
@@ -67,6 +74,11 @@ SearchForAStar::~SearchForAStar(void)
 	{
 		m_pDebugFont->Release();
 	}
+
+	if( m_pFontMed )
+	{
+		m_pFontMed->Release();
+	}
 	
 	if( m_pSprite )
 	{
@@ -77,15 +89,17 @@ SearchForAStar::~SearchForAStar(void)
 void SearchForAStar::Render(float dt)
 {
 	// Draw game components here
-	m_StateArray[m_State]->Render( dt );
+	m_State->Render( dt );
 
 	// Overlay the text
-	Engine::TextRenderer textRenderer( m_pFont, m_pDebugFont, m_pSprite );
-	m_StateArray[m_State]->RenderOverlay( &textRenderer );
+	Engine::TextRenderer textRenderer( m_pFont, m_pFontMed, m_pDebugFont, m_pSprite );
+	m_State->RenderOverlay( &textRenderer, GetWindowWidth(), GetWindowHeight() );
 }
 
 void SearchForAStar::Update(float dt)
 {
+	int newStateID;
+
 	// Update the time in state
 	m_TimeInState += dt;
 	
@@ -100,24 +114,25 @@ void SearchForAStar::Update(float dt)
 			m_AppRunning = false;
 		}
 		// Update game logic here
-		else if( m_StateArray[m_State]->Update( input, dt ) )
+		else
 		{
-			// Reset the time spent in this state
-			m_TimeInState = 0.0f;
-
-			// Change state
-			GameState old_state = m_State;
-			m_State = (GameState)( ( m_State + 1 ) % keNumStates );
-
-			// If the game is over then update the next state
-			if( m_State == keGameOver )
+			newStateID = m_State->Update( input, dt );
+			if( newStateID > kSelfState )
 			{
-				const Game::Player * player = reinterpret_cast<States::MainGameState*>( m_StateArray[old_state] )->GetWorld()->GetPlayer();
-				reinterpret_cast<States::SummaryState*>( m_StateArray[m_State] )->Setup(player->GetScore(), player->GetBestScore() );
-			}
+				// Reset the time spent in this state
+				m_TimeInState = 0.0f;
 
-			m_StateArray[m_State]->OnEnteringState();
-			m_StateArray[old_state]->OnLeavingState();
+				// Change state
+				States::GameStateBase* oldState = m_State;
+				m_State = m_StateArray[newStateID];
+
+				m_State->OnEnteringState();
+				oldState->OnLeavingState();
+			} 
+			else if (newStateID == kExitState) 
+			{
+				m_AppRunning = false;
+			}
 		}
 	}
 	catch( Engine::JSON::JSONCastException e )

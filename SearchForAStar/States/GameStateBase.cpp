@@ -6,71 +6,124 @@
 // 
 // Add a summary of your changes here:
 // - Removed WCHAR references, simplified with wstring
-// 
+// - Removed most of the original functions replaced with more versatile system
 // 
 
 #include "GameStateBase.h"
 #include "Graphics/TextRenderer.h"
 
-using SFAS::States::GameStateBase;
+using namespace SFAS::States;
 
-GameStateBase::GameStateBase(void)
+GameStateBase::GameStateBase( LPDIRECT3DDEVICE9 p_dx_Device ) :
+	m_Cursor( p_dx_Device )
 {
-	m_Text[keTitleText].strMsg = L"NO TITLE TEXT HAS BEEN SET ON THIS GAME STATE";
-	m_Text[keTitleText].x = 800;
-	m_Text[keTitleText].y = 200;
-	m_Text[keTitleText].colour = D3DXCOLOR( 0.2f, 0.8f, 0.7f, 1 );
-
-	m_Text[kePageText].strMsg = L"NO PAGE TEXT HAS BEEN SET ON THIS GAME STATE";
-	m_Text[kePageText].x = 800;
-	m_Text[kePageText].y = 300;
-	m_Text[kePageText].colour = D3DXCOLOR( 0.2f, 0.8f, 0.7f, 1 );
-
-	m_Text[keInstructionText].strMsg = L"NO INSTRUCTIONS TEXT HAS BEEN SET ON THIS GAME STATE";
-	m_Text[keInstructionText].x = 800;
-	m_Text[keInstructionText].y = 500;
-	m_Text[keInstructionText].colour = D3DXCOLOR( 1.0f, 1.0f, 1.0f, 1 );
+	// The crosshair for the player
+	m_Cursor.Init( L"Textures/crosshair.png" );
 }
 
 GameStateBase::~GameStateBase(void)
 {
 }
 
-void GameStateBase::RenderOverlay( Engine::TextRenderer * txt )
+void GameStateBase::Render( float dt )
 {
-	for( int count = 0; count < keNumTextToDisplay; count++ )
+	m_Cursor.Draw(
+		D3DXVECTOR3(m_PlayerMousePosition.x, m_PlayerMousePosition.y, 0),
+		D3DXVECTOR3(50, 50, 0)
+	);
+}
+
+void GameStateBase::RenderOverlay( Engine::TextRenderer * txt, int winWidth, int winHeight )
+{
+	m_WindowWidth  = winWidth;
+	m_WindowHeight = winHeight;
+	int size = m_TextItems.size();
+	for( int i = 0; i < size; i++ )
 	{
-		txt->DrawTextLine( m_Text[count].strMsg, m_Text[count].x, m_Text[count].y, m_Text[count].colour );
+		if( m_TextItems[i].size == FontSize::Medium )
+		{
+			txt->DrawMediumTextLine( 
+				m_TextItems[i].strMsg, 
+				(int) (m_TextItems[i].x * 2 * winWidth), 
+				(int) (m_TextItems[i].y * winHeight), 
+				m_TextItems[i].colour
+			);
+		}
+		else if( m_TextItems[i].size == FontSize::Small )
+		{
+			// Quick hack because time is running out
+			txt->DrawDebug(
+				m_TextItems[i].strMsg, 
+				(int) (m_TextItems[i].x * 2 * winWidth), 
+				(int) (m_TextItems[i].y * winHeight), 
+				m_TextItems[i].colour
+			);
+		}
+		else
+		{
+			txt->DrawTextLine( 
+				m_TextItems[i].strMsg, 
+				(int) (m_TextItems[i].x * 2 * winWidth), 
+				(int) (m_TextItems[i].y * winHeight), 
+				m_TextItems[i].colour
+			);
+		}
 	}
+}
+
+void GameStateBase::UpdateText (
+	const int id,
+	const std::wstring message
+)
+{
+	int size = m_TextItems.size();
+	for( int i = 0; i < size; i ++ )
+	{
+		if( m_TextItems[i].id == id ) 
+		{
+			m_TextItems[i].strMsg = message;
+		}
+	}
+}
+
+void GameStateBase::AddText( 
+	const int id,
+	const std::wstring message, 
+	const float posX, 
+	const float posY, 
+	FontSize size,
+	const D3DXCOLOR colour )
+{
+	Text text;
+	text.id = id;
+	text.colour = colour;
+	text.x = posX;
+	text.y = posY;
+	text.size = size;
+	text.strMsg = message;
+	m_TextItems.push_back(text);
+}
+
+const GameStateBase::Text * GameStateBase::GetTextAt( const D3DXVECTOR2 & mousePos ) const
+{
+	const Text * out = NULL;
 
 	int size = m_TextItems.size();
 	for( int i = 0; i < size; i++ )
 	{
-		txt->DrawTextLine( m_Text[i].strMsg, m_Text[i].x, m_Text[i].y, m_Text[i].colour );
+		Text item = m_TextItems[i];
+		int width = ( FontSize::Medium == item.size ? 24 : 32 ) * item.strMsg.length();
+		int height = ( FontSize::Medium == item.size ? 24 : 32 );
+		
+		int posX = (int) (m_WindowWidth * item.x - (width / 2));
+		int posY = (int) (m_WindowHeight - m_WindowHeight * item.y - 2 * height);
+
+		if( mousePos.x > posX && mousePos.x < posX + width 
+			&& mousePos.y > posY && mousePos.y < posY + height )
+		{
+			out = &m_TextItems[i];
+		}
 	}
-}
 
-void GameStateBase::SetTitleText( const std::wstring text )
-{
-	m_Text[keTitleText].strMsg = text;
-}
-
-void GameStateBase::SetPageText( const std::wstring text )
-{
-	m_Text[kePageText].strMsg = text;
-}
-
-void GameStateBase::SetInstructionText( const std::wstring text )
-{
-	m_Text[keInstructionText].strMsg = text;
-}
-
-void GameStateBase::AddText( const std::wstring message, const int posX, const int posY, const D3DXCOLOR colour )
-{
-	Text text;
-	text.colour = colour;
-	text.x = posX;
-	text.y = posY;
-	text.strMsg = message;
-	m_TextItems.push_back(text);
+	return out;
 }

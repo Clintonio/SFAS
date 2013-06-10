@@ -11,6 +11,7 @@
 
 #pragma once
 
+#include "Graphics/RenderItem.h"
 #include <windows.h>
 #include <wchar.h>
 #include <d3dx9.h>
@@ -30,50 +31,66 @@ namespace States
 class GameStateBase
 {
 public:
-	GameStateBase(void);
+	GameStateBase( LPDIRECT3DDEVICE9 p_dx_Device );
 	virtual ~GameStateBase(void);
 
 	// Rendering of a text overlay - can be overriden but not required
-	virtual void RenderOverlay( Engine::TextRenderer* txt );
+	void RenderOverlay( Engine::TextRenderer* txt, int winWidth, int winHeight );
 
 	// Basic rendering and updating - must be implemented by inheriting classes
-	virtual void Render( float dt ) = 0;
-	virtual bool Update( Engine::Input * input, float dt ) = 0;
+	virtual void Render( float dt );
+	// Returns the state ID to go to next, -1 to stay the same
+	virtual int Update( Engine::Input * input, float dt ) = 0;
 
 	// Inheriting classes can override these events but not required
 	virtual void OnEnteringState() {}
 	virtual void OnLeavingState() {}
 
 protected:
-
-	// The inheriting classes to change on screen text
-	void SetTitleText( const std::wstring text );
-	void SetPageText( const std::wstring text );
-	void SetInstructionText( const std::wstring text );
-
-	void AddText( const std::wstring message, const int posX, const int posY, const D3DXCOLOR colour );
-
-private:
+	enum FontSize
+	{
+		Large,
+		Medium,
+		Small
+	};
 
 	// Everything we need to know to display a bit of text to the screen
 	struct Text
 	{
+		int id;
 		std::wstring strMsg; 
-		int x; 
-		int y; 
+		float x; 
+		float y; 
+		FontSize size;
 		D3DXCOLOR colour;
 	};
 
-	// The only text that a state will typically need to display
-	enum TextDisplayed
-	{
-		keTitleText,
-		kePageText,
-		keInstructionText,
-		keNumTextToDisplay	
-	};
+	// Gets the text clicked, if any
+	const Text * GetTextAt( const D3DXVECTOR2 & mousePos ) const;
+	
+	// A general add text function that uses relative positioning and size
+	// rather than absolute
+	void AddText(
+		const int id,
+		const std::wstring message, 
+		const float posX, 
+		const float posY, 
+		FontSize size,
+		const D3DXCOLOR colour 
+	);
+	// Like Add Text, but updates any text matching the ID
+	void UpdateText(
+		const int id,
+		const std::wstring message 
+	);
 
-	Text m_Text[keNumTextToDisplay];
+	Engine::RenderItem	m_Cursor;
+	D3DXVECTOR2			m_PlayerMousePosition;
+private:
+	// Local storage of window sizes, updated per frame
+	int m_WindowHeight;
+	int m_WindowWidth;
+
 	// Dynamic list of items to display
 	std::vector<Text> m_TextItems;
 };

@@ -178,10 +178,6 @@ bool Input::IsButtonHeld ( Button btn ) const
 	return false;
 }
 
-const D3DXVECTOR2 &Input::GetMousePosition ( Button btn ) const {
-	if ( btn == Button::MouseButton1 ) {
-		return m_MouseButton1.position;
-	}
-
-	return D3DXVECTOR2(0,0);
+const D3DXVECTOR2 &Input::GetMousePosition ( ) const {
+	return m_MouseButton1.position;
 }

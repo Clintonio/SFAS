@@ -21,12 +21,13 @@ namespace States
 class StartState : public GameStateBase
 {
 public:
-	StartState(void);
+	StartState( LPDIRECT3DDEVICE9 p_dx_Device );
 	~StartState(void);
 
 	void Render( float dt );
-	bool Update( Engine::Input * input, float dt );
+	int Update( Engine::Input * input, float dt );
 
+	static const int kStateID = 0;
 };
 }
 }
