@@ -523,7 +523,7 @@ JSONNode * JSONParser::ParseNumber( const std::string json, unsigned int & cur, 
 
 		float* values	= new float[1];
 		std::string str = buffer.str();
-		values[1]		= (float) atof( str.c_str() );
+		values[0]		= (float) atof( str.c_str() );
 
 		out->type		= JSONType::Float;
 		out->value		= values;
