@@ -38,6 +38,8 @@ private:
 	// Do a keypress from a virtual source, must be used after the main
 	// keypress loop in the update method
 	void DoKeyPress(const Key key, const bool pressed);
+	// Set the sensitivity of the aim
+	inline void SetSensitivity( const float sensitivity ) { m_Sensitivity = sensitivity; }
 	
 	static KeyMap sKeyCodes[kNumInputOptions];
 
@@ -45,6 +47,8 @@ private:
 	unsigned short m_ControllerNumber;
 	// Amount of time left to vibrate
 	float m_VibrateTimeRemaining;
+	// Sensitivity, for Gamepad in range [0,1]
+	float m_Sensitivity;
 	
 	static const float kJoyStickThreshold;
 	static const unsigned char kTriggerThreshold = 50;

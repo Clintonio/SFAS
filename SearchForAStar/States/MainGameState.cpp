@@ -94,6 +94,7 @@ int MainGameState::Update( Engine::Input * input, float dt)
 			case keNewLevel:
 				if( m_TimeSinceStateChange > keMessageDisplayTime )
 				{
+					input->SetSensitivity( 1.0f );
 					//SetPageText( L"" );
 					m_GameState = keGamePlay;
 					m_World.NextLevel();
@@ -122,6 +123,7 @@ int MainGameState::Update( Engine::Input * input, float dt)
 				}
 				else if( m_World.IsGameOver() )
 				{
+					input->SetSensitivity( 0.1f );
 					UpdateHighScores( m_World.GetPlayer()->GetScore() );
 					m_World.ClearLevel();
 					gameOver = true;

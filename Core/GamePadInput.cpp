@@ -37,7 +37,8 @@ struct GamePadInput::KeyMap GamePadInput::sKeyCodes[kNumInputOptions] = {
 GamePadInput::GamePadInput(unsigned short controllerNum) : 
 	Input(),
 	m_ControllerNumber(controllerNum - 1),
-	m_VibrateTimeRemaining(0.0f)
+	m_VibrateTimeRemaining(0.0f),
+	m_Sensitivity(1.0f)
 {
 	// Set the "mouse" to defaults
 	m_MouseButton1.lastClickX = 0;
@@ -189,8 +190,8 @@ void GamePadInput::DoRightJoyStickInput()
 		float normalizedX = xDist / magnitude;
 		float normalizedY = yDist / magnitude;
 		
-		m_MouseButton1.position.x += 10 * normalizedX;
-		m_MouseButton1.position.y += 10 * normalizedY;
+		m_MouseButton1.position.x += m_Sensitivity * 10 * normalizedX;
+		m_MouseButton1.position.y += m_Sensitivity * 10 * normalizedY;
 		
 		m_MouseButton1.position.x = min( m_WindowWidth, max( 0, m_MouseButton1.position.x ) );
 		m_MouseButton1.position.y = min( m_WindowHeight, max( 0, m_MouseButton1.position.y ) );

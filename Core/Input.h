@@ -35,6 +35,8 @@ public:
 	void Disable() { m_Enabled = false; }
 	// Enable input updating
 	void Enable() { m_Enabled = true; }
+	// Set the sensitivity
+	virtual void SetSensitivity( const float sensitivity ) { }
 
 	enum Key
 	{
