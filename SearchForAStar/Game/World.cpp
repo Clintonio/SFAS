@@ -44,6 +44,7 @@ World::World(LPDIRECT3DDEVICE9 p_dx_Device, HWND han_Window, int w, int h)
 	: m_Width( (float)w ), m_Height( (float)h ), m_Level( 0 ), m_NumActiveEnemies( INT_MAX )
 {
 	GameLoader gameLoader;
+	m_GameProperties = gameLoader.LoadGamePropertiesFromFile( "levels/game.json" );
 
 	m_SoundProvider = new Engine::SoundProvider();
 	m_SoundProvider->Init(han_Window);
@@ -58,8 +59,6 @@ World::World(LPDIRECT3DDEVICE9 p_dx_Device, HWND han_Window, int w, int h)
 
 	Engine::Sound* sound = m_SoundProvider->CreateSoundBufferFromFile("Sound/menumusic.wav");
 	sound->PlaySoundFromStart();
-
-	m_GameProperties = gameLoader.LoadGamePropertiesFromFile( "levels/game.json" );
 	
 	m_LevelMusic = m_SoundProvider->CreateSoundBufferFromFile("Sound/level1.wav");
 }

@@ -24,11 +24,12 @@ GameProperties * GameLoader::LoadGamePropertiesFromFile( const std::string file 
 	}
 	else
 	{
-		std::string error;
+		std::string error = "Could not find game properties file";
 		if( parser.HasError() )
 		{
 			error = parser.GetErrorMessage();
 		}
+		throw new std::runtime_error( error );
 	}
 
 	return properties;
@@ -75,7 +76,7 @@ void GameLoader::ParseWeaponTypes( const JSONArrayNode * node, GameProperties * 
 		
 		properties->weaponTypes[i].name			= weaponNode->GetChildString( "name" );
 		properties->weaponTypes[i].damage		= weaponNode->GetChildInt( "damage" );
-		properties->weaponTypes[i].ranged		= weaponNode->GetChildFloat( "ranged" );
+		properties->weaponTypes[i].ranged		= weaponNode->GetChildBool( "ranged" );
 		properties->weaponTypes[i].fireDelay	= weaponNode->GetChildFloat( "fireDelay" );
 		properties->weaponTypes[i].lifetime		= weaponNode->GetChildFloat( "lifetime" );
 		properties->weaponTypes[i].dimensions	= weaponNode->GetChildVector3( "dimensions" );

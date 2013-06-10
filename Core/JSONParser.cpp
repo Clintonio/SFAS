@@ -578,7 +578,7 @@ JSONNode * JSONParser::ParseFalse( const std::string json, unsigned int & cur, c
 	}
 	else
 	{
-		throw ParseException( cur, json[--cur], "true" );
+		throw ParseException( cur, json[--cur], "false" );
 	}
 }
 
@@ -594,7 +594,7 @@ JSONNode * JSONParser::ParseNull( const std::string json, unsigned int & cur, co
 	}
 	else
 	{
-		throw ParseException( cur, json[--cur], "true" );
+		throw ParseException( cur, json[--cur], "null" );
 	}
 }
 
