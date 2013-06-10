@@ -33,6 +33,10 @@ MainGameState::MainGameState( LPDIRECT3DDEVICE9 p_dx_Device, HWND han_Window, in
 	AddText( 1, L"", 0.5f, 0.85f, FontSize::Large, D3DXCOLOR(1,1,1,0.5f));
 	// Text in the middle of the screen
 	AddText( 2, L"", 0.5f, 0.45f, FontSize::Large, D3DXCOLOR(0.7f,1,1,1));
+	// Level intro text
+	AddText( 3, L"", 0.5f, 0.5f, FontSize::Small, D3DXCOLOR(1,0.7f,0.7f,1));
+	// Level Title text
+	AddText( 4, L"", 0.5f, 0.2f, FontSize::Large, D3DXCOLOR(1,0.7f,0.7f,1));
 	
 	// Loads the high scores
 	LoadHighScores( "scores.json" );
@@ -82,8 +86,11 @@ int MainGameState::Update( Engine::Input * input, float dt)
 		// Update the time in this state
 		m_TimeSinceStateChange += dt;
 
-		// Update the game world
-		m_World.Update(input, 0.03f);//dt
+		if( m_GameState != keIntroText )
+		{
+			// Update the game world
+			m_World.Update(input, 0.03f);//dt
+		}
 
 		// Capture the current mouse position
 		m_PlayerMousePosition = input->GetMousePosition();
@@ -95,8 +102,7 @@ int MainGameState::Update( Engine::Input * input, float dt)
 				if( m_TimeSinceStateChange > keMessageDisplayTime )
 				{
 					input->SetSensitivity( 1.0f );
-					//SetPageText( L"" );
-					m_GameState = keGamePlay;
+					m_GameState = keIntroText;
 					m_World.NextLevel();
 					input->Enable();
 					m_DrawCursor = true;
@@ -105,6 +111,20 @@ int MainGameState::Update( Engine::Input * input, float dt)
 				{
 					m_DrawCursor = false;
 					input->Disable();
+				}
+				break;
+			case keIntroText:
+				if( input->HasUserClicked( Engine::Input::Button::MouseButton1) )
+				{
+					m_GameState = keGamePlay;
+					UpdateText( 3, L"" );
+					UpdateText( 4, L"" );
+				}
+				else
+				{
+					UpdateText( 1, L"Press Fire To Continue" );
+					UpdateText( 3, m_World.GetCurrentLevelDescriptor()->introText );
+					UpdateText( 4, m_World.GetCurrentLevelDescriptor()->name );
 				}
 				break;
 			case keGamePlay:

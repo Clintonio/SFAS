@@ -42,7 +42,7 @@ void LevelLoader::ParseLevelFile( const JSONMapNode * root, Level * level ) cons
 	JSONArrayNode * enemyNodes;
 	
 	level->id					= root->GetChildString( "id" );
-	level->name					= root->GetChildString( "name" );
+	level->name					= root->GetChildWString( "name" );
 	level->skyboxTextureFile	= root->GetChildWString( "skyboxTextureFile" );
 	level->introText			= root->GetChildWString( "introText" );
 

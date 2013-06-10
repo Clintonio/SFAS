@@ -61,6 +61,7 @@ public:
 	void ClearLevel();
 	bool IsLevelFinished() const;
 	int GetCurrentLevel() const { return m_Level; } 
+	const Level * GetCurrentLevelDescriptor() const { return m_CurrentLevel; } 
 
 	// Add an entity to the world
 	void AddEntity(Entity* entity);
