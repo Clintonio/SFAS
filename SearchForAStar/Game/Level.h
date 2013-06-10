@@ -37,6 +37,7 @@ struct Level
 
 	std::string			id;
 	std::string			name;
+	std::string			introText;
 	//std::string musicFile;
 	unsigned int		enemyCount;
 	Level::Enemy*		enemies;

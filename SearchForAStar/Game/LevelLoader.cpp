@@ -44,6 +44,7 @@ void LevelLoader::ParseLevelFile( const JSONMapNode * root, Level * level ) cons
 	level->id					= root->GetChildString( "id" );
 	level->name					= root->GetChildString( "name" );
 	level->skyboxTextureFile	= root->GetChildWString( "skyboxTextureFile" );
+	level->introText			= root->GetChildWString( "introText" );
 
 	playerNode = (JSONMapNode*) (*root)["player"];
 	level->player.weapon		= m_WeaponTypes[playerNode->GetChildInt( "weapon" )];

@@ -2,6 +2,7 @@
 	"id": 						"L1",
 	"name":					"Level 1",
 	"skyboxTextureFile": "textures/skybox.png",
+	"introText": "In AD 2101 War Was Beginning.  The universe is under threat. We have to find the Greatest Star to save it.",
 	"enemies": [
 		{
 			"type": 		0,
