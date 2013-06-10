@@ -39,18 +39,21 @@ const Level* LevelLoader::LoadLevelFromFile( std::string file )
 void LevelLoader::ParseLevelFile( const JSONMapNode * root, Level * level ) const
 {
 	JSONMapNode * playerNode;
+	JSONArrayNode * enemyNodes;
 	
 	level->id					= root->GetChildString( "id" );
 	level->name					= root->GetChildString( "name" );
 	level->skyboxTextureFile	= root->GetChildWString( "skyboxTextureFile" );
-	level->enemyCount			= root->GetChildInt( "enemyCount" );
 
 	playerNode = (JSONMapNode*) (*root)["player"];
 	level->player.weapon		= m_WeaponTypes[playerNode->GetChildInt( "weapon" )];
 	level->player.textureFile	= playerNode->GetChildWString( "textureFile" );
 	level->player.startPos		= playerNode->GetChildVector3( "startPos" );
 
-	ParseEnemies( (JSONArrayNode*) (*root)["enemies"], level );
+	enemyNodes = (JSONArrayNode*) (*root)["enemies"];
+	level->enemyCount			= enemyNodes->childCount;
+
+	ParseEnemies( enemyNodes, level );
 }
 
 void LevelLoader::ParseEnemies( const Engine::JSON::JSONArrayNode * enemyNodes, Level * level ) const
