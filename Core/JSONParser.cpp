@@ -448,7 +448,7 @@ JSONNode * JSONParser::ParseNumber( const std::string json, unsigned int & cur, 
 		}
 	}
 
-	done = hasRightSide;
+	done = !hasRightSide;
 	while( cur < length && !done )
 	{
 		curSymbol = ParseSymbol( json[cur] );
@@ -478,7 +478,7 @@ JSONNode * JSONParser::ParseNumber( const std::string json, unsigned int & cur, 
 		}
 	}
 	
-	done = exponent;
+	done = !exponent;
 	while( cur < length && !done )
 	{
 		curSymbol = ParseSymbol( json[cur] );
@@ -522,7 +522,8 @@ JSONNode * JSONParser::ParseNumber( const std::string json, unsigned int & cur, 
 		}
 
 		float* values	= new float[1];
-		values[1]		= (float) atof( buffer.str().c_str() );
+		std::string str = buffer.str();
+		values[1]		= (float) atof( str.c_str() );
 
 		out->type		= JSONType::Float;
 		out->value		= values;
