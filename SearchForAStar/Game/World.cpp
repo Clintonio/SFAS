@@ -33,6 +33,7 @@
 #include "Audio/SoundProvider.h"
 #include "Audio/Sound.h"
 #include "LevelLoader.h"
+#include "GameLoader.h"
 
 // Binary level includes
 #include "Levels/Level1.h"
@@ -58,6 +59,9 @@ World::World(LPDIRECT3DDEVICE9 p_dx_Device, HWND han_Window, int w, int h)
 
 	Engine::Sound* sound = m_SoundProvider->CreateSoundBufferFromFile("Sound/menumusic.wav");
 	sound->PlaySoundFromStart();
+
+	GameLoader gameLoader;
+	m_GameProperties = gameLoader.LoadGamePropertiesFromFile( "levels/game.json" );
 	
 	m_LevelMusic = m_SoundProvider->CreateSoundBufferFromFile("Sound/level1.wav");
 }
@@ -213,7 +217,7 @@ void World::OpenLevel( int level )
 	{
 		Level::Enemy curEnemy = l->enemies[i];
 		D3DXVECTOR3 pos = curEnemy.pos;
-		Enemy* enemy = new Enemy(l->enemyTypes[curEnemy.type], pos.x, pos.y);
+		Enemy* enemy = new Enemy(m_GameProperties.enemyTypes[curEnemy.type], pos.x, pos.y);
 		AddEntity(enemy);
 	}
 	

@@ -31,7 +31,7 @@ namespace Game
 class Enemy : public ShipEntity
 {
 public:
-	Enemy( Level::EnemyType & type, float x, float y );
+	Enemy( EnemyType & type, float x, float y );
 	virtual ~Enemy(void);
 
 	virtual void Update( World * world, float dt );

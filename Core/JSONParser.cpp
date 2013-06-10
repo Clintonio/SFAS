@@ -29,25 +29,27 @@ const JSONMapNode * JSONParser::ParseJSONFile( const std::string file )
 	m_RootNode = 0; // Reset the root for this new parsed JSON
 
 	std::string json = LoadJSONFile( file );
-	
-	JSONSymbol curSymbol;
-	unsigned int length = json.length();
-	unsigned int cur = 0;
-
-	try {
-		curSymbol = ParseSymbol( json[cur++] );
-		if( curSymbol == JSONSymbol::Object )
-		{
-			m_RootNode = ParseObject( json, cur, length );
-		}
-		else
-		{
-			throw ParseException( cur, json[cur], "{" );
-		}
-	} 
-	catch ( ParseException e )
+	if( json.length() > 0 )
 	{
-		SetError( e.m_ErrorPosition, e.m_ErrorChar, e.m_ExpectedString );
+		JSONSymbol curSymbol;
+		unsigned int length = json.length();
+		unsigned int cur = 0;
+
+		try {
+			curSymbol = ParseSymbol( json[cur++] );
+			if( curSymbol == JSONSymbol::Object )
+			{
+				m_RootNode = ParseObject( json, cur, length );
+			}
+			else
+			{
+				throw ParseException( cur, json[cur], "{" );
+			}
+		} 
+		catch ( ParseException e )
+		{
+			SetError( e.m_ErrorPosition, e.m_ErrorChar, e.m_ExpectedString );
+		}
 	}
 
 	return m_RootNode;
@@ -55,16 +57,24 @@ const JSONMapNode * JSONParser::ParseJSONFile( const std::string file )
 
 std::string JSONParser::LoadJSONFile( const std::string file ) const 
 {
-	FILE *filePtr = NULL;
+	char * input	= NULL;
+	FILE *filePtr	= NULL;
 	fopen_s( &filePtr, file.c_str(), "r" );
-	fseek( filePtr, 0, SEEK_END );
-	int size = ftell( filePtr );
+	if( filePtr != NULL )
+	{
+		fseek( filePtr, 0, SEEK_END );
+		int size = ftell( filePtr );
 
-	char* input = new char[size];
-	fseek( filePtr, 0, 0 );
-	fread( input, sizeof( char ), size, filePtr );
+		input = new char[size];
+		fseek( filePtr, 0, 0 );
+		fread( input, sizeof( char ), size, filePtr );
 
-	fclose(filePtr);
+		fclose(filePtr);
+	}
+	else
+	{
+		input = "";
+	}
 
 	return input;
 }

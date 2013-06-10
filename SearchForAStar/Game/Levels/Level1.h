@@ -3,12 +3,12 @@
 using SFAS::Game::Level;
 
 #include <d3dx9.h>
-#include "WeaponType.h"
 
 Level * getLevel1() {
+	/*
 	Level::Enemy* level1Enemies = static_cast<Level::Enemy*> 
 			(::operator new (sizeof(Level::Enemy[1])));
-	Level::EnemyType* enemyTypes = new Level::EnemyType[4];
+	EnemyType* enemyTypes = new Level::EnemyType[4];
 	WeaponType* weaponTypes = new WeaponType[5];
 
 	// Define weapon types
@@ -96,10 +96,10 @@ Level * getLevel1() {
 	Level::Player player;
 	player.weapon				= weaponTypes[4];
 	player.startPos				= D3DXVECTOR3( 0.5f, 0.5f, 0 );
-	player.textureFile			= L"textures/player.png";
+	player.textureFile			= L"textures/player.png";*/
 	
 	Level*  level1 = new Level;
-	
+	/*
 	level1->id				 = "L0";
 	level1->name				 = "Level 0";
 	level1->enemyCount		 = 1;
@@ -109,6 +109,6 @@ Level * getLevel1() {
 	level1->enemyTypes		 = enemyTypes;
 	level1->weaponTypes		 = weaponTypes;
 	level1->player			 = player;
-
+	*/
 	return level1;
 }

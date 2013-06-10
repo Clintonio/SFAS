@@ -16,6 +16,7 @@
 #include "Audio/SoundProvider.h"
 #include "Audio/Sound.h"
 #include "Bullet.h"
+#include "GameProperties.h"
 
 using namespace SFAS::Game;
 
@@ -26,7 +27,7 @@ const float Enemy::sDamping = 0.6f;
 const Entity::EntityType Enemy::kEntityType(2);
 Engine::Sound* Enemy::sExplosionSound = 0;
 
-Enemy::Enemy( Level::EnemyType & type, float x, float y ) : 
+Enemy::Enemy( EnemyType & type, float x, float y ) : 
 	ShipEntity( D3DXVECTOR3( x, y, 0.0f ), D3DXVECTOR3( 1, 1, 0.0f ), sDamping ),
 	m_LastFireTime(0.0f)
 {

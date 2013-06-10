@@ -13,7 +13,7 @@
 #include <d3d9.h>
 #include <map>
 #include "Entity.h"
-
+#include "GameProperties.h"
 
 // Forward declare
 namespace Engine 
@@ -37,6 +37,7 @@ class Bullet;
 class Player;
 class EntityList;
 struct Level;
+struct GameProperties;
 
 class World
 {
@@ -85,6 +86,7 @@ private:
 	// Player is a key object, so store it here
 	Player *				m_Player;
 	const Level *			m_CurrentLevel;
+	GameProperties			m_GameProperties;
 
 	float					m_Width;
 	float					m_Height;
