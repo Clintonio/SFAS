@@ -36,22 +36,52 @@ GameProperties * GameLoader::LoadGamePropertiesFromFile( const std::string file 
 
 void GameLoader::ParseGameFile( const JSONMapNode * root, GameProperties * properties ) const
 {
-	properties->enemyTypeCount	 = root->GetChildInt( "enemyTypeCount" );
-	properties->weaponTypesCount = root->GetChildInt( "weaponTypeCount" );
+	properties->enemyTypeCount		= root->GetChildInt( "enemyTypeCount" );
+	properties->weaponTypesCount	= root->GetChildInt( "weaponTypeCount" );
+	properties->enemyTypes			= new EnemyType[properties->enemyTypeCount];
+	properties->weaponTypes			= new WeaponType[properties->weaponTypesCount];
 	
-	JSONMapNode * enemyTypes  = (JSONMapNode*) (*root)["enemyTypes"];
-	JSONMapNode * weaponTypes = (JSONMapNode*) (*root)["weaponTypes"];
-
-	ParseEnemyTypes( enemyTypes , properties );
+	JSONArrayNode * weaponTypes = (JSONArrayNode*) (*root)["weaponTypes"];
+	JSONArrayNode * enemyTypes  = (JSONArrayNode*) (*root)["enemyTypes"];
+	root->CheckForNodeErrors( weaponTypes, "enemyTypes", JSONType::Array ); 
+	root->CheckForNodeErrors( enemyTypes, "enemyTypes", JSONType::Array ); 
+	
 	ParseWeaponTypes( weaponTypes, properties );
+	ParseEnemyTypes( enemyTypes , properties );
 }
 
-void GameLoader::ParseEnemyTypes( const JSONMapNode * node, GameProperties * properties ) const
+void GameLoader::ParseEnemyTypes( const JSONArrayNode * node, GameProperties * properties ) const
 {
+	for( unsigned int i = 0; i < properties->enemyTypeCount; i++ )
+	{
+		JSONMapNode * enemyNode = (JSONMapNode*) node->child[i];
+		enemyNode->CheckForNodeErrors( enemyNode, "enemyTypes", JSONType::Object ); 
 
+		properties->enemyTypes[i].id			= enemyNode->GetChildInt( "id" );
+		properties->enemyTypes[i].health		= enemyNode->GetChildInt( "health" );
+		properties->enemyTypes[i].textureFile	= enemyNode->GetChildWString( "textureFile" );
+		properties->enemyTypes[i].dimensions	= enemyNode->GetChildVector3( "dimensions" );
+		properties->enemyTypes[i].weaponType	= &properties->weaponTypes[enemyNode->GetChildInt( "weaponType" )];
+		properties->enemyTypes[i].aiType		= enemyNode->GetChildString( "AIType" );
+	}
 }
 
-void GameLoader::ParseWeaponTypes( const JSONMapNode * node, GameProperties * properties ) const
+void GameLoader::ParseWeaponTypes( const JSONArrayNode * node, GameProperties * properties ) const
 {
-
+	for( unsigned int i = 0; i < properties->weaponTypesCount; i++ )
+	{
+		JSONMapNode * weaponNode = (JSONMapNode*) node->child[i];
+		weaponNode->CheckForNodeErrors( weaponNode, "weaponTypes", JSONType::Object ); 
+		
+		properties->weaponTypes[i].name			= weaponNode->GetChildString( "name" );
+		properties->weaponTypes[i].damage		= weaponNode->GetChildInt( "damage" );
+		properties->weaponTypes[i].ranged		= weaponNode->GetChildFloat( "ranged" );
+		properties->weaponTypes[i].fireDelay	= weaponNode->GetChildFloat( "fireDelay" );
+		properties->weaponTypes[i].lifetime		= weaponNode->GetChildFloat( "lifetime" );
+		properties->weaponTypes[i].dimensions	= weaponNode->GetChildVector3( "dimensions" );
+		properties->weaponTypes[i].soundFile	= weaponNode->GetChildString( "soundFile" );
+		properties->weaponTypes[i].speed		= weaponNode->GetChildFloat( "speed" );
+		properties->weaponTypes[i].textureFile	= weaponNode->GetChildWString( "textureFile" );
+		properties->weaponTypes[i].weaponAIType	= weaponNode->GetChildString( "AIType" );
+	}
 }

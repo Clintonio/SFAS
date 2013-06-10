@@ -159,27 +159,27 @@ void Application::InitializeApplicationDevice()
 	if (m_dx_Object == NULL)
 	{
 		MessageBox(m_Window,L"DirectX Runtime library not installed!",L"InitializeDevice()",MB_OK);
-	}
+	} else {
+		D3DPRESENT_PARAMETERS dx_PresParams;
 
-	D3DPRESENT_PARAMETERS dx_PresParams;
-
-	ZeroMemory( &dx_PresParams, sizeof(dx_PresParams) );
-	dx_PresParams.Windowed = TRUE;
-	dx_PresParams.SwapEffect = D3DSWAPEFFECT_DISCARD;
-	dx_PresParams.BackBufferFormat = D3DFMT_X8R8G8B8;
-	dx_PresParams.BackBufferCount = 1;
-	dx_PresParams.MultiSampleType = D3DMULTISAMPLE_NONE;
-	dx_PresParams.MultiSampleQuality = 0;
-	dx_PresParams.Flags = NULL;
-	dx_PresParams.PresentationInterval = D3DPRESENT_INTERVAL_DEFAULT;
-	dx_PresParams.EnableAutoDepthStencil = TRUE;
-	dx_PresParams.AutoDepthStencilFormat = D3DFMT_D16;
+		ZeroMemory( &dx_PresParams, sizeof(dx_PresParams) );
+		dx_PresParams.Windowed = TRUE;
+		dx_PresParams.SwapEffect = D3DSWAPEFFECT_DISCARD;
+		dx_PresParams.BackBufferFormat = D3DFMT_X8R8G8B8;
+		dx_PresParams.BackBufferCount = 1;
+		dx_PresParams.MultiSampleType = D3DMULTISAMPLE_NONE;
+		dx_PresParams.MultiSampleQuality = 0;
+		dx_PresParams.Flags = NULL;
+		dx_PresParams.PresentationInterval = D3DPRESENT_INTERVAL_DEFAULT;
+		dx_PresParams.EnableAutoDepthStencil = TRUE;
+		dx_PresParams.AutoDepthStencilFormat = D3DFMT_D16;
 	
-	if (FAILED(m_dx_Object->CreateDevice(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, m_Window, D3DCREATE_HARDWARE_VERTEXPROCESSING, &dx_PresParams, &m_Device)))
-	{
-		if (FAILED(m_dx_Object->CreateDevice(D3DADAPTER_DEFAULT, D3DDEVTYPE_REF, m_Window, D3DCREATE_SOFTWARE_VERTEXPROCESSING, &dx_PresParams, &m_Device)))
+		if (FAILED(m_dx_Object->CreateDevice(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, m_Window, D3DCREATE_HARDWARE_VERTEXPROCESSING, &dx_PresParams, &m_Device)))
 		{
-			MessageBox(m_Window,L"Failed to create even the reference device!",L"InitializeDevice()",MB_OK);
+			if (FAILED(m_dx_Object->CreateDevice(D3DADAPTER_DEFAULT, D3DDEVTYPE_REF, m_Window, D3DCREATE_SOFTWARE_VERTEXPROCESSING, &dx_PresParams, &m_Device)))
+			{
+				MessageBox(m_Window,L"Failed to create even the reference device!",L"InitializeDevice()",MB_OK);
+			}
 		}
 	}
 }

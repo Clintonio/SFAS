@@ -42,6 +42,13 @@ const int JSONMapNode::GetChildInt( const std::string nodeName ) const
 	return *((int*) child->value);
 }
 
+const float JSONMapNode::GetChildFloat( const std::string nodeName ) const
+{
+	const JSONNode * child = (*this)[nodeName];
+	CheckForNodeErrors( child, nodeName, JSONType::Float );
+	return *((float*) child->value);
+}
+
 const D3DXVECTOR3 JSONMapNode::GetChildVector3( const std::string nodeName ) const
 {
 	JSONArrayNode * arrayNode = (JSONArrayNode*) (*this)[nodeName];

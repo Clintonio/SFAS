@@ -50,9 +50,8 @@ struct JSONMapNode : public JSONArrayNode
 	const std::wstring JSONMapNode::GetChildWString( const std::string nodeName ) const;
 	const int JSONMapNode::GetChildInt( const std::string nodeName ) const;
 	const D3DXVECTOR3 JSONMapNode::GetChildVector3( const std::string nodeName ) const;
-
-private:
-
+	const float GetChildFloat( const std::string nodeName ) const;
+	
 	void CheckForNodeErrors( const Engine::JSON::JSONNode * node, const std::string nodeName, const JSONType & expectedType ) const;
 };
 

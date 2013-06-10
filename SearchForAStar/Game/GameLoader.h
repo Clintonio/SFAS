@@ -5,6 +5,7 @@
 
 #include <string>
 #include "GameProperties.h"
+#include "../../Core/JSONTypes.h"
 
 namespace Engine
 {
@@ -32,8 +33,8 @@ private:
 	// Loads the game properties from the given JSON map to the properties structure
 	void ParseGameFile( const JSONMapNode * root, GameProperties * properties ) const;
 
-	void ParseEnemyTypes( const JSONMapNode * node, GameProperties * properties ) const;
-	void ParseWeaponTypes( const JSONMapNode * node, GameProperties * properties ) const;
+	void ParseEnemyTypes( const JSONArrayNode * node, GameProperties * properties ) const;
+	void ParseWeaponTypes( const JSONArrayNode * node, GameProperties * properties ) const;
 };
 }
 }
