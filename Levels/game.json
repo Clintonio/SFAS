@@ -9,12 +9,12 @@
 			"name":			"None",
 			"damage":			0,
 			"ranged":			false,
-			"fireDelay":		0,
-			"lifetime":			0,
+			"fireDelay":		0.0,
+			"lifetime":			0.0,
 			"dimensions":	[ 0.0, 0.0, 0.0 ],
 			"soundFile":		"",
 			"speed":			0.0,
-			"textureFile":		""
+			"textureFile":		"",
 			"AIType":			""
 		},
 		
@@ -65,7 +65,7 @@
 			"lifetime":			5.0,
 			"dimensions":	[ 2.0, 2.0, 0.0 ],
 			"soundFile":		"Sound/laser1.wav",
-			"speed":			4000.0
+			"speed":			4000.0,
 			"textureFile":		"textures/bullet.png",
 			"AIType":			"direct"
 		}
@@ -87,7 +87,7 @@
 			"AIType":			"avoid",	
 			"weaponType":	1,	
 			"dimensions":	[ 20.0, 25.0, 0.0 ],	
-			"textureFile":		"textures/enemy.png2"	
+			"textureFile":		"textures/enemy2.png"	
 		},
 		
 		{
@@ -96,7 +96,7 @@
 			"AIType":			"avoid",	
 			"weaponType":	2,	
 			"dimensions":	[ 20.0, 30.0, 0.0 ],	
-			"textureFile":		"textures/enemy.png3"	
+			"textureFile":		"textures/enemy3.png"	
 		},
 		
 		{
@@ -105,7 +105,7 @@
 			"AIType":			"avoid",	
 			"weaponType":	3,	
 			"dimensions":	[ 30.0, 70.0, 0.0 ],	
-			"textureFile":		"textures/enemy.png4"	
+			"textureFile":		"textures/enemy4.png"	
 		}
 	]
 }

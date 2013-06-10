@@ -11,6 +11,7 @@
 
 #include "Application.h"
 #include "GamePadInput.h"
+#include <stdexcept>
 
 using Engine::Application;
 
@@ -53,8 +54,16 @@ void Application::Run()
 		m_Device->EndScene();
 		m_Device->Present(NULL, NULL, NULL, NULL);
 
-		// Update Stuff
-		Update( fDT );
+		try 
+		{
+			// Update Stuff
+			Update( fDT );
+		} 
+		catch ( std::runtime_error e )
+		{
+			MessageBox( GetWindow(), L"An error has caused the game to crash", L"Game Crashed", MB_OK );
+			m_AppRunning = false;
+		}
 
 		// Update input
 		m_Input->Update( fDT );
