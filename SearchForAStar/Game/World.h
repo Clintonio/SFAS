@@ -87,6 +87,7 @@ private:
 	Player *				m_Player;
 	const Level *			m_CurrentLevel;
 	GameProperties *		m_GameProperties;
+	GameMode				m_GameMode;
 
 	float					m_Width;
 	float					m_Height;

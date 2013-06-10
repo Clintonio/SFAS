@@ -45,6 +45,7 @@ World::World(LPDIRECT3DDEVICE9 p_dx_Device, HWND han_Window, int w, int h)
 {
 	GameLoader gameLoader;
 	m_GameProperties = gameLoader.LoadGamePropertiesFromFile( "levels/game.json" );
+	m_GameMode = m_GameProperties->gameModes[0];
 
 	m_SoundProvider = new Engine::SoundProvider();
 	m_SoundProvider->Init(han_Window);
@@ -61,6 +62,8 @@ World::World(LPDIRECT3DDEVICE9 p_dx_Device, HWND han_Window, int w, int h)
 	sound->PlaySoundFromStart();
 	
 	m_LevelMusic = m_SoundProvider->CreateSoundBufferFromFile("Sound/level1.wav");
+
+	m_CurrentLevel = 0;
 }
 
 World::~World(void)
@@ -73,6 +76,10 @@ World::~World(void)
 	if( m_LevelMusic != 0 )
 	{
 		delete m_LevelMusic;
+	}
+	if( m_CurrentLevel )
+	{
+		delete m_CurrentLevel;
 	}
 }
 
@@ -197,9 +204,14 @@ void World::NextLevel()
 
 void World::OpenLevel( int level )
 {
+	// Erase the old level
+	if( m_CurrentLevel )
+	{
+		delete m_CurrentLevel;
+	}
 	LevelLoader loader( m_GameProperties->weaponTypes );
-
-	const Level * l = loader.LoadLevelFromFile( "Levels/level1.json" );
+	
+	const Level * l = loader.LoadLevelFromFile( m_GameMode.levels[m_Level] );
 	
 	// Player Setup
 	D3DXVECTOR3 start = l->player.startPos;
