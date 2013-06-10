@@ -5,7 +5,7 @@
 	"introText": "They've sent a class II bomber at us, we're screwed!",
 	"enemies": [
 	{
-	  "type": 2,
+	  "type": 3,
 	  "pos":  [ 15.0, 0.5, 0.0 ]
 	},
 	{
