@@ -11,8 +11,10 @@
 
 #include "GameStateBase.h"
 #include "Graphics/TextRenderer.h"
+#include "../../Core/JSONParser.h"
 
 using namespace SFAS::States;
+using namespace Engine::JSON;
 
 GameStateBase::GameStateBase( LPDIRECT3DDEVICE9 p_dx_Device ) :
 	m_Cursor( p_dx_Device )
@@ -126,4 +128,33 @@ const GameStateBase::Text * GameStateBase::GetTextAt( const D3DXVECTOR2 & mouseP
 	}
 
 	return out;
+}
+
+void GameStateBase::LoadHighScores( const std::string scoreFile )
+{
+	JSONParser parser;
+	int i = 0; 
+	try {
+		const JSONMapNode * root = parser.ParseJSONFile( scoreFile );
+		if( root != NULL )
+		{
+			JSONArrayNode * scores = (JSONArrayNode*) (*root)["scores"];
+			for( ; i < scores->childCount && i < kNumHighScores; i++ )
+			{
+				JSONMapNode * scoreNode = (JSONMapNode*) scores->child[i];
+				m_HighestScores[i].score = scoreNode->GetChildInt( "score" );
+				m_HighestScores[i].name = scoreNode->GetChildString( "name" );
+			}
+		}
+	}
+	catch ( std::runtime_error e )
+	{
+		// File may not exist, ignore
+	}
+	// Fill in remaining scores
+	for(; i < kNumHighScores; i++ )
+	{
+			m_HighestScores[i].score = 0;
+			m_HighestScores[i].name = "";
+	}
 }

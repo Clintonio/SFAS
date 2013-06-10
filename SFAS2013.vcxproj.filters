@@ -108,6 +108,9 @@
     <ClCompile Include="SearchForAStar\States\CreditsState.cpp">
       <Filter>SearchForAStar\States</Filter>
     </ClCompile>
+    <ClCompile Include="SearchForAStar\States\HighScoresState.cpp">
+      <Filter>SearchForAStar\States</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Core\Application.h">
@@ -204,6 +207,9 @@
       <Filter>SearchForAStar\States</Filter>
     </ClInclude>
     <ClInclude Include="SearchForAStar\States\CreditsState.h">
+      <Filter>SearchForAStar\States</Filter>
+    </ClInclude>
+    <ClInclude Include="SearchForAStar\States\HighScoresState.h">
       <Filter>SearchForAStar\States</Filter>
     </ClInclude>
   </ItemGroup>

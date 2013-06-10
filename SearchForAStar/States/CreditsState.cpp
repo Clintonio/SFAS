@@ -16,25 +16,25 @@ CreditsState::CreditsState( LPDIRECT3DDEVICE9 p_dx_Device ) :
 {
 
 	AddText(0, L"Credits",
-		0.5, 0.2, FontSize::Large, D3DXCOLOR( 1, 1, 1, 1 )
+		0.5f, 0.2f, FontSize::Large, D3DXCOLOR( 1, 1, 1, 1 )
 	);
 	
 	AddText(0, L"Game Development",
-		0.5, 0.3, FontSize::Medium, D3DXCOLOR( 1, 1, 1, 1 )
+		0.5f, 0.3f, FontSize::Medium, D3DXCOLOR( 1, 1, 1, 1 )
 	);
 	AddText(0, L"Clinton Alexander",
-		0.5, 0.37, FontSize::Medium, D3DXCOLOR( 0.8, 0.8, 0.8, 1 )
+		0.5f, 0.37f, FontSize::Medium, D3DXCOLOR( 0.8f, 0.8f, 0.8f, 1 )
 	);
 	
 	AddText(0, L"Sound",
-		0.5, 0.47, FontSize::Medium, D3DXCOLOR( 1, 1, 1, 1 )
+		0.5f, 0.47f, FontSize::Medium, D3DXCOLOR( 1, 1, 1, 1 )
 	);
 	AddText(0, L"freesound.org",
-		0.5, 0.54, FontSize::Medium, D3DXCOLOR( 0.8, 0.8, 0.8, 1 )
+		0.5f, 0.54f, FontSize::Medium, D3DXCOLOR( 0.8f, 0.8f, 0.8f, 1 )
 	);
 
 	AddText(1, L"Exit",
-		0.5, 0.67, FontSize::Medium, D3DXCOLOR( 0.8, 0.8, 0.8, 1 )
+		0.5f, 0.67f, FontSize::Medium, D3DXCOLOR( 0.8f, 0.8f, 0.8f, 1 )
 	);
 }
 

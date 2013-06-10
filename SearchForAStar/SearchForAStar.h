@@ -48,7 +48,7 @@ private:
 	void Render( float dt );		// Draw the current game components
 	void Update( float dt );		// Update the game with the delta time
 
-	enum { keScreenWidth = 800 , keScreenHeight = 600, keNumStates = 5 };
+	enum { keScreenWidth = 800 , keScreenHeight = 600, keNumStates = 6 };
 
 	Engine::Camera	m_Camera;		// The camera for the main view
 	float			m_TimeInState;	// The time spent in the current state

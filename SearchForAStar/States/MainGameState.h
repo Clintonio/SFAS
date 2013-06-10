@@ -51,16 +51,8 @@ private:
 		keNumStates
 	};
 
-	struct GameScore 
-	{
-		int score;
-		std::string name;
-	};
+	enum { keMessageDisplayTime = 1 };
 
-	enum { keMessageDisplayTime = 1, kNumHighScores = 20 };
-
-	// Load the highest scores from the json database
-	void LoadHighScores( const std::string scoreFile );
 	// Save any new high scores
 	void UpdateHighScores( int newScore );
 
@@ -69,8 +61,6 @@ private:
 	Game::World			m_World;
 	float				m_TimeSinceStateChange;
 	bool				m_DrawCursor;
-	
-	GameScore m_HighestScores[kNumHighScores];
 };
 }
 }

@@ -47,6 +47,8 @@ public:
 	virtual void OnLeavingState() {}
 
 protected:
+	enum { kNumHighScores = 20 };
+
 	enum FontSize
 	{
 		Large,
@@ -64,9 +66,17 @@ protected:
 		FontSize size;
 		D3DXCOLOR colour;
 	};
+	// Representation of a high score
+	struct GameScore 
+	{
+		int score;
+		std::string name;
+	};
 
 	// Gets the text clicked, if any
 	const Text * GetTextAt( const D3DXVECTOR2 & mousePos ) const;
+	// Load the highest scores from the json database
+	void LoadHighScores( const std::string scoreFile );
 	
 	// A general add text function that uses relative positioning and size
 	// rather than absolute
@@ -83,9 +93,11 @@ protected:
 		const int id,
 		const std::wstring message 
 	);
-
+	// The cursor for this page
 	Engine::RenderItem	m_Cursor;
 	D3DXVECTOR2			m_PlayerMousePosition;
+	// Array of all of our highest scores (if loaded)
+	GameScore m_HighestScores[kNumHighScores];
 private:
 	// Local storage of window sizes, updated per frame
 	int m_WindowHeight;

@@ -14,6 +14,7 @@
 #include "MainGameState.h"
 #include "ControlsState.h"
 #include "CreditsState.h"
+#include "HighScoresState.h"
 
 using SFAS::States::StartState;
 
@@ -33,8 +34,10 @@ StartState::StartState( LPDIRECT3DDEVICE9 p_dx_Device ) :
 		x, y + 0.22f, FontSize::Medium, D3DXCOLOR( 1, 1, 1, 1 ) );
 	AddText(3, L"Credits", 
 		x, y + 0.32f, FontSize::Medium, D3DXCOLOR( 1, 1, 1, 1 ) );
-	AddText(4, L"Controls/ How To Play", 
+	AddText(6, L"High Scores", 
 		x, y + 0.39f, FontSize::Medium, D3DXCOLOR( 1, 1, 1, 1 ) );
+	AddText(4, L"Controls/ How To Play", 
+		x, y + 0.46f, FontSize::Medium, D3DXCOLOR( 1, 1, 1, 1 ) );
 	AddText(5, L"Exit", 
 		x, y + 0.65f, FontSize::Medium, D3DXCOLOR( 1, 1, 1, 1 ) );
 }
@@ -79,6 +82,10 @@ int StartState::Update( Engine::Input * input, float dt)
 			else if( t->id == 2 )
 			{
 
+			}
+			else if( t->id == 6 )
+			{
+				return HighScoresState::kStateID;
 			}
 		}
 	}

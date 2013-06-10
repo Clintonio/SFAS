@@ -17,6 +17,7 @@
 #include "SearchForAStar/States/SummaryState.h"
 #include "SearchForAStar/States/CreditsState.h"
 #include "SearchForAStar/States/ControlsState.h"
+#include "SearchForAStar/States/HighScoresState.h"
 
 #include "Graphics/RenderItem.h"
 #include "Graphics/TextRenderer.h"
@@ -46,6 +47,7 @@ SearchForAStar::SearchForAStar(WNDPROC proc) : Application(L"SearchForAStar", L"
 		m_StateArray[2] = new States::SummaryState( device );
 		m_StateArray[3] = new States::CreditsState( device );
 		m_StateArray[4] = new States::ControlsState( device );
+		m_StateArray[5] = new States::HighScoresState( device );
 		m_State = m_StateArray[0];
 		m_Camera.Init( GetDevice() );
 		ShowCursor( FALSE );

@@ -12,13 +12,11 @@
 #include "MainGameState.h"
 #include "Core/Input.h"
 #include "SummaryState.h"
-#include "../../Core/JSONParser.h"
 #include <sstream>
-#include <fstream>;
+#include <fstream>
 #include <string>
 
 using namespace SFAS::States;
-using namespace Engine::JSON;
 
 const int kStateID = 1;
 
@@ -32,9 +30,9 @@ MainGameState::MainGameState( LPDIRECT3DDEVICE9 p_dx_Device, HWND han_Window, in
 	// The crosshair for the player
 	m_Cursor.Init( L"Textures/crosshair.png" );
 	// Text at the bottom of the screen
-	AddText( 1, L"", 0.5, 0.85, FontSize::Large, D3DXCOLOR(1,1,1,0.5));
+	AddText( 1, L"", 0.5f, 0.85f, FontSize::Large, D3DXCOLOR(1,1,1,0.5f));
 	// Text in the middle of the screen
-	AddText( 2, L"", 0.5, 0.45, FontSize::Large, D3DXCOLOR(0.7,1,1,1));
+	AddText( 2, L"", 0.5f, 0.45f, FontSize::Large, D3DXCOLOR(0.7f,1,1,1));
 	
 	// Loads the high scores
 	LoadHighScores( "scores.json" );
@@ -163,35 +161,6 @@ void MainGameState::OnEnteringState()
 	m_TimeSinceStateChange = 0.0f;
 	//SetPageText( L"Get Ready!" );
 	m_World.NewGame();
-}
-
-void MainGameState::LoadHighScores( const std::string scoreFile )
-{
-	JSONParser parser;
-	int i = 0; 
-	try {
-		const JSONMapNode * root = parser.ParseJSONFile( scoreFile );
-		if( root != NULL )
-		{
-			JSONArrayNode * scores = (JSONArrayNode*) (*root)["scores"];
-			for( ; i < scores->childCount && i < kNumHighScores; i++ )
-			{
-				JSONMapNode * scoreNode = (JSONMapNode*) scores->child[i];
-				m_HighestScores[i].score = scoreNode->GetChildInt( "score" );
-				m_HighestScores[i].name = scoreNode->GetChildString( "name" );
-			}
-		}
-	}
-	catch ( std::runtime_error e )
-	{
-		// File may not exist, ignore
-	}
-	// Fill in remaining scores
-	for(; i < kNumHighScores; i++ )
-	{
-			m_HighestScores[i].score = 0;
-			m_HighestScores[i].name = "";
-	}
 }
 
 void MainGameState::UpdateHighScores( int newScore ) {
