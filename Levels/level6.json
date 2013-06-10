@@ -1,8 +1,12 @@
 {
-	"id": 						"L5",
-	"name":					"Level 5",
+	"id": 						"L6",
+	"name":					"Level 6",
 	"skyboxTextureFile": "textures/skybox.png",
 	"enemies": [
+	{
+	  "type": 2,
+	  "pos":  [ 15.0, 0.5, 0.0 ]
+	},
 	{
 	  "type": 1,
 	  "pos":  [ 7.6, 2.5, 0.0 ]
