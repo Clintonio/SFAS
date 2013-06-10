@@ -86,7 +86,7 @@ private:
 	// Player is a key object, so store it here
 	Player *				m_Player;
 	const Level *			m_CurrentLevel;
-	GameProperties			m_GameProperties;
+	GameProperties *		m_GameProperties;
 
 	float					m_Width;
 	float					m_Height;

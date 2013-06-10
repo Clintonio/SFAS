@@ -16,9 +16,6 @@
     <Filter Include="SearchForAStar\States">
       <UniqueIdentifier>{2318bab6-2422-412d-b0c5-9ef199bf5214}</UniqueIdentifier>
     </Filter>
-    <Filter Include="SearchForAStar\Game\Level">
-      <UniqueIdentifier>{5790cc95-9af7-4016-9e6f-1e290ede7ba8}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Audio">
       <UniqueIdentifier>{7f88e263-fb00-416a-a1f0-dc59c8212302}</UniqueIdentifier>
     </Filter>
@@ -105,6 +102,9 @@
     <ClCompile Include="SearchForAStar\Game\GameLoader.cpp">
       <Filter>SearchForAStar\Game</Filter>
     </ClCompile>
+    <ClCompile Include="Core\JSONTypes.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Core\Application.h">
@@ -178,9 +178,6 @@
     </ClInclude>
     <ClInclude Include="Audio\SoundProvider.h">
       <Filter>Audio</Filter>
-    </ClInclude>
-    <ClInclude Include="SearchForAStar\Game\Levels\Level1.h">
-      <Filter>SearchForAStar\Game\Level</Filter>
     </ClInclude>
     <ClInclude Include="SearchForAStar\Game\WeaponType.h">
       <Filter>SearchForAStar\Game</Filter>

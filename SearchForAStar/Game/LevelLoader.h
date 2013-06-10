@@ -38,31 +38,5 @@ private:
 	// Throws exceptions for the data extraction functions
 	void CheckForNodeErrors( const JSONNode * node, const std::string nodeName, const JSONType & expectedType ) const;
 };
-
-class LevelLoaderException : public std::runtime_error
-{
-public:
-	LevelLoaderException( std::string nodeName, JSONType expectedType  ) :
-		std::runtime_error( "Error loading level, missing value" ),
-		m_NodeName( nodeName ),
-		m_ExpectedType( expectedType )
-	{
-
-	}
-
-	LevelLoaderException( std::string nodeName, JSONType expectedType, JSONType foundType  ) :
-		std::runtime_error( "Error loading level, data type mismatch" ),
-		m_NodeName( nodeName ),
-		m_ExpectedType( expectedType ),
-		m_FoundType( foundType )
-	{
-
-	}
-
-	std::string m_NodeName;
-	JSONType m_ExpectedType;
-	JSONType m_FoundType;
-};
-
 }
 }

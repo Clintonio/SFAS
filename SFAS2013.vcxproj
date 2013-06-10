@@ -17,6 +17,7 @@
     <ClCompile Include="Core\GamePadInput.cpp" />
     <ClCompile Include="Core\Input.cpp" />
     <ClCompile Include="Core\JSONParser.cpp" />
+    <ClCompile Include="Core\JSONTypes.cpp" />
     <ClCompile Include="Graphics\Camera.cpp" />
     <ClCompile Include="Graphics\RenderItem.cpp" />
     <ClCompile Include="Graphics\SkyBox.cpp" />
@@ -61,7 +62,6 @@
     <ClInclude Include="SearchForAStar\Game\GameProperties.h" />
     <ClInclude Include="SearchForAStar\Game\Level.h" />
     <ClInclude Include="SearchForAStar\Game\LevelLoader.h" />
-    <ClInclude Include="SearchForAStar\Game\Levels\Level1.h" />
     <ClInclude Include="SearchForAStar\Game\Player.h" />
     <ClInclude Include="SearchForAStar\Game\ShipEntity.h" />
     <ClInclude Include="SearchForAStar\Game\Wall.h" />

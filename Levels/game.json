@@ -1,0 +1,111 @@
+{
+	"_COMMENT": "WARNING: KEEP THESE VALUES CONSISTENT",
+	
+	"weaponTypeCount": 5,
+	"enemyTypeCount": 4,
+	
+	"weaponTypes": [
+		{
+			"name":			"None",
+			"damage":			0,
+			"ranged":			false,
+			"fireDelay":		0,
+			"lifetime":			0,
+			"dimensions":	[ 0.0, 0.0, 0.0 ],
+			"soundFile":		"",
+			"speed":			0.0,
+			"textureFile":		""
+			"AIType":			""
+		},
+		
+		{
+			"name":			"Laser",
+			"damage":			1,
+			"ranged":			true,
+			"fireDelay":		0.5,
+			"lifetime":			5.0,
+			"dimensions":	[ 2.0, 2.0, 0.0 ],
+			"soundFile":		"Sound/laser1.wav",
+			"speed":			4000.0,
+			"textureFile":		"textures/bullet.png",
+			"AIType":			"direct"
+		},
+		
+		{
+			"name":			"Homing Rocket",
+			"damage":			5,
+			"ranged":			true,
+			"fireDelay":		5.0,
+			"lifetime":			15.0,
+			"dimensions":	[ 17.0, 9.0, 0.0 ],
+			"soundFile":		"Sound/targettedrocket.wav",
+			"speed":			100.0,
+			"textureFile":		"textures/rocket.png",
+			"AIType":			"target"
+		},
+		
+		{
+			"name":			"Fast Homing Rocket",
+			"damage":			5,
+			"ranged":			true,
+			"fireDelay":		3.0,
+			"lifetime":			15.0,
+			"dimensions":	[ 17.0, 9.0, 0.0 ],
+			"soundFile":		"Sound/targettedrocket.wav",
+			"speed":			200.0,
+			"textureFile":		"textures/rocket.png",
+			"AIType":			"target"
+		},
+		
+		{
+			"name":			"Rapid Laser",
+			"damage":			1,
+			"ranged":			true,
+			"fireDelay":		0.2,
+			"lifetime":			5.0,
+			"dimensions":	[ 2.0, 2.0, 0.0 ],
+			"soundFile":		"Sound/laser1.wav",
+			"speed":			4000.0
+			"textureFile":		"textures/bullet.png",
+			"AIType":			"direct"
+		}
+	],
+	
+	"enemyTypes": [
+		{
+			"id":					0,
+			"health":			1,	
+			"AIType":			"suicide",	
+			"weaponType":	0,	
+			"dimensions":	[ 20.0, 20.0, 0.0 ],	
+			"textureFile":		"textures/enemy.png"
+		},
+		
+		{
+			"id":					1,
+			"health":			3,	
+			"AIType":			"avoid",	
+			"weaponType":	1,	
+			"dimensions":	[ 20.0, 25.0, 0.0 ],	
+			"textureFile":		"textures/enemy.png2"	
+		},
+		
+		{
+			"id":					2,
+			"health":			10,	
+			"AIType":			"avoid",	
+			"weaponType":	2,	
+			"dimensions":	[ 20.0, 30.0, 0.0 ],	
+			"textureFile":		"textures/enemy.png3"	
+		},
+		
+		{
+			"id":					3,
+			"health":			15,	
+			"AIType":			"avoid",	
+			"weaponType":	3,	
+			"dimensions":	[ 30.0, 70.0, 0.0 ],	
+			"textureFile":		"textures/enemy.png4"	
+		}
+	]
+}

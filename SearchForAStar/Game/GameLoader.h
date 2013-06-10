@@ -26,11 +26,14 @@ class GameLoader
 public:
 	GameLoader();
 
-	GameProperties LoadGamePropertiesFromFile( std::string file );
+	GameProperties * LoadGamePropertiesFromFile( const std::string file ) const;
 
 private:
+	// Loads the game properties from the given JSON map to the properties structure
+	void ParseGameFile( const JSONMapNode * root, GameProperties * properties ) const;
 
-	void ParseGameFile( const JSONMapNode * root, GameProperties properties ) const;
+	void ParseEnemyTypes( const JSONMapNode * node, GameProperties * properties ) const;
+	void ParseWeaponTypes( const JSONMapNode * node, GameProperties * properties ) const;
 };
 }
 }

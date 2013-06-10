@@ -35,9 +35,6 @@
 #include "LevelLoader.h"
 #include "GameLoader.h"
 
-// Binary level includes
-#include "Levels/Level1.h"
-
 using SFAS::Game::World;
 using SFAS::Game::Entity;
 using SFAS::Game::Wall;
@@ -46,6 +43,8 @@ using SFAS::Game::Player;
 World::World(LPDIRECT3DDEVICE9 p_dx_Device, HWND han_Window, int w, int h) 
 	: m_Width( (float)w ), m_Height( (float)h ), m_Level( 0 ), m_NumActiveEnemies( INT_MAX )
 {
+	GameLoader gameLoader;
+
 	m_SoundProvider = new Engine::SoundProvider();
 	m_SoundProvider->Init(han_Window);
 
@@ -60,7 +59,6 @@ World::World(LPDIRECT3DDEVICE9 p_dx_Device, HWND han_Window, int w, int h)
 	Engine::Sound* sound = m_SoundProvider->CreateSoundBufferFromFile("Sound/menumusic.wav");
 	sound->PlaySoundFromStart();
 
-	GameLoader gameLoader;
 	m_GameProperties = gameLoader.LoadGamePropertiesFromFile( "levels/game.json" );
 	
 	m_LevelMusic = m_SoundProvider->CreateSoundBufferFromFile("Sound/level1.wav");
@@ -72,6 +70,7 @@ World::~World(void)
 	delete m_SkyBox;
 	delete m_SoundProvider;
 	delete m_Player;
+	delete m_GameProperties;
 	if( m_LevelMusic != 0 )
 	{
 		delete m_LevelMusic;
@@ -201,7 +200,6 @@ void World::OpenLevel( int level )
 {
 	LevelLoader loader;
 
-	//const Level * l = getLevel1();
 	const Level * l = loader.LoadLevelFromFile( "Levels/level1.json" );
 	
 	// Player Setup
@@ -217,7 +215,7 @@ void World::OpenLevel( int level )
 	{
 		Level::Enemy curEnemy = l->enemies[i];
 		D3DXVECTOR3 pos = curEnemy.pos;
-		Enemy* enemy = new Enemy(m_GameProperties.enemyTypes[curEnemy.type], pos.x, pos.y);
+		Enemy* enemy = new Enemy(m_GameProperties->enemyTypes[curEnemy.type], pos.x, pos.y);
 		AddEntity(enemy);
 	}
 	

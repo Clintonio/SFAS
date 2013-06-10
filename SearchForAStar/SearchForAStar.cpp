@@ -22,7 +22,7 @@
 #include <windows.h>
 #include <stdexcept>
 
-#include "Game/LevelLoader.h"
+#include "../Core/JSONTypes.h"
 
 using Engine::Application;
 using SFAS::SearchForAStar;
@@ -120,7 +120,7 @@ void SearchForAStar::Update(float dt)
 			m_StateArray[old_state]->OnLeavingState();
 		}
 	}
-	catch( LevelLoaderException e )
+	catch( Engine::JSON::JSONCastException e )
 	{
 		MessageBox( GetWindow(), L"The game has crashed. One of the level JSON files are invalid", L"Game Has Crashed", MB_OK );
 		m_AppRunning = false;

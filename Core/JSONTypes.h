@@ -4,11 +4,14 @@
 
 #include <string>
 #include <stdexcept>
+#include <d3dx9.h>
 
 namespace Engine
 {
 namespace JSON
 {
+class JSONCastException;
+
 enum JSONType
 {
 	Object,
@@ -41,20 +44,16 @@ struct JSONMapNode : public JSONArrayNode
 {
 	std::string	**	childTags; // Only in object
 
-	// Search through child tags for the given tag and
-	// return that child
-	const JSONNode * operator [] ( const std::string tagName ) const 
-	{
-		for( unsigned int i = 0; i < childCount; i++ )
-		{
-			if( (*childTags[i]) == tagName )
-			{
-				return child[i];
-			}
-		}
+	// Search through child tags for the given tag and return that child
+	const JSONNode * JSONMapNode::operator [] ( const std::string tagName ) const;
+	const std::string JSONMapNode::GetObjectChildStringValue( const std::string nodeName ) const;
+	const std::wstring JSONMapNode::GetObjectChildWStringValue( const std::string nodeName ) const;
+	const int JSONMapNode::GetObjectChildIntValue( const std::string nodeName ) const;
+	const D3DXVECTOR3 JSONMapNode::GetObjectChildVector3Value( const std::string nodeName ) const;
 
-		return 0;
-	}
+private:
+
+	void CheckForNodeErrors( const Engine::JSON::JSONNode * node, const std::string nodeName, const JSONType & expectedType ) const;
 };
 
 class ParseException : public std::runtime_error {
@@ -77,5 +76,31 @@ public:
 	// The position of an error that stopped parsing
 	const unsigned int m_ErrorPosition;
 };
+
+class JSONCastException : public std::runtime_error
+{
+public:
+	JSONCastException( std::string nodeName, JSONType expectedType  ) :
+		std::runtime_error( "Error loading level, missing value" ),
+		m_NodeName( nodeName ),
+		m_ExpectedType( expectedType )
+	{
+
+	}
+
+	JSONCastException( std::string nodeName, JSONType expectedType, JSONType foundType  ) :
+		std::runtime_error( "Error loading level, data type mismatch" ),
+		m_NodeName( nodeName ),
+		m_ExpectedType( expectedType ),
+		m_FoundType( foundType )
+	{
+
+	}
+
+	std::string m_NodeName;
+	JSONType m_ExpectedType;
+	JSONType m_FoundType;
+};
+
 }
 }
