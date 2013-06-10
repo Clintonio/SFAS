@@ -36,8 +36,8 @@ GameProperties * GameLoader::LoadGamePropertiesFromFile( const std::string file 
 
 void GameLoader::ParseGameFile( const JSONMapNode * root, GameProperties * properties ) const
 {
-	properties->enemyTypeCount;
-	properties->weaponTypesCount;
+	properties->enemyTypeCount	 = root->GetChildInt( "enemyTypeCount" );
+	properties->weaponTypesCount = root->GetChildInt( "weaponTypeCount" );
 	
 	JSONMapNode * enemyTypes  = (JSONMapNode*) (*root)["enemyTypes"];
 	JSONMapNode * weaponTypes = (JSONMapNode*) (*root)["weaponTypes"];

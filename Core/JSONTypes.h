@@ -46,10 +46,10 @@ struct JSONMapNode : public JSONArrayNode
 
 	// Search through child tags for the given tag and return that child
 	const JSONNode * JSONMapNode::operator [] ( const std::string tagName ) const;
-	const std::string JSONMapNode::GetObjectChildStringValue( const std::string nodeName ) const;
-	const std::wstring JSONMapNode::GetObjectChildWStringValue( const std::string nodeName ) const;
-	const int JSONMapNode::GetObjectChildIntValue( const std::string nodeName ) const;
-	const D3DXVECTOR3 JSONMapNode::GetObjectChildVector3Value( const std::string nodeName ) const;
+	const std::string JSONMapNode::GetChildString( const std::string nodeName ) const;
+	const std::wstring JSONMapNode::GetChildWString( const std::string nodeName ) const;
+	const int JSONMapNode::GetChildInt( const std::string nodeName ) const;
+	const D3DXVECTOR3 JSONMapNode::GetChildVector3( const std::string nodeName ) const;
 
 private:
 

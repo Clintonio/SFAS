@@ -39,15 +39,15 @@ void LevelLoader::ParseLevelFile( const JSONMapNode * root, Level * level ) cons
 {
 	JSONMapNode * playerNode;
 	
-	level->id					= root->GetObjectChildStringValue( "id" );
-	level->name					= root->GetObjectChildStringValue( "name" );
-	level->skyboxTextureFile	= root->GetObjectChildWStringValue( "skyboxTextureFile" );
-	level->enemyCount			= root->GetObjectChildIntValue( "enemyCount" );
+	level->id					= root->GetChildString( "id" );
+	level->name					= root->GetChildString( "name" );
+	level->skyboxTextureFile	= root->GetChildWString( "skyboxTextureFile" );
+	level->enemyCount			= root->GetChildInt( "enemyCount" );
 
 	playerNode = (JSONMapNode*) (*root)["player"];
-	//level->player.weapon		= m_WeaponType[GetObjectChildIntValue( playerNode, "weapon" )];
-	level->player.textureFile	= playerNode->GetObjectChildWStringValue( "textureFile" );
-	level->player.startPos		= playerNode->GetObjectChildVector3Value( "startPos" );
+	//level->player.weapon		= m_WeaponType[GetChildIntValue( playerNode, "weapon" )];
+	level->player.textureFile	= playerNode->GetChildWString( "textureFile" );
+	level->player.startPos		= playerNode->GetChildVector3( "startPos" );
 
 	ParseEnemies( (JSONArrayNode*) (*root)["enemies"], level );
 }
@@ -58,8 +58,8 @@ void LevelLoader::ParseEnemies( const Engine::JSON::JSONArrayNode * enemyNodes, 
 	for( unsigned int i = 0; i < level->enemyCount; i++ )
 	{
 		JSONMapNode * enemyNode = (JSONMapNode*) enemyNodes->child[i];
-		enemies[i].type = enemyNode->GetObjectChildIntValue( "type" );
-		enemies[i].pos = enemyNode->GetObjectChildVector3Value( "pos" );
+		enemies[i].type = enemyNode->GetChildInt( "type" );
+		enemies[i].pos = enemyNode->GetChildVector3( "pos" );
 	}
 
 	level->enemies = enemies;
