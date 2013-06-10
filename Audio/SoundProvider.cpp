@@ -135,7 +135,7 @@ bool SoundProvider::LoadWaveFile(const std::string filename, LPDIRECTSOUNDBUFFER
 	}
 	
 	fclose(filePtr);
-	delete [] waveData;
+	delete [] waveData; 
  
 	return true;
 }
