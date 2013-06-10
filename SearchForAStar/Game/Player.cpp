@@ -34,13 +34,13 @@ const float Player::sDamping	= 0.39f;
 
 const Entity::EntityType Player::kEntityType(1);
 
-Player::Player( int lives ) : 
+Player::Player( ) : 
 	ShipEntity( D3DXVECTOR3(), D3DXVECTOR3( sSize, sSize, 0.0f ), sDamping ), 
-	m_Lives( lives ), 
 	m_Score( 0 ), 
 	m_Multiplier( 1 ), 
 	m_Best( 0 ), 
-	m_TimeSinceLastFire( 0 )
+	m_TimeSinceLastFire( 0 ),
+	m_Lives( 3 )
 {
 	SetMass( sMass );
 

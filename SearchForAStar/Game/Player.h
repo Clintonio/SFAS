@@ -35,7 +35,7 @@ class Player : public ShipEntity
 {
 public:
 
-	Player( int lives );
+	Player( );
 	virtual ~Player(void);
 
 	// Rendering, Updating and Messaging

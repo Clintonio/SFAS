@@ -3,11 +3,13 @@
 		{
 			"name":		"Story",
 			"type":			"levels",
+			"lives":			5,
 			"levels": [
 				"Levels/level1.json",
 				"Levels/level2.json",
 				"Levels/level3.json",
-				"Levels/level4.json"
+				"Levels/level4.json",
+				"Levels/level5.json"
 			]
 		}
 	],

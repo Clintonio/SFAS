@@ -42,6 +42,7 @@ struct GameMode
 	std::string		name;
 	std::string		type;
 	std::string	*	levels;
+	int				lives;
 };
 
 // This meta object stores most of the generated

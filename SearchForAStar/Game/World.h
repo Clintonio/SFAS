@@ -75,7 +75,7 @@ private:
 
 	bool DoCollision( Entity * lh, Entity * rh, float dt );
 
-	enum { kePlayerLives = 3, keNumLevels = 10, keHitScore = 100 };
+	enum { keHitScore = 100 };
 
 	// The music for this level
 	Engine::Sound*			m_LevelMusic;

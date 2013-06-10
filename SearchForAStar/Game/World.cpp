@@ -53,7 +53,7 @@ World::World(LPDIRECT3DDEVICE9 p_dx_Device, HWND han_Window, int w, int h)
 	m_SkyBox = new Engine::SkyBox(p_dx_Device, w, h);
 	m_EntityList = new EntityList;
 	
-	m_Player = new Player( kePlayerLives );
+	m_Player = new Player( );
 	m_Player->SetCollidable();
 
 	Entity::Init(p_dx_Device);
@@ -175,7 +175,7 @@ void World::NewGame()
 	m_Level = 0;
 	Player * player = GetPlayerHelper();
 	player->ResetScore();
-	player->ResetLives( kePlayerLives );
+	player->ResetLives( m_GameMode.lives );
 	if( m_LevelMusic != 0 )
 	{
 		m_LevelMusic->PlaySoundFromStart();
