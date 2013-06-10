@@ -147,7 +147,8 @@ void World::Update( Engine::Input * input, float dt )
 			EntityList::iterator innerIt;
 			for(innerIt = it; m_EntityList->end() != innerIt; innerIt++)
 			{
-				if(it != innerIt)
+				// Entities of the same type do not collide in thie game
+				if(!((*it).second->GetEntityType() == (*innerIt).second->GetEntityType()))
 				{
 					DoCollision((*it).second, (*innerIt).second, dt);
 				}
@@ -293,20 +294,27 @@ bool World::IsLevelFinished() const
 bool World::DoCollision( Entity * lh, Entity * rh, float dt )
 {
 	bool collision = false;
-
-	if( lh->CheckForPossibleCollision( *rh, dt ) )
+	
+	D3DXVECTOR3 lhp = lh->GetPosition();
+	D3DXVECTOR3 rhp = rh->GetPosition();
+	// If they're not in the viewing area they don't collide
+	if( lhp.x >= 0 && lhp.x <= m_Width && lhp.y <= m_Height && lhp.y >= 0
+		&& rhp.x >= 0 && rhp.x <= m_Width && rhp.y <= m_Height && rhp.y >= 0 )
 	{
-		if( lh->CheckForCollision( *rh, dt ) )
+		if( lh->CheckForPossibleCollision( *rh, dt ) )
 		{
-			collision = true;
-
-			if( lh->IsCollidable() && rh->IsCollidable() )
+			if( lh->CheckForCollision( *rh, dt ) )
 			{
-				bool physics = lh->OnCollision( *rh, this );
-				physics &= rh->OnCollision( *lh, this );
-				if( physics ) 
+				collision = true;
+
+				if( lh->IsCollidable() && rh->IsCollidable() )
 				{
-					lh->Resolve( *rh, dt );
+					bool physics = lh->OnCollision( *rh, this );
+					physics &= rh->OnCollision( *lh, this );
+					if( physics ) 
+					{
+						lh->Resolve( *rh, dt );
+					}
 				}
 			}
 		}

@@ -31,11 +31,11 @@ MainGameState::MainGameState( LPDIRECT3DDEVICE9 p_dx_Device, HWND han_Window, in
 	// Text at the bottom of the screen
 	AddText( 1, L"", 0.5f, 0.85f, FontSize::Large, D3DXCOLOR(1,1,1,0.5f));
 	// Text in the middle of the screen
-	AddText( 2, L"", 0.5f, 0.45f, FontSize::Large, D3DXCOLOR(0.7f,1,1,1));
+	AddText( 2, L"", 0.5f, 0.45f, FontSize::Large, D3DXCOLOR(1,1,1,1));
 	// Level intro text
-	AddText( 3, L"", 0.5f, 0.5f, FontSize::Small, D3DXCOLOR(1,0.7f,0.7f,1));
+	AddText( 3, L"", 0.5f, 0.5f, FontSize::Small, D3DXCOLOR(1,1,1,1));
 	// Level Title text
-	AddText( 4, L"", 0.5f, 0.2f, FontSize::Large, D3DXCOLOR(1,0.7f,0.7f,1));
+	AddText( 4, L"", 0.5f, 0.2f, FontSize::Large, D3DXCOLOR(1,1,0.7f,1));
 	
 	// Loads the high scores
 	LoadHighScores( "scores.json" );
@@ -135,16 +135,19 @@ int MainGameState::Update( Engine::Input * input, float dt)
 				}
 				break;
 		}
-	
-		// Update on screen text
-		const Game::Player * player = m_World.GetPlayer();
-		swprintf_s( strBuffer, 512, L"Lives: %d    Score: %d    Multiplier: %d    Best: %d", 
-			player->GetLivesRemaining(), 
-			player->GetScore(), 
-			player->GetMultiplier(), 
-			m_HighestScores[0] 
-		);
-		UpdateText( 1, strBuffer );
+		
+		if( m_GameState != keIntroText )
+		{
+			// Update on screen text
+			const Game::Player * player = m_World.GetPlayer();
+			swprintf_s( strBuffer, 512, L"Lives: %d    Score: %d    Multiplier: %d    Best: %d", 
+				player->GetLivesRemaining(), 
+				player->GetScore(), 
+				player->GetMultiplier(), 
+				m_HighestScores[0] 
+			);
+			UpdateText( 1, strBuffer );
+		}
 	}
 
 	if( gameOver )

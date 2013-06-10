@@ -1,8 +1,8 @@
 {
 	"id": 						"L6",
-	"name":					"Level 6",
+	"name":					"The Big Guns",
 	"skyboxTextureFile": "textures/skybox.png",
-	"introText": "In AD 2101 War Was Beginning.  The universe is under threat. We have to find the Greatest Star to save it.",
+	"introText": "We're on course to encounter a bomber, watch out!",
 	"enemies": [
 	{
 	  "type": 2,
@@ -103,34 +103,6 @@
 	{
 	  "type": 0,
 	  "pos":  [ 1.01, 2.8, 0.0 ]
-	},
-	{
-	  "type": 0,
-	  "pos":  [ 7.1, 6.4, 0.0 ]
-	},
-	{
-	  "type": 0,
-	  "pos":  [ 0.6, 1.01, 0.0 ]
-	},
-	{
-	  "type": 0,
-	  "pos":  [ 3.8, 1.4, 0.0 ]
-	},
-	{
-	  "type": 0,
-	  "pos":  [ 9.01, 1.1, 0.0 ]
-	},
-	{
-	  "type": 0,
-	  "pos":  [ 0.6, 2.6, 0.0 ]
-	},
-	{
-	  "type": 0,
-	  "pos":  [ 9.1, 3.2, 0.0 ]
-	},
-	{
-	  "type": 0,
-	  "pos":  [ 8.6, 3.3, 0.0 ]
 	},
 	{
 	  "type": 0,
@@ -263,18 +235,6 @@
 	{
 	  "type": 0,
 	  "pos":  [ 2.5, 8.8, 0.0 ]
-	},
-	{
-	  "type": 0,
-	  "pos":  [ 8.01, 4.2, 0.0 ]
-	},
-	{
-	  "type": 0,
-	  "pos":  [ 8.1, 7.8, 0.0 ]
-	},
-	{
-	  "type": 0,
-	  "pos":  [ 3.7, 1.6, 0.0 ]
 	},
 	{
 	  "type": 0,
@@ -451,7 +411,7 @@
 	],
 	"player": {
 		"weapon": 		4,
-		"startPos": 		[ 0.05, 0.5, 0.0 ],
+		"startPos": 		[ 0.08, 0.5, 0.0 ],
 		"textureFile": 	"textures/player.png"
 	}
 }

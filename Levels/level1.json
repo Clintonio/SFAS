@@ -1,6 +1,6 @@
 {
 	"id": 						"L1",
-	"name":					"Level 1",
+	"name":					"The Search For The Star",
 	"skyboxTextureFile": "textures/skybox.png",
 	"introText": "In AD 2101 War Was Beginning.  The universe is under threat. We have to find the Greatest Star to save it.",
 	"enemies": [
@@ -11,7 +11,7 @@
 	],
 	"player": {
 		"weapon": 		4,
-		"startPos": 		[ 0.05, 0.5, 0.0 ],
+		"startPos": 		[ 0.08, 0.5, 0.0 ],
 		"textureFile": 	"textures/player.png"
 	}
 }
