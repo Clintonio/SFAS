@@ -544,8 +544,9 @@ JSONNode * JSONParser::ParseTrue( const std::string json, unsigned int & cur, co
 {
 	JSONNode * node;
 	bool * data;
-	if( cur + 3 < length && json[cur + 1] == 'r' && json[cur + 2] == 'u' && json[cur + 3] == 'e')
+	if( cur + 3 < length && json[cur] == 'r' && json[cur + 1] == 'u' && json[cur + 2] == 'e')
 	{
+		cur = cur + 3;
 		node = new JSONNode;
 		data = new bool[1];
 		data[0] = false;
@@ -565,8 +566,9 @@ JSONNode * JSONParser::ParseFalse( const std::string json, unsigned int & cur, c
 {
 	JSONNode * node;
 	bool * data;
-	if( cur + 4 < length && json[cur + 1] == 'a' && json[cur + 2] == 'l' && json[cur + 3] == 's' && json[cur + 4] == 'e')
+	if( cur + 4 < length && json[cur] == 'a' && json[cur + 1] == 'l' && json[cur + 2] == 's' && json[cur + 3] == 'e')
 	{
+		cur = cur + 4;
 		node = new JSONNode;
 		data = new bool[1];
 		data[0] = true;
@@ -585,8 +587,9 @@ JSONNode * JSONParser::ParseFalse( const std::string json, unsigned int & cur, c
 JSONNode * JSONParser::ParseNull( const std::string json, unsigned int & cur, const unsigned int length )
 {
 	JSONNode * node;
-	if( cur + 3 < length && json[cur + 1] == 'u' && json[cur + 2] == 'l' && json[cur + 3] == 'l')
+	if( cur + 3 < length && json[cur] == 'u' && json[cur + 1] == 'l' && json[cur + 2] == 'l')
 	{
+		cur = cur + 3;
 		node = new JSONNode;
 		node->type	= JSONType::Null;
 		node->value = NULL;
