@@ -5,7 +5,7 @@
 // Game state base class, represents the states that the game software can be in.
 // 
 // Add a summary of your changes here:
-// 
+// - Replaced WCHAR with wstring for easier text rendering
 // 
 // 
 
@@ -14,6 +14,8 @@
 #include <windows.h>
 #include <wchar.h>
 #include <d3dx9.h>
+#include <vector>
+#include <string>
 
 
 // Forward declare 
@@ -45,21 +47,18 @@ public:
 protected:
 
 	// The inheriting classes to change on screen text
-	void SetTitleText( const WCHAR* text );
-	void SetPageText( const WCHAR* text );
-	void SetInstructionText( const WCHAR* text );
+	void SetTitleText( const std::wstring text );
+	void SetPageText( const std::wstring text );
+	void SetInstructionText( const std::wstring text );
+
+	void AddText( const std::wstring message, const int posX, const int posY, const D3DXCOLOR colour );
 
 private:
-
-	// Maximum size of a string within a text object
-	// currently stored in the associated buffer.
-
-	enum { keMaxStringLength = 64 };
 
 	// Everything we need to know to display a bit of text to the screen
 	struct Text
 	{
-		WCHAR strMsg[keMaxStringLength]; 
+		std::wstring strMsg; 
 		int x; 
 		int y; 
 		D3DXCOLOR colour;
@@ -75,6 +74,8 @@ private:
 	};
 
 	Text m_Text[keNumTextToDisplay];
+	// Dynamic list of items to display
+	std::vector<Text> m_TextItems;
 };
 }
 }

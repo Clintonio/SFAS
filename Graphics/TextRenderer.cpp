@@ -5,7 +5,7 @@
 // Text rendering helper class.  
 // 
 // Add a summary of your changes here:
-// 
+// - Replaced WCHAR* with std::wstring for more versatile functionality
 // 
 // 
 
@@ -27,21 +27,21 @@ TextRenderer::~TextRenderer(void)
 	m_pSprite->End();
 }
 
-HRESULT TextRenderer::DrawTextLine( const WCHAR* strMsg, int x, int y, D3DXCOLOR colour )
+HRESULT TextRenderer::DrawTextLine( const std::wstring & strMsg, int x, int y, D3DXCOLOR colour )
 {
     HRESULT hr;
     RECT rc;
     SetRect( &rc, x, y, 0, 0 );
-    hr = m_pFont->DrawText( m_pSprite, strMsg, -1, &rc, DT_CENTER | DT_NOCLIP, colour );
+    hr = m_pFont->DrawText( m_pSprite, strMsg.c_str(), -1, &rc, DT_CENTER | DT_NOCLIP, colour );
 	return hr;
 }
 
-HRESULT TextRenderer::DrawDebug( const WCHAR* strMsg, int x, int y, D3DXCOLOR colour )
+HRESULT TextRenderer::DrawDebug( const std::wstring & strMsg, int x, int y, D3DXCOLOR colour )
 {
     HRESULT hr;
     RECT rc;
     SetRect( &rc, x, y, 0, 0 );
-    hr = m_pDebugFont->DrawText( m_pSprite, strMsg, -1, &rc, DT_CENTER | DT_NOCLIP, colour );
+    hr = m_pDebugFont->DrawText( m_pSprite, strMsg.c_str(), -1, &rc, DT_CENTER | DT_NOCLIP, colour );
 	return hr;
 }
 

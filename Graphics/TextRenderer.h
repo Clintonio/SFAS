@@ -5,14 +5,14 @@
 // Text rendering helper class.  
 // 
 // Add a summary of your changes here:
-// 1. Fixed spelling errors on names the two ID3DXFont private variables
-// 
+// - Fixed spelling errors on names the two ID3DXFont private variables
+// - Using wstring instead of WCHAR
 // 
 #pragma once
 
 #include <windows.h>
 #include <d3dx9.h>
-#include <wchar.h>
+#include <string>
 
 namespace Engine
 {
@@ -23,8 +23,8 @@ public:
 	TextRenderer(ID3DXFont* font, ID3DXFont* debug_font, ID3DXSprite* sprite);
 	~TextRenderer(void);
 
-	HRESULT DrawTextLine( const WCHAR* strMsg, int x, int y, D3DXCOLOR colour );
-	HRESULT DrawDebug( const WCHAR* strMsg, int x, int y, D3DXCOLOR colour );
+	HRESULT DrawTextLine( const std::wstring & strMsg, int x, int y, D3DXCOLOR colour );
+	HRESULT DrawDebug( const std::wstring & strMsg, int x, int y, D3DXCOLOR colour );
 
 private:
 
