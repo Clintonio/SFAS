@@ -62,10 +62,10 @@ void Enemy::Update( World * world, float dt )
 {
 	Player * player = (Player*) world->FindNearestEntityOfType( this, Player::kEntityType );
 	D3DXVECTOR3 directionToPlayer = DirectionToEntity( player );
+	float playerDistance = DistanceTo(player);
 
 	if( m_AIRoutine == AIRoutine::avoid )
 	{
-		float playerDistance = DistanceTo(player);
 		if( playerDistance < 200.0f )
 		{
 			AddForce( sSpeed * -directionToPlayer);
@@ -84,7 +84,8 @@ void Enemy::Update( World * world, float dt )
 	}
 
 	m_LastFireTime += dt;
-	if( m_WeaponType->ranged && ( m_LastFireTime > m_WeaponType->fireDelay ) )
+	if( m_WeaponType->ranged && ( m_LastFireTime > m_WeaponType->fireDelay ) 
+		&& (playerDistance < 1000.0f) )
 	{
 		Bullet * bullet = new Bullet( m_WeaponType );
 		bullet->Fire(directionToPlayer, this);
