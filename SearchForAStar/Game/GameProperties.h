@@ -29,6 +29,7 @@ struct EnemyType
 {
 	unsigned int	id;
 	int				health;
+	int				killScore;
 	std::string		aiType;
 	WeaponType*		weaponType;
 	D3DXVECTOR3		dimensions;

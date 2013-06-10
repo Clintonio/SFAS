@@ -40,6 +40,7 @@ Enemy::Enemy( EnemyType & type, float x, float y ) :
 	m_WeaponType	= type.weaponType; 
 	m_Health		= type.health;
 	m_RenderItem	= sTextureLoader->LoadTexturedRenderItem(type.textureFile, 1.0f);
+	m_KillScore		= type.killScore;
 }
 
 Enemy::~Enemy(void)

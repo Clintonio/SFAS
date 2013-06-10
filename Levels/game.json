@@ -88,6 +88,7 @@
 			"health":			1,	
 			"AIType":			"suicide",	
 			"weaponType":	0,	
+			"killScore":		50,
 			"dimensions":	[ 20.0, 20.0, 0.0 ],	
 			"textureFile":		"textures/enemy.png"
 		},
@@ -97,6 +98,7 @@
 			"health":			3,	
 			"AIType":			"avoid",	
 			"weaponType":	1,	
+			"killScore":		150,
 			"dimensions":	[ 20.0, 25.0, 0.0 ],	
 			"textureFile":		"textures/enemy2.png"	
 		},
@@ -106,6 +108,7 @@
 			"health":			10,	
 			"AIType":			"avoid",	
 			"weaponType":	2,	
+			"killScore":		100,
 			"dimensions":	[ 20.0, 30.0, 0.0 ],	
 			"textureFile":		"textures/enemy3.png"	
 		},
@@ -115,6 +118,7 @@
 			"health":			15,	
 			"AIType":			"avoid",	
 			"weaponType":	3,	
+			"killScore":		200,
 			"dimensions":	[ 30.0, 70.0, 0.0 ],	
 			"textureFile":		"textures/enemy4.png"	
 		}

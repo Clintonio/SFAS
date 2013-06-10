@@ -39,6 +39,16 @@ public:
 	static const float sMass;
 	static const float sDamping;
 
+	// Each enemy has a different kill score
+	const unsigned int GetKillScore() const 
+	{
+		if( m_Health < 1 )
+		{
+			return m_KillScore;
+		}
+		return 0;
+	}
+
 	static const Entity::EntityType kEntityType;
 	
 	// Get the entity type for this entity
@@ -63,6 +73,7 @@ private:
 	AIRoutine			m_AIRoutine;
 	float				m_LastFireTime;
 	int					m_Health;
+	unsigned int		m_KillScore;
 
 	static Engine::Sound* sExplosionSound;
 };
