@@ -18,7 +18,13 @@ using Engine::Application;
 bool Application::m_AppRunning = true;
 
 Application::Application(LPCTSTR str_Title, LPCTSTR str_Class, int int_Width, int int_Height, WNDPROC proc) : 
-	m_Window(), m_Device(0), m_Title(str_Title), m_Class(str_Class), m_Width(int_Width), m_Height(int_Height)
+	m_Window(), 
+	m_Device(0), 
+	m_Title(str_Title), 
+	m_Class(str_Class), 
+	m_Width(int_Width), 
+	m_Height(int_Height),
+	m_FullScreen( false )
 {
 	CreateApplicationWindow(10, 10, proc);
 	InitializeApplicationDevice();
@@ -64,9 +70,14 @@ void Application::Run()
 			MessageBox( GetWindow(), L"An error has caused the game to crash", L"Game Crashed", MB_OK );
 			m_AppRunning = false;
 		}
-
+		
+		if( m_Input->JustPressed( Engine::Input::Key::kFullScreen ) )
+		{
+			ToggleFullScreen();
+		}
 		// Update input
 		m_Input->Update( fDT );
+
 
 		if(PeekMessage(&msg_Message, m_Window, 0, 0, PM_REMOVE))
 		{
@@ -125,6 +136,43 @@ void Application::OnMouseMove( Engine::Input::Button btn, WPARAM parameter1, LPA
 	}
 }
 
+void Application::ToggleFullScreen()
+{
+	RECT rect;
+	if( !m_FullScreen )
+	{
+		int fsWidth = GetSystemMetrics(SM_CXSCREEN);
+		int fsHeight = GetSystemMetrics(SM_CYSCREEN);
+		SetWindowLongPtr(
+			m_Window, 
+			GWL_STYLE, 
+			WS_SYSMENU | WS_POPUP | WS_CLIPCHILDREN | WS_CLIPSIBLINGS | WS_VISIBLE
+		);
+		SetWindowPos( m_Window, 0, 0, 0, fsWidth, fsHeight, 0 );
+	}
+	else
+	{
+		rect.left		= 0;
+		rect.top		= 0;
+		rect.right		= m_Width;
+		rect.bottom		= m_Height;
+		SetWindowLongPtr(
+			m_Window, 
+			GWL_STYLE, 
+			WS_CAPTION | WS_POPUPWINDOW | WS_VISIBLE
+		);
+		AdjustWindowRect(&rect, WS_CAPTION | WS_POPUPWINDOW, FALSE);
+		SetWindowPos(
+			m_Window, 
+			0, 0, 0, 
+			rect.right-rect.left, 
+			rect.bottom-rect.top, 
+			0
+		);
+	}
+	m_FullScreen = !m_FullScreen;
+}
+
 void Application::InitialiseInput()
 {
 	GamePadInput * gpadInput = new GamePadInput(1);
@@ -144,22 +192,35 @@ void Application::CreateApplicationWindow(int int_XPos, int int_YPos, WNDPROC pr
 {
 	WNDCLASSEX wnd_Structure;
 
-	wnd_Structure.cbSize = sizeof(WNDCLASSEX);
-	wnd_Structure.style = CS_HREDRAW | CS_VREDRAW;
-	wnd_Structure.lpfnWndProc = proc;
-	wnd_Structure.cbClsExtra = 0;
-	wnd_Structure.cbWndExtra = 0;
-	wnd_Structure.hInstance = GetModuleHandle(NULL);
-	wnd_Structure.hIcon = NULL;
-	wnd_Structure.hCursor = NULL;
-	wnd_Structure.hbrBackground = GetSysColorBrush(COLOR_BTNFACE);
-	wnd_Structure.lpszMenuName = NULL;
-	wnd_Structure.lpszClassName = m_Class;
-	wnd_Structure.hIconSm = LoadIcon(NULL,IDI_APPLICATION);
+	wnd_Structure.cbSize			= sizeof(WNDCLASSEX);
+	wnd_Structure.style				= CS_HREDRAW | CS_VREDRAW;
+	wnd_Structure.lpfnWndProc		= proc;
+	wnd_Structure.cbClsExtra		= 0;
+	wnd_Structure.cbWndExtra		= 0;
+	wnd_Structure.hInstance			= GetModuleHandle(NULL);
+	wnd_Structure.hIcon				= NULL;
+	wnd_Structure.hCursor			= NULL;
+	wnd_Structure.hbrBackground		= GetSysColorBrush(COLOR_BTNFACE);
+	wnd_Structure.lpszMenuName		= NULL;
+	wnd_Structure.lpszClassName		= m_Class;
+	wnd_Structure.hIconSm			= LoadIcon(NULL,IDI_APPLICATION);
 	
 	RegisterClassEx(&wnd_Structure);
  
-	m_Window = CreateWindowEx(WS_EX_CONTROLPARENT, m_Class, m_Title, WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX | WS_VISIBLE, int_XPos, int_YPos, m_Width, m_Height, NULL, NULL, GetModuleHandle(NULL), NULL); 
+	m_Window = CreateWindowEx(
+		WS_EX_CONTROLPARENT, 
+		m_Class, 
+		m_Title, 
+		WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX | WS_VISIBLE, 
+		int_XPos, 
+		int_YPos, 
+		m_Width, 
+		m_Height, 
+		NULL, 
+		NULL, 
+		GetModuleHandle(NULL), 
+		NULL
+	); 
 }
 
 void Application::InitializeApplicationDevice()
@@ -167,22 +228,24 @@ void Application::InitializeApplicationDevice()
 	m_dx_Object = Direct3DCreate9(D3D_SDK_VERSION);
 	if (m_dx_Object == NULL)
 	{
-		MessageBox(m_Window,L"DirectX Runtime library not installed!",L"InitializeDevice()",MB_OK);
-	} else {
+		MessageBox(m_Window, L"DirectX Runtime library not installed!", L"InitializeDevice()", MB_OK);
+	} 
+	else 
+	{
 		D3DPRESENT_PARAMETERS dx_PresParams;
 
 		ZeroMemory( &dx_PresParams, sizeof(dx_PresParams) );
-		dx_PresParams.Windowed = TRUE;
-		dx_PresParams.SwapEffect = D3DSWAPEFFECT_DISCARD;
-		dx_PresParams.BackBufferFormat = D3DFMT_X8R8G8B8;
-		dx_PresParams.BackBufferCount = 1;
-		dx_PresParams.MultiSampleType = D3DMULTISAMPLE_NONE;
-		dx_PresParams.MultiSampleQuality = 0;
-		dx_PresParams.Flags = NULL;
-		dx_PresParams.PresentationInterval = D3DPRESENT_INTERVAL_DEFAULT;
-		dx_PresParams.EnableAutoDepthStencil = TRUE;
-		dx_PresParams.AutoDepthStencilFormat = D3DFMT_D16;
-	
+		dx_PresParams.Windowed					= TRUE;
+		dx_PresParams.SwapEffect				= D3DSWAPEFFECT_DISCARD;
+		dx_PresParams.BackBufferFormat			= D3DFMT_X8R8G8B8;
+		dx_PresParams.BackBufferCount			= 1;
+		dx_PresParams.MultiSampleType			= D3DMULTISAMPLE_NONE;
+		dx_PresParams.MultiSampleQuality		= 0;
+		dx_PresParams.Flags						= NULL;
+		dx_PresParams.PresentationInterval		= D3DPRESENT_INTERVAL_DEFAULT;
+		dx_PresParams.EnableAutoDepthStencil	= TRUE;
+		dx_PresParams.AutoDepthStencilFormat	= D3DFMT_D16;
+		
 		if (FAILED(m_dx_Object->CreateDevice(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, m_Window, D3DCREATE_HARDWARE_VERTEXPROCESSING, &dx_PresParams, &m_Device)))
 		{
 			if (FAILED(m_dx_Object->CreateDevice(D3DADAPTER_DEFAULT, D3DDEVTYPE_REF, m_Window, D3DCREATE_SOFTWARE_VERTEXPROCESSING, &dx_PresParams, &m_Device)))

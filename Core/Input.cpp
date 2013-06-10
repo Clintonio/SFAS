@@ -13,7 +13,7 @@
 
 using Engine::Input;
 
-const int Input::sKeyCodes[kNumInputOptions] = { 32, 87, 83, 65, 68, VK_ESCAPE, 0x50 };
+const int Input::sKeyCodes[kNumInputOptions] = { 32, 87, 83, 65, 68, VK_ESCAPE, 0x50, VK_F11 };
 const float Input::kfButtonRepeatTime = 0.2f;
 
 Input::Input() : m_Enabled( true )

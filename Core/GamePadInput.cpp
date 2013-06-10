@@ -30,7 +30,8 @@ struct GamePadInput::KeyMap GamePadInput::sKeyCodes[kNumInputOptions] = {
 	KeyMap(Key::kUp, XINPUT_GAMEPAD_DPAD_UP),
 	KeyMap(Key::kDown, XINPUT_GAMEPAD_DPAD_DOWN),
 	KeyMap(Key::kLeft, XINPUT_GAMEPAD_DPAD_LEFT),
-	KeyMap(Key::kRight, XINPUT_GAMEPAD_DPAD_RIGHT)
+	KeyMap(Key::kRight, XINPUT_GAMEPAD_DPAD_RIGHT),
+	KeyMap(Key::kFullScreen, XINPUT_GAMEPAD_BACK)
 };
 
 GamePadInput::GamePadInput(unsigned short controllerNum) : 

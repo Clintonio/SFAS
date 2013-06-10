@@ -44,6 +44,8 @@ protected:
 	inline LPDIRECT3DDEVICE9 GetDevice() { return m_Device; }	
 	inline Input * GetInput() const { return m_Input; }
 	
+	void ToggleFullScreen();
+	
 	static bool m_AppRunning;
 private:
 
@@ -57,18 +59,18 @@ private:
 
 	LARGE_INTEGER GetCurrentTime();
 
-	HWND m_Window;
-	Input * m_Input;
-	LPDIRECT3DDEVICE9 m_Device;
-	LPDIRECT3D9 m_dx_Object;
-	LPCTSTR m_Title;
-	LPCTSTR m_Class;
-	int m_Width;
-	int m_Height;
+	HWND				m_Window;
+	Input *				m_Input;
+	LPDIRECT3DDEVICE9	m_Device;
+	LPDIRECT3D9			m_dx_Object;
+	LPCTSTR				m_Title;
+	LPCTSTR				m_Class;
+	int					m_Width;
+	int					m_Height;
 
     bool m_bPaused;
     LARGE_INTEGER m_llLastTime;
-
-
+	// This variable monitors whether we're currently in full screen or not
+	bool m_FullScreen;
 };
 };

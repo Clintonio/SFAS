@@ -45,6 +45,7 @@ public:
 		kRight,
 		kExit,
 		kPause,
+		kFullScreen,
 
 		kNumInputOptions
 	};
