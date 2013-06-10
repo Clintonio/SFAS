@@ -3,16 +3,16 @@
 		{
 			"name":		"Story",
 			"type":			"levels",
-			"lives":			5,
+			"lives":			10,
 			"levels": [
-				"Levels/level8.json",
-				"Levels/level7.json",
-				"Levels/level6.json",
+				"Levels/level1.json",
 				"Levels/level2.json",
 				"Levels/level3.json",
 				"Levels/level4.json",
 				"Levels/level5.json",
-				"Levels/level1.json"
+				"Levels/level6.json",
+				"Levels/level7.json",
+				"Levels/level8.json"
 			]
 		}
 	],
