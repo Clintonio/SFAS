@@ -197,7 +197,7 @@ void World::NextLevel()
 
 void World::OpenLevel( int level )
 {
-	LevelLoader loader;
+	LevelLoader loader( m_GameProperties->weaponTypes );
 
 	const Level * l = loader.LoadLevelFromFile( "Levels/level1.json" );
 	

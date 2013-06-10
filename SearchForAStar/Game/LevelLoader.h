@@ -19,7 +19,7 @@ struct WeaponType;
 class LevelLoader
 {
 public:
-	LevelLoader();
+	LevelLoader( const WeaponType * weaponTypes );
 
 	const Level* LoadLevelFromFile( std::string file );
 private:
@@ -27,7 +27,7 @@ private:
 	void ParseLevelFile( const JSONMapNode * root, Level * level ) const;
 	void ParseEnemies( const JSONArrayNode * enemyNodes, Level * level ) const;
 
-	WeaponType * m_WeaponType;
+	const WeaponType * m_WeaponTypes;
 };
 }
 }

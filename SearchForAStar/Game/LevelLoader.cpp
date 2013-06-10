@@ -5,7 +5,8 @@ using namespace SFAS::Game;
 
 using namespace Engine::JSON;
 
-LevelLoader::LevelLoader()
+LevelLoader::LevelLoader( const WeaponType * weaponTypes ) : 
+	m_WeaponTypes( weaponTypes )
 {
 
 }
@@ -45,7 +46,7 @@ void LevelLoader::ParseLevelFile( const JSONMapNode * root, Level * level ) cons
 	level->enemyCount			= root->GetChildInt( "enemyCount" );
 
 	playerNode = (JSONMapNode*) (*root)["player"];
-	//level->player.weapon		= m_WeaponType[GetChildIntValue( playerNode, "weapon" )];
+	level->player.weapon		= m_WeaponTypes[playerNode->GetChildInt( "weapon" )];
 	level->player.textureFile	= playerNode->GetChildWString( "textureFile" );
 	level->player.startPos		= playerNode->GetChildVector3( "startPos" );
 
