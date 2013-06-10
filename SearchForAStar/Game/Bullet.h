@@ -12,8 +12,8 @@
 #pragma once
 
 #include "Entity.h"
+#include "GameProperties.h"
 #include <map>
-#include "WeaponType.h"
 
 namespace Engine
 {

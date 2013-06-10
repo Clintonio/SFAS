@@ -15,7 +15,6 @@
 #include <list>
 #include "Audio/Sound.h"
 #include "ShipEntity.h"
-#include "WeaponType.h"
 #include "Level.h"
 
 // Forward declare

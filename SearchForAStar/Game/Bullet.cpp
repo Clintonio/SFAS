@@ -14,7 +14,6 @@
 #include "Player.h"
 #include "Enemy.h" 
 #include "Audio/SoundProvider.h"
-#include "WeaponType.h"
 
 using namespace SFAS::Game;
 

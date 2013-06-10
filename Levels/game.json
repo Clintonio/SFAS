@@ -3,6 +3,18 @@
 	
 	"weaponTypeCount": 5,
 	"enemyTypeCount": 4,
+	"gameModeCount": 1,
+	
+	"gameModes": [
+		{
+			"name":		"Story",
+			"type":			"levels",
+			"levels": [
+				"Levels/level1.json",
+				"Levels/level2.json"
+			]
+		}
+	],
 	
 	"weaponTypes": [
 		{

@@ -14,7 +14,6 @@
 #include "World.h"
 #include "ShipEntity.h"
 #include "Level.h"
-#include "WeaponType.h"
 
 namespace Engine
 {

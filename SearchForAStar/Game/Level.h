@@ -4,7 +4,6 @@
 
 #include <string>
 #include <d3dx9.h>
-#include "WeaponType.h"
 #include "GameProperties.h"
 
 namespace SFAS
