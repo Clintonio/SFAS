@@ -39,6 +39,10 @@ public:
 	const Game::World* GetWorld() const { return &m_World; }
 
 	static int GetStateID() { return 1; };
+
+	// A couple of little shortcuts due to time constraints
+	static int sLastScore;
+	static int sHighestScore;
 private:
 
 	enum State

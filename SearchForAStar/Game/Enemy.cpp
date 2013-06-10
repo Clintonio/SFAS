@@ -21,7 +21,6 @@
 
 using namespace SFAS::Game;
 
-const float Enemy::sSpeed = 10000.0f;
 const float Enemy::sMass = 100.0f;
 const float Enemy::sDamping = 0.6f;
 
@@ -37,6 +36,7 @@ Enemy::Enemy( EnemyType & type, float x, float y ) :
 	SetActive(true);
 	SetAIRoutine( type.aiType );
 
+	m_Speed         = type.speed;
 	m_WeaponType	= type.weaponType; 
 	m_Health		= type.health;
 	m_RenderItem	= sTextureLoader->LoadTexturedRenderItem(type.textureFile, 1.0f);
@@ -69,18 +69,18 @@ void Enemy::Update( World * world, float dt )
 	{
 		if( playerDistance < 200.0f )
 		{
-			AddForce( sSpeed * -directionToPlayer);
+			AddForce( m_Speed * -directionToPlayer);
 		} 
 		else if( playerDistance > 210.0f )
 		{
-			AddForce( sSpeed * directionToPlayer);
+			AddForce( m_Speed * directionToPlayer);
 		}
 	} 
 	else
 	{
 		if(player != NULL)
 		{
-			AddForce( sSpeed * directionToPlayer);
+			AddForce( m_Speed * directionToPlayer);
 		}
 	}
 

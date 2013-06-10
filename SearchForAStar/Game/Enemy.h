@@ -35,7 +35,6 @@ public:
 
 	virtual void Update( World * world, float dt );
 
-	static const float sSpeed;
 	static const float sMass;
 	static const float sDamping;
 
@@ -73,6 +72,7 @@ private:
 	AIRoutine			m_AIRoutine;
 	float				m_LastFireTime;
 	int					m_Health;
+	float				m_Speed;
 	unsigned int		m_KillScore;
 
 	static Engine::Sound* sExplosionSound;

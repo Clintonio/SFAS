@@ -30,8 +30,8 @@ StartState::StartState( LPDIRECT3DDEVICE9 p_dx_Device ) :
 		x, y + 0.00f, FontSize::Large, D3DXCOLOR( 1, 1, 0.4f, 1 ) );
 	AddText(1, L"Start Story Mode", 
 		x, y + 0.15f, FontSize::Medium, D3DXCOLOR( 1, 1, 1, 1 ) );
-	AddText(2, L"Start Survival Mode", 
-		x, y + 0.22f, FontSize::Medium, D3DXCOLOR( 1, 1, 1, 1 ) );
+	/*AddText(2, L"Start Survival Mode", 
+		x, y + 0.22f, FontSize::Medium, D3DXCOLOR( 1, 1, 1, 1 ) );*/
 	AddText(3, L"Credits", 
 		x, y + 0.32f, FontSize::Medium, D3DXCOLOR( 1, 1, 1, 1 ) );
 	AddText(6, L"High Scores", 

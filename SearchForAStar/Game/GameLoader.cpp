@@ -69,6 +69,7 @@ void GameLoader::ParseEnemyTypes( const JSONArrayNode * node, GameProperties * p
 		properties->enemyTypes[i].health		= enemyNode->GetChildInt( "health" );
 		properties->enemyTypes[i].textureFile	= enemyNode->GetChildWString( "textureFile" );
 		properties->enemyTypes[i].dimensions	= enemyNode->GetChildVector3( "dimensions" );
+		properties->enemyTypes[i].speed			= enemyNode->GetChildFloat( "speed" );
 		properties->enemyTypes[i].killScore		= enemyNode->GetChildInt( "killScore" );
 		properties->enemyTypes[i].weaponType	= &properties->weaponTypes[enemyNode->GetChildInt( "weaponType" )];
 		properties->enemyTypes[i].aiType		= enemyNode->GetChildString( "AIType" );

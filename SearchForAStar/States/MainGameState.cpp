@@ -20,6 +20,10 @@ using namespace SFAS::States;
 
 const int kStateID = 1;
 
+// A couple of shortcuts
+int MainGameState::sLastScore = 0;
+int MainGameState::sHighestScore = 0;
+
 MainGameState::MainGameState( LPDIRECT3DDEVICE9 p_dx_Device, HWND han_Window, int w, int h ) : 
 	GameStateBase( p_dx_Device ),
 	m_GameState( keNewLevel ), 
@@ -130,6 +134,8 @@ int MainGameState::Update( Engine::Input * input, float dt)
 				{
 					input->SetSensitivity( 0.1f );
 					UpdateHighScores( m_World.GetPlayer()->GetScore() );
+					sLastScore = m_World.GetPlayer()->GetScore();
+					sHighestScore = m_HighestScores[0].score;
 					m_World.ClearLevel();
 					gameOver = true;
 				}

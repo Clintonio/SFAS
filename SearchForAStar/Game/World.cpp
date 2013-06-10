@@ -40,6 +40,7 @@ using SFAS::Game::Entity;
 using SFAS::Game::Wall;
 using SFAS::Game::Player;
 
+
 World::World(LPDIRECT3DDEVICE9 p_dx_Device, HWND han_Window, int w, int h) 
 	: m_Width( (float)w ), m_Height( (float)h ), m_Level( 0 ), m_NumActiveEnemies( INT_MAX )
 {
@@ -148,7 +149,7 @@ void World::Update( Engine::Input * input, float dt )
 			for(innerIt = it; m_EntityList->end() != innerIt; innerIt++)
 			{
 				// Entities of the same type do not collide in thie game
-				if(!((*it).second->GetEntityType() == (*innerIt).second->GetEntityType()))
+				if(it != innerIt)
 				{
 					DoCollision((*it).second, (*innerIt).second, dt);
 				}

@@ -31,6 +31,7 @@ struct EnemyType
 	int				health;
 	int				killScore;
 	std::string		aiType;
+	float			speed;
 	WeaponType*		weaponType;
 	D3DXVECTOR3		dimensions;
 	std::wstring	textureFile;
