@@ -133,7 +133,7 @@ const GameStateBase::Text * GameStateBase::GetTextAt( const D3DXVECTOR2 & mouseP
 void GameStateBase::LoadHighScores( const std::string scoreFile )
 {
 	JSONParser parser;
-	int i = 0; 
+	unsigned int i = 0; 
 	try {
 		const JSONMapNode * root = parser.ParseJSONFile( scoreFile );
 		if( root != NULL )

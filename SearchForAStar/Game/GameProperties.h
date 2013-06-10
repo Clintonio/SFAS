@@ -44,6 +44,7 @@ struct GameMode
 	std::string		name;
 	std::string		type;
 	std::string	*	levels;
+	int				numLevels;
 	int				lives;
 };
 

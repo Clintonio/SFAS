@@ -19,7 +19,7 @@ void SkyBox::Render()
 	D3DXMATRIX scale;
 
 	D3DXMatrixTranslation( &move, (float) m_Width / 2, (float) m_Height / 2, 0 );
-	D3DXMatrixScaling( &scale, m_Width, m_Height, 0.0f );
+	D3DXMatrixScaling( &scale, (float) m_Width, (float) m_Height, 0.0f );
 		
 	world = scale * move;
 	m_RenderItem.Draw( &world );

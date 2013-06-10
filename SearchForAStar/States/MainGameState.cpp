@@ -12,6 +12,7 @@
 #include "MainGameState.h"
 #include "Core/Input.h"
 #include "SummaryState.h"
+#include "StartState.h"
 #include <sstream>
 #include <fstream>
 #include <string>
@@ -83,7 +84,7 @@ int MainGameState::Update( Engine::Input * input, float dt)
 	{
 		WCHAR strBuffer[512];
 
-		if( m_GameState != keIntroText )
+		if( m_GameState != keIntroText && m_GameState != kePlayerWins )
 		{
 			// Update the game world
 			m_World.Update(input, 0.03f);//dt
@@ -116,6 +117,11 @@ int MainGameState::Update( Engine::Input * input, float dt)
 					UpdateText( 4, m_World.GetCurrentLevelDescriptor()->name );
 				}
 				break;
+			case kePlayerWins:
+				if( input->HasUserClicked( Engine::Input::Button::MouseButton1) )
+				{
+					return StartState::kStateID;
+				}
 			case keGamePlay:
 				// If the level is over then go to level complete
 				if( m_World.IsLevelFinished() )
@@ -129,6 +135,27 @@ int MainGameState::Update( Engine::Input * input, float dt)
 					m_DrawCursor = false;
 					m_GameState = keNewLevel;
 					m_World.ClearLevel();
+
+					if( m_World.IsLastLevel() )
+					{
+						m_GameState = kePlayerWins;
+						UpdateText( 1, L"Press Close The Game" );
+						UpdateText( 3, L"You have found the star and saved everyone, defeating the evil in doing so!" );
+						UpdateText( 4, L"You Have Won!" );
+					
+						std::wstringstream buf;
+						buf << "Your score was ";
+						buf << MainGameState::sLastScore;
+						buf << " and the high score is ";
+						buf << MainGameState::sHighestScore;
+						UpdateText( 2, buf.str() );
+
+						input->SetSensitivity( 0.1f );
+						UpdateHighScores( m_World.GetPlayer()->GetScore() );
+						sLastScore = m_World.GetPlayer()->GetScore();
+						sHighestScore = m_HighestScores[0].score;
+						m_World.ClearLevel();
+					}
 				}
 				else if( m_World.IsGameOver() )
 				{
@@ -142,7 +169,7 @@ int MainGameState::Update( Engine::Input * input, float dt)
 				break;
 		}
 		
-		if( m_GameState != keIntroText )
+		if( m_GameState != keIntroText && m_GameState != kePlayerWins )
 		{
 			// Update on screen text
 			const Game::Player * player = m_World.GetPlayer();

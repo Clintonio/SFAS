@@ -108,6 +108,7 @@ void GameLoader::ParseGameModes( const JSONArrayNode * node, GameProperties * pr
 		properties->gameModes[i].name	= modeNode->GetChildString( "name" );
 		properties->gameModes[i].type	= modeNode->GetChildString( "type" );
 		properties->gameModes[i].lives	= modeNode->GetChildInt( "lives" );
+		properties->gameModes[i].numLevels	= levelNode->childCount;
 
 		properties->gameModes[i].levels = new std::string[levelNode->childCount];
 		for( unsigned int j = 0; j < levelNode->childCount; j++ )

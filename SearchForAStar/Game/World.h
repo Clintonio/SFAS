@@ -62,6 +62,8 @@ public:
 	bool IsLevelFinished() const;
 	int GetCurrentLevel() const { return m_Level; } 
 	const Level * GetCurrentLevelDescriptor() const { return m_CurrentLevel; } 
+	// return true if the game is done
+	bool IsLastLevel() const { return m_Level == m_GameMode.numLevels; }
 
 	// Add an entity to the world
 	void AddEntity(Entity* entity);

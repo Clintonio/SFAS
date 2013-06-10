@@ -52,6 +52,7 @@ private:
 		keLevelComplete,
 		keGameComplete,
 		keIntroText,
+		kePlayerWins,
 
 		keNumStates
 	};
