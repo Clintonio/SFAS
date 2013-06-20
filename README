@@ -1,0 +1,35 @@
+SFAS Round 2 Entry
+
+Author: Clinton Alexander
+
+----- Introduction -----
+
+This is my Search For a Star competition round 2 entry. The task was to improve 
+an existing, very basic, and broken, game by adding new features and content.
+I extended the original 2D block-shooter to a 2D space shooter concept, added
+sound, 360 Gamepad support, texturing, very basic animations on the explosions,
+enemy types, levels, data driven level and entity loading, a custom JSON parser,
+and other features. 
+
+The game is written in C++ and uses the DirectX and DirectSound APIs, and no others
+due to a restriction within the competition itself. Visual Studio 2012 files
+are included in the source build. 
+
+This game took exactly one week of time to create, with some minor, additional, 
+time to refine and remove some bugs that were present in the submitted version. 
+
+----- Usage -----
+
+Run SFAS2012.exe to play the game. 
+
+----- Compilation -----
+
+Currently only compilation within the Visual Studio 2012 IDE has been tested, and
+in the source build the relevant VS files have been included.
+
+----- Licence -----
+
+Please read the bundled LICENCE file for source licensing.
+
+All art and audio assets are not a part of this license and should
+not be distributed in any way, or used commercially.
